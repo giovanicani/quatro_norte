@@ -213,5 +213,5 @@ Grão: **uma posição GPS por carreta por dia** (o **último** ponto de cada di
 - Lookups por `LEFT JOIN` podem vir nulos (peça fora do catálogo, OS sem UF/local, etc.) — sem perda de linha.
 - `flag_refrigerado` reflete o acoplamento **atual** do reefer, não o histórico.
 - `fato_gps` usa o vínculo **atual** beacon→carreta (`ym_units.bewbea_id`); se um beacon foi remanejado entre carretas, posições antigas ficam atribuídas à carreta atual.
-- **Separador decimal:** a extração força ponto (`ALTER SESSION ... NLS_NUMERIC_CHARACTERS = '.,'`); `latitude`/`longitude` ainda passam por `TO_CHAR` explícito para garantir o ponto mesmo se o NLS for ignorado — evita a vírgula decimal quebrar o CSV.
+- **Separador decimal:** **todas** as colunas numéricas com decimais (custos, horas, KM, lat/long, velocidade, franquia, etc.) saem por `TO_CHAR(..., 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''')`, forçando **ponto** decimal — o SQLcl ignorava o `ALTER SESSION` e a vírgula decimal quebrava o CSV. No CSV esses campos vêm entre aspas, mas o `pd.read_csv` os lê como `float` normalmente.
 - "Interno" (`charge_flag='I'`) ≠ "preventivo": é o custo absorvido pela Trailcon, de qualquer natureza.

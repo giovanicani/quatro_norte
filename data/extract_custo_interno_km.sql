@@ -56,7 +56,7 @@ SELECT u.uni_id                AS id_carreta,
        u.year                  AS ano_modelo,
        u.in_service_date       AS data_entrada_servico,
        u.axles                 AS eixos,
-       u.length                AS comprimento,
+       TO_CHAR(u.length, 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS comprimento,
        CASE WHEN u.uni_id_reefer IS NOT NULL THEN 'Y' ELSE 'N' END AS flag_refrigerado,
        cl.code                 AS cod_classe,
        cl.description          AS classe,
@@ -95,10 +95,10 @@ WITH frota AS (
 SELECT r.unirea_id        AS id_leitura,
        r.uni_id           AS id_carreta,
        CAST(r.reading_date AS DATE) AS data_leitura,
-       r.reading          AS km_acumulado,
+       TO_CHAR(r.reading,          'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS km_acumulado,
        r.reading_uom      AS unidade_leitura,
-       r.reset_reading_at AS km_reset_em,
-       r.reset_reading_to AS km_reset_para,
+       TO_CHAR(r.reset_reading_at, 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS km_reset_em,
+       TO_CHAR(r.reset_reading_to, 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS km_reset_para,
        r.worord_id        AS id_os
   FROM rep_unit_readings r
   JOIN frota f ON f.uni_id = r.uni_id
@@ -133,19 +133,18 @@ SELECT w.worord_id        AS id_os,
        CAST(w.wo_date AS DATE)        AS data_os,
        w.repair_request   AS solicitacao_reparo,
        loc.code           AS cod_local_os,
-       loc.description    AS local_os,
        w.wo_location      AS endereco_os,
        ps.code            AS cod_provincia_estado,
        ps.name            AS provincia_estado,
-       (SELECT nvl(round(SUM(CASE WHEN l.sublet_flag = 'Y'
+       TO_CHAR((SELECT nvl(round(SUM(CASE WHEN l.sublet_flag = 'Y'
                                   THEN nvl(l.total_sublet, 0)
                                   ELSE nvl(l.cost_hours, 0) * nvl(l.hourly_cost, 0)
                              END), 2), 0)
           FROM rep_work_order_labour l
          WHERE l.worord_id = w.worord_id
            AND l.charge_flag = 'I'
-           AND l.deleted_flag = 'N')  AS total_interno_mao_obra,
-       (SELECT nvl(round(SUM(CASE WHEN l.sublet_flag = 'Y'
+           AND l.deleted_flag = 'N'), 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''')  AS total_interno_mao_obra,
+       TO_CHAR((SELECT nvl(round(SUM(CASE WHEN l.sublet_flag = 'Y'
                                   THEN nvl(p.total_sublet, 0)
                                   ELSE nvl(nvl(p.item_average_cost, p.item_cost), 0) * nvl(p.actual_qty, 0)
                              END), 2), 0)
@@ -153,7 +152,7 @@ SELECT w.worord_id        AS id_os,
           JOIN rep_work_order_labour l ON l.worordlab_id = p.worordlab_id
          WHERE l.worord_id = w.worord_id
            AND p.charge_flag = 'I'
-           AND p.deleted_flag = 'N')  AS total_interno_pecas
+           AND p.deleted_flag = 'N'), 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''')  AS total_interno_pecas
   FROM rep_work_orders w
   JOIN frota f ON f.uni_id = w.uni_id
   LEFT JOIN rla_locations loc       ON loc.loc_id = w.loc_id
@@ -199,13 +198,13 @@ SELECT l.worordlab_id     AS id_linha_mao_obra,
        w.uni_id           AS id_carreta,
        CAST(w.wo_date AS DATE) AS data_os,
        jt.code            AS cod_tipo_servico,
-       l.cost_hours       AS horas_custo,
-       l.hourly_cost      AS custo_hora,
-       round(CASE WHEN l.sublet_flag = 'Y'
-                  THEN nvl(l.total_sublet, 0)
-                  ELSE nvl(l.cost_hours, 0) * nvl(l.hourly_cost, 0)
-             END, 2) AS custo_interno_mao_obra,
-       l.total_sublet     AS total_terceirizado,
+       TO_CHAR(l.cost_hours,  'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS horas_custo,
+       TO_CHAR(l.hourly_cost, 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS custo_hora,
+       TO_CHAR(round(CASE WHEN l.sublet_flag = 'Y'
+                          THEN nvl(l.total_sublet, 0)
+                          ELSE nvl(l.cost_hours, 0) * nvl(l.hourly_cost, 0)
+                     END, 2), 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS custo_interno_mao_obra,
+       TO_CHAR(l.total_sublet, 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS total_terceirizado,
        l.sublet_flag      AS flag_terceirizado,
        s.code             AS cod_sistema_vmrs,
        s.description      AS sistema_vmrs
@@ -249,13 +248,13 @@ SELECT p.worordpar_id      AS id_linha_peca,
        p.par_id           AS id_peca,
        ip.code            AS numero_peca,
        ip.description     AS descricao_peca,
-       p.actual_qty       AS qtd_real,
-       p.item_cost        AS custo_item,
-       p.item_average_cost AS custo_medio_item,
-       round(CASE WHEN l.sublet_flag = 'Y'
-                  THEN nvl(p.total_sublet, 0)
-                  ELSE nvl(nvl(p.item_average_cost, p.item_cost), 0) * nvl(p.actual_qty, 0)
-             END, 2) AS custo_interno_peca,
+       TO_CHAR(p.actual_qty,        'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS qtd_real,
+       TO_CHAR(p.item_cost,         'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS custo_item,
+       TO_CHAR(p.item_average_cost, 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS custo_medio_item,
+       TO_CHAR(round(CASE WHEN l.sublet_flag = 'Y'
+                          THEN nvl(p.total_sublet, 0)
+                          ELSE nvl(nvl(p.item_average_cost, p.item_cost), 0) * nvl(p.actual_qty, 0)
+                     END, 2), 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS custo_interno_peca,
        l.sublet_flag      AS flag_terceirizado,
        p.warranty_flag    AS flag_garantia
   FROM rep_work_order_parts p
@@ -298,7 +297,7 @@ SELECT lra.learenass_id           AS id_contrato_carreta,
        cus.code                   AS cod_cliente,
        CAST(lra.start_date AS DATE)  AS data_inicio,
        CAST(lra.return_date AS DATE) AS data_fim,
-       lra.monthly_km_allowance   AS franquia_km_mensal,
+       TO_CHAR(lra.monthly_km_allowance, 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS franquia_km_mensal,
        loc.code                   AS cod_local_contrato
   FROM rla_lease_rental_assets lra
   JOIN frota f               ON f.uni_id = lra.uni_id
@@ -356,7 +355,7 @@ SELECT uni_id        AS id_carreta,
        ts_local      AS data_hora_gps,
        TO_CHAR(latitude,  'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS latitude,
        TO_CHAR(longitude, 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS longitude,
-       speed         AS velocidade,
+       TO_CHAR(speed,     'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS velocidade,
        address       AS endereco
   FROM pos_dia
  WHERE rn = 1
