@@ -10,14 +10,9 @@
 -- Alvo: custo interno = linhas charge_flag='I'.
 --   labour = CASE sublet_flag='Y' -> total_sublet ; senao cost_hours * hourly_cost
 --   parts  = CASE labour.sublet_flag='Y' -> parts.total_sublet ; senao nvl(item_average_cost,item_cost) * actual_qty
---   (mesmas formulas de asset_functions_pkg / bi_asset_finance_pkg no TCL360;
---    peca sempre via linha de labour por worordlab_id, e o sublet da peca segue o flag da labour pai).
 --
--- Gera 5 CSVs em data/raw/. Executar com SQLcl:  sql user/pass@db @data/extract_custo_interno_km.sql
+-- Gera 7 CSVs em data/raw/. Executar com SQLcl:  sql user/pass@db @data/extract_custo_interno_km.sql
 -- SOMENTE LEITURA.
---
--- Obs.: complementa data/dump.sql (que e um dump bruto, sem estes filtros e
---   datado por create_date). Este script entrega o dataset ja recortado.
 -- ============================================================================
 
 -- SQLcl specific settings
@@ -30,6 +25,8 @@ SET TRIMSPOOL ON
 
 ALTER SESSION SET NLS_TIMESTAMP_TZ_FORMAT = 'YYYY-MM-DD"T"HH24:MI:SS.FF6 TZH:TZM';
 ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD"T"HH24:MI:SS';
+-- Forca PONTO como separador decimal (lat/long, custos): evita virgula decimal quebrando o CSV
+ALTER SESSION SET NLS_NUMERIC_CHARACTERS = '.,';
 
 -- ----------------------------------------------------------------------------
 -- 1) dim_carretas  (1 linha por carreta da populacao)
@@ -74,7 +71,6 @@ SELECT u.uni_id                AS id_carreta,
   LEFT JOIN rla_unit_models md         ON md.unimod_id = u.unimod_id
   LEFT JOIN adm_unit_classification cl ON cl.unicla_id = u.unicla_id
   LEFT JOIN pm_maintenance_groups mg   ON mg.maigro_id = u.maigro_id
-  LEFT JOIN rla_locations loc          ON loc.loc_id = u.loc_id_domiciled
   LEFT JOIN adm_equipment_status es    ON es.equsta_id = u.equsta_id;
 
 SPOOL OFF
@@ -247,7 +243,7 @@ WITH frota AS (
                       AND r.reading_date <  DATE '2026-01-01')
 )
 SELECT p.worordpar_id      AS id_linha_peca,
-       p.worord_id        AS id_os,
+       w.worord_id        AS id_os,
        w.uni_id           AS id_carreta,
        CAST(w.wo_date AS DATE) AS data_os,
        p.par_id           AS id_peca,
@@ -309,5 +305,61 @@ SELECT lra.learenass_id           AS id_contrato_carreta,
   LEFT JOIN ym_customers cus ON cus.cus_id = lra.cus_id_invoice_to
   LEFT JOIN rla_locations loc ON loc.loc_id = lra.loc_id_revenue
  WHERE lra.void_date IS NULL;
+
+SPOOL OFF
+
+-- ----------------------------------------------------------------------------
+-- 7) fato_gps  (posicoes GPS bewhere -- 1 ponto por carreta por dia)
+--    Ligacao: ym_units.bewbea_id = tlm_bewhere_beacon_activity.id (id do beacon)
+--    TIMESTAMP e epoch Unix -> convertido por system_functions_pkg.unix_time_to_timestamp.
+--    Mantem o ULTIMO ponto de cada dia (ROW_NUMBER por carreta+dia, timestamp desc).
+-- ----------------------------------------------------------------------------
+PROMPT Exporting fato_gps
+SPOOL data/raw/fato_gps_2020-01-01_to_2025-12-31.csv
+
+WITH frota AS (
+    SELECT u.uni_id, u.bewbea_id
+      FROM ym_units u
+     WHERE u.cus_id_owner = 4
+       AND u.active_flag = 'Y'
+       AND u.bewbea_id IS NOT NULL
+       AND EXISTS (SELECT 1 FROM rep_unit_readings r
+                    WHERE r.uni_id = u.uni_id
+                      AND r.reading_uom = 'KM' AND r.void_flag = 'N'
+                      AND r.reading_date >= DATE '2020-01-01'
+                      AND r.reading_date <  DATE '2026-01-01')
+),
+pos AS (
+    SELECT f.uni_id          AS uni_id,
+           bba.id            AS beacon_id,
+           bba.latitude,
+           bba.longitude,
+           bba.speed,
+           bba.address,
+           bba.timestamp     AS ts_epoch,
+           CAST(system_functions_pkg.unix_time_to_timestamp(p_unix_epoch_time => bba.timestamp) AT LOCAL AS DATE) AS ts_local
+      FROM tlm_bewhere_beacon_activity bba
+      JOIN frota f ON f.bewbea_id = bba.id
+     WHERE bba.latitude IS NOT NULL
+       AND bba.longitude IS NOT NULL
+),
+pos_dia AS (
+    SELECT pos.*,
+           ROW_NUMBER() OVER (PARTITION BY pos.uni_id, TRUNC(pos.ts_local)
+                              ORDER BY pos.ts_epoch DESC) AS rn
+      FROM pos
+     WHERE pos.ts_local >= DATE '2020-01-01'
+       AND pos.ts_local <  DATE '2026-01-01'
+)
+SELECT uni_id        AS id_carreta,
+       beacon_id     AS id_beacon,
+       ts_local      AS data_hora_gps,
+       TO_CHAR(latitude,  'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS latitude,
+       TO_CHAR(longitude, 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS longitude,
+       speed         AS velocidade,
+       address       AS endereco
+  FROM pos_dia
+ WHERE rn = 1
+ ORDER BY uni_id, data_hora_gps;
 
 SPOOL OFF

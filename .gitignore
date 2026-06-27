@@ -4,11 +4,4 @@
 __pycache__/
 *.py[cod]
 
-# Dados brutos/intermediarios/processados podem conter informacao sensivel.
-data/raw/*
-!data/raw/.gitkeep
-data/interim/*
-!data/interim/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
 
