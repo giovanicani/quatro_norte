@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modelo de Dados — Quatro Norte</title>
+<meta name="description" content="Diagrama do modelo estrela: dim_carretas e os 6 fatos de custo interno por km, com chaves de junção id_carreta e id_os.">
+<style>
+  :root{
+    --ground:#e9edf2;
+    --surface:#ffffff;
+    --ink:#16202e;
+    --ink-soft:#475467;
+    --line:#d3dae3;
+    --carreta:#bd4a14;      /* laranja — id_carreta */
+    --carreta-soft:#fbeee6;
+    --os:#0d7d8a;           /* teal — id_os */
+    --os-soft:#e3f1f2;
+    --slate:#2b3a4d;        /* fatos neutros */
+    --pk:#16202e;
+    font-synthesis:none;
+  }
+  *{box-sizing:border-box;}
+  body,h1,h2,h3,p,ul{margin:0;}
+  .wrap{
+    background:var(--ground);
+    color:var(--ink);
+    font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding:40px 28px 60px;
+    min-height:100%;
+  }
+  .head{max-width:1180px;margin:0 auto 28px;}
+  .eyebrow{
+    font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--carreta);font-weight:700;margin-bottom:10px;
+  }
+  h1{font-size:30px;font-weight:700;letter-spacing:-.01em;line-height:1.15;text-wrap:balance;}
+  .sub{margin-top:10px;color:var(--ink-soft);font-size:15.5px;max-width:70ch;line-height:1.5;}
+
+  /* legend */
+  .legend{
+    max-width:1180px;margin:0 auto 22px;display:flex;flex-wrap:wrap;gap:10px 22px;
+    align-items:center;font-size:13.5px;color:var(--ink-soft);
+  }
+  .legend b{color:var(--ink);font-weight:600;}
+  .key{display:inline-flex;align-items:center;gap:8px;}
+  .swatch{width:30px;height:0;border-top:3px solid var(--carreta);border-radius:2px;}
+  .swatch.os{border-top-color:var(--os);}
+  .swatch.opt{border-top-style:dashed;border-top-color:var(--os);}
+  .card-mono{font-family:"Cascadia Code","Consolas",ui-monospace,monospace;}
+
+  /* scroll canvas */
+  .scroller{overflow-x:auto;padding-bottom:8px;}
+  .canvas{
+    position:relative;width:1200px;height:900px;margin:0 auto;
+  }
+  .canvas svg{position:absolute;inset:0;width:1200px;height:900px;z-index:0;overflow:visible;}
+
+  .node{
+    position:absolute;z-index:1;background:var(--surface);
+    border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 6px 18px -10px rgba(16,32,46,.35);
+    overflow:hidden;
+  }
+  .node header{
+    padding:9px 14px;color:#fff;background:var(--slate);
+    display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  }
+  .node header .nm{
+    font-family:"Cascadia Code","Consolas",ui-monospace,monospace;
+    font-size:14.5px;font-weight:700;letter-spacing:-.2px;
+  }
+  .node header .grao{font-size:10.5px;opacity:.82;letter-spacing:.02em;text-transform:lowercase;}
+  .node.dim header{background:var(--carreta);}
+  .node.wo header{background:var(--os);}
+  .rows{padding:7px 8px;display:flex;flex-direction:column;gap:1px;}
+  .row{
+    display:flex;align-items:center;gap:8px;padding:3.5px 7px;border-radius:6px;
+    font-family:"Cascadia Code","Consolas",ui-monospace,monospace;font-size:12.4px;
+    color:#243140;
+  }
+  .row .fname{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .row.k-carreta{background:var(--carreta-soft);}
+  .row.k-os{background:var(--os-soft);}
+  .tag{
+    font-family:"Segoe UI",system-ui,sans-serif;font-size:9px;font-weight:700;
+    letter-spacing:.06em;padding:1.5px 5px;border-radius:4px;line-height:1.4;
+  }
+  .tag.pk{background:var(--pk);color:#fff;}
+  .tag.fk{background:transparent;color:var(--carreta);border:1px solid var(--carreta);}
+  .tag.fk.os{color:var(--os);border-color:var(--os);}
+  .tag.fk.opt{opacity:.6;}
+  .count{
+    position:absolute;bottom:7px;right:11px;font-size:10px;color:var(--ink-soft);
+    font-family:"Cascadia Code","Consolas",ui-monospace,monospace;opacity:.7;
+  }
+
+  /* floating relationship label */
+  .rlabel{
+    position:absolute;z-index:2;transform:translate(-50%,-50%);
+    font-family:"Cascadia Code","Consolas",ui-monospace,monospace;
+    font-size:11px;font-weight:600;padding:2px 7px;border-radius:20px;
+    background:#fff;border:1px solid var(--line);white-space:nowrap;
+  }
+  .rlabel.c{color:var(--carreta);border-color:#eaccbb;}
+  .rlabel.o{color:var(--os);border-color:#bfe0e2;}
+
+  .notes{
+    max-width:1180px;margin:28px auto 0;display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;
+  }
+  .note{
+    background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px;font-size:13.5px;line-height:1.5;color:var(--ink-soft);
+  }
+  .note h3{font-size:13px;color:var(--ink);margin-bottom:7px;letter-spacing:.01em;}
+  .note code{font-family:"Cascadia Code","Consolas",ui-monospace,monospace;font-size:12px;color:var(--carreta);background:var(--carreta-soft);padding:1px 5px;border-radius:4px;}
+  .note code.os{color:var(--os);background:var(--os-soft);}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="head">
+    <div class="eyebrow">Quatro Norte · MBA Grupo 01 · Custo interno por km</div>
+    <h1>Modelo de dados — esquema estrela</h1>
+    <p class="sub">Uma dimensão de carretas no centro e seis fatos ao redor. Tudo se liga à <span class="card-mono">dim_carretas</span> por <b style="color:var(--carreta)">id_carreta</b>; as linhas da ordem de serviço se ligam ao <span class="card-mono">fato_wo</span> por <b style="color:var(--os)">id_os</b>. Janela 2020–2025.</p>
+  </div>
+
+  <div class="legend">
+    <span class="key"><span class="swatch"></span> <b>id_carreta</b> — liga cada fato à dimensão</span>
+    <span class="key"><span class="swatch os"></span> <b>id_os</b> — liga as linhas à ordem de serviço</span>
+    <span class="key"><span class="swatch opt"></span> id_os <i>opcional</i> (leitura feita numa OS)</span>
+    <span class="key" style="margin-left:auto"><span class="card-mono" style="color:var(--ink)">1 ──&lt; N</span> &nbsp;um-para-muitos</span>
+  </div>
+
+  <div class="scroller">
+  <div class="canvas">
+    <svg viewBox="0 0 1200 900" aria-hidden="true">
+      <defs>
+        <marker id="crowC" markerWidth="16" markerHeight="16" refX="13" refY="8" orient="auto">
+          <path d="M13,8 L2,2 M13,8 L2,8 M13,8 L2,14" stroke="var(--carreta)" fill="none" stroke-width="1.5"/>
+        </marker>
+        <marker id="crowO" markerWidth="16" markerHeight="16" refX="13" refY="8" orient="auto">
+          <path d="M13,8 L2,2 M13,8 L2,8 M13,8 L2,14" stroke="var(--os)" fill="none" stroke-width="1.5"/>
+        </marker>
+        <marker id="oneC" markerWidth="12" markerHeight="16" refX="4" refY="8" orient="auto">
+          <path d="M5,2 L5,14" stroke="var(--carreta)" stroke-width="1.8"/>
+        </marker>
+        <marker id="oneO" markerWidth="12" markerHeight="16" refX="4" refY="8" orient="auto">
+          <path d="M5,2 L5,14" stroke="var(--os)" stroke-width="1.8"/>
+        </marker>
+      </defs>
+
+      <!-- id_carreta : dim -> facts -->
+      <g fill="none" stroke="var(--carreta)" stroke-width="2" marker-start="url(#oneC)" marker-end="url(#crowC)">
+        <path d="M495,360 C420,250 360,180 292,150"/>            <!-- contratos -->
+        <path d="M470,455 C400,452 360,449 292,447"/>            <!-- gps -->
+        <path d="M495,560 C400,640 360,710 292,750"/>            <!-- readings -->
+        <path d="M730,415 C760,330 770,230 800,168"/>            <!-- wo -->
+        <path d="M730,495 C800,500 850,508 898,512"/>            <!-- labour -->
+        <path d="M650,590 C720,690 820,730 898,744"/>            <!-- parts -->
+      </g>
+
+      <!-- id_os : wo -> lines -->
+      <g fill="none" stroke="var(--os)" stroke-width="2" marker-start="url(#oneO)" marker-end="url(#crowO)">
+        <path d="M965,250 C1010,320 1030,370 1042,442"/>         <!-- labour -->
+        <path d="M935,250 C920,430 980,580 1030,662"/>           <!-- parts -->
+      </g>
+      <!-- id_os optional : wo -> readings -->
+      <g fill="none" stroke="var(--os)" stroke-width="1.7" stroke-dasharray="6 6" opacity="0.55" marker-end="url(#crowO)">
+        <path d="M800,205 C520,300 320,560 252,668"/>
+      </g>
+    </svg>
+
+    <!-- relationship labels -->
+    <div class="rlabel c" style="left:372px;top:230px;">id_carreta</div>
+    <div class="rlabel c" style="left:378px;top:438px;">id_carreta</div>
+    <div class="rlabel c" style="left:372px;top:670px;">id_carreta</div>
+    <div class="rlabel c" style="left:772px;top:300px;">id_carreta</div>
+    <div class="rlabel c" style="left:812px;top:498px;">id_carreta</div>
+    <div class="rlabel c" style="left:792px;top:700px;">id_carreta</div>
+    <div class="rlabel o" style="left:1024px;top:352px;">id_os</div>
+    <div class="rlabel o" style="left:940px;top:470px;">id_os</div>
+    <div class="rlabel o" style="left:470px;top:470px;display:none;"></div>
+    <div class="rlabel o" style="left:430px;top:512px;">id_os · opc.</div>
+
+    <!-- ================= NODES ================= -->
+
+    <!-- DIM (hub) -->
+    <div class="node dim" style="left:470px;top:355px;width:260px;height:250px;">
+      <header><span class="nm">dim_carretas</span><span class="grao">1 carreta</span></header>
+      <div class="rows">
+        <div class="row k-carreta"><span class="fname">id_carreta</span><span class="tag pk">PK</span></div>
+        <div class="row"><span class="fname">cod_montadora / cod_modelo</span></div>
+        <div class="row"><span class="fname">ano_modelo</span></div>
+        <div class="row"><span class="fname">data_entrada_servico</span></div>
+        <div class="row"><span class="fname">eixos · comprimento</span></div>
+        <div class="row"><span class="fname">flag_refrigerado</span></div>
+        <div class="row"><span class="fname">classe · grupo_manutencao</span></div>
+      </div>
+      <span class="count">≈ 10.412 linhas</span>
+    </div>
+
+    <!-- CONTRATOS -->
+    <div class="node" style="left:40px;top:50px;width:252px;height:188px;">
+      <header><span class="nm">fato_contratos</span><span class="grao">1 carreta-contrato</span></header>
+      <div class="rows">
+        <div class="row"><span class="fname">id_contrato_carreta</span><span class="tag pk">PK</span></div>
+        <div class="row k-carreta"><span class="fname">id_carreta</span><span class="tag fk">FK</span></div>
+        <div class="row"><span class="fname">tipo_contrato · tipo_manutencao</span></div>
+        <div class="row"><span class="fname">data_inicio · data_fim</span></div>
+        <div class="row"><span class="fname">franquia_km_mensal</span></div>
+      </div>
+      <span class="count">≈ 32.232</span>
+    </div>
+
+    <!-- GPS -->
+    <div class="node" style="left:40px;top:365px;width:252px;height:165px;">
+      <header><span class="nm">fato_gps</span><span class="grao">1 ponto / dia</span></header>
+      <div class="rows">
+        <div class="row k-carreta"><span class="fname">id_carreta</span><span class="tag fk">FK</span></div>
+        <div class="row"><span class="fname">id_beacon</span></div>
+        <div class="row"><span class="fname">data_hora_gps</span></div>
+        <div class="row"><span class="fname">latitude · longitude</span></div>
+        <div class="row"><span class="fname">velocidade</span></div>
+      </div>
+      <span class="count">≈ 227.795</span>
+    </div>
+
+    <!-- READINGS -->
+    <div class="node" style="left:40px;top:670px;width:252px;height:185px;">
+      <header><span class="nm">fato_readings</span><span class="grao">1 leitura de odômetro</span></header>
+      <div class="rows">
+        <div class="row"><span class="fname">id_leitura</span><span class="tag pk">PK</span></div>
+        <div class="row k-carreta"><span class="fname">id_carreta</span><span class="tag fk">FK</span></div>
+        <div class="row"><span class="fname">data_leitura</span></div>
+        <div class="row"><span class="fname">km_acumulado</span></div>
+        <div class="row"><span class="fname">km_reset_em · km_reset_para</span></div>
+        <div class="row k-os"><span class="fname">id_os</span><span class="tag fk os opt">FK?</span></div>
+      </div>
+      <span class="count">≈ 290.535</span>
+    </div>
+
+    <!-- WO (secondary hub) -->
+    <div class="node wo" style="left:800px;top:60px;width:290px;height:198px;">
+      <header><span class="nm">fato_wo</span><span class="grao">1 ordem de serviço</span></header>
+      <div class="rows">
+        <div class="row k-os"><span class="fname">id_os</span><span class="tag pk">PK</span></div>
+        <div class="row k-carreta"><span class="fname">id_carreta</span><span class="tag fk">FK</span></div>
+        <div class="row"><span class="fname">data_os · numero_os</span></div>
+        <div class="row"><span class="fname">total_interno_mao_obra</span></div>
+        <div class="row"><span class="fname">total_interno_pecas</span></div>
+        <div class="row"><span class="fname">provincia_estado · local_os</span></div>
+      </div>
+      <span class="count">≈ 383.810</span>
+    </div>
+
+    <!-- LABOUR -->
+    <div class="node" style="left:900px;top:430px;width:285px;height:168px;">
+      <header><span class="nm">fato_wo_labour</span><span class="grao">1 linha de mão de obra</span></header>
+      <div class="rows">
+        <div class="row"><span class="fname">id_linha_mao_obra</span><span class="tag pk">PK</span></div>
+        <div class="row k-os"><span class="fname">id_os</span><span class="tag fk os">FK</span></div>
+        <div class="row k-carreta"><span class="fname">id_carreta</span><span class="tag fk">FK</span></div>
+        <div class="row"><span class="fname">custo_interno_mao_obra</span></div>
+        <div class="row"><span class="fname">sistema_vmrs · flag_terceirizado</span></div>
+      </div>
+      <span class="count">≈ 759.813</span>
+    </div>
+
+    <!-- PARTS -->
+    <div class="node" style="left:900px;top:660px;width:285px;height:178px;">
+      <header><span class="nm">fato_wo_parts</span><span class="grao">1 linha de peça</span></header>
+      <div class="rows">
+        <div class="row"><span class="fname">id_linha_peca</span><span class="tag pk">PK</span></div>
+        <div class="row k-os"><span class="fname">id_os</span><span class="tag fk os">FK</span></div>
+        <div class="row k-carreta"><span class="fname">id_carreta</span><span class="tag fk">FK</span></div>
+        <div class="row"><span class="fname">custo_interno_peca</span></div>
+        <div class="row"><span class="fname">descricao_peca · flag_garantia</span></div>
+      </div>
+      <span class="count">≈ 738.754</span>
+    </div>
+
+  </div>
+  </div>
+
+  <div class="notes">
+    <div class="note">
+      <h3>A chave universal</h3>
+      <code>id_carreta</code> aparece em <b>todos</b> os arquivos e liga cada fato à dimensão. É o ponto de partida de qualquer junção.
+    </div>
+    <div class="note">
+      <h3>O sub-hub da OS</h3>
+      <code class="os">id_os</code> liga <span class="card-mono">fato_wo_labour</span> e <span class="card-mono">fato_wo_parts</span> ao cabeçalho <span class="card-mono">fato_wo</span>. As peças, na origem, pendem de uma linha de mão de obra; no CSV isso é resumido por <code class="os">id_os</code>.
+    </div>
+    <div class="note">
+      <h3>Contrato é por período</h3>
+      Uma carreta tem vários contratos ao longo do tempo. A junção usa <code>id_carreta</code> <b>e</b> a data: a OS/leitura cai no contrato cujo intervalo <span class="card-mono">data_inicio–data_fim</span> contém a data do evento.
+    </div>
+    <div class="note">
+      <h3>O alvo: custo por km</h3>
+      Custo da OS = <span class="card-mono">mão_obra + peças</span> → agregar por carreta × mês → dividir pelo Δ de <span class="card-mono">km_acumulado</span> no mês (tratando resets de odômetro).
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
