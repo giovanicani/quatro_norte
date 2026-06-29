@@ -1,0 +1,2 @@
+modelo_recomendado,criterio,alvo,populacao,pipeline_direto_disponivel,rmse,mae,r2
+random_forest,menor RMSE no conjunto de teste temporal da populacao MAINT,custo_manutencao_preventiva_por_km_deflacionado,tipo_manutencao = MAINT; km_rodado_mes >= piso metodologico,True,0.09615201451298178,0.04643441132707797,0.06298653527219766

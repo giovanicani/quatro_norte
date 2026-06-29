@@ -1,0 +1,16 @@
+checagem,valor
+linhas_base,749664.0
+carretas,10412.0
+meses,72.0
+km_rodado_mes_negativo,0.0
+alvo_interno_calculado_abaixo_piso_km,0.0
+alvo_preventivo_calculado_abaixo_piso_km,0.0
+alvo_mao_obra_preventiva_calculado_abaixo_piso_km,0.0
+observacoes_com_alvo_preventivo,352066.0
+observacoes_com_alvo_mao_obra_preventiva,352066.0
+share_zero_preventivo_com_km_valido,0.8049655462328086
+meses_desde_ultima_os_zero,0.0
+km_acumulado_defasado_valores_validos,591923.0
+soma_custo_base,78996520.64
+soma_custo_fato_wo_filtrado,78996520.63999999
+soma_custo_preventivo,24833687.14

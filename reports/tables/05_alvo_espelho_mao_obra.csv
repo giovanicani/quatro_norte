@@ -1,0 +1,3 @@
+alvo,descricao,modelo,observacoes_teste,share_zero_teste,r2,rmse,mae,delta_r2_vs_total,delta_rmse_vs_total
+custo_manutencao_preventiva_por_km_deflacionado,custo preventivo total por km: mao de obra preventiva + pecas de OS com linha preventiva,random_forest,52372,0.7842740395631254,0.06298653527219766,0.09615201451298178,0.04643441132707797,0.0,0.0
+custo_preventivo_mao_obra_por_km_deflacionado,alvo-espelho mais limpo: apenas mao de obra preventiva atribuivel por linha VMRS,random_forest,51727,0.7947106926750053,0.08189650186552544,0.021751666694599252,0.012190420198192048,0.018909966593327776,-0.07440034781838252

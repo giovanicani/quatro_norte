@@ -1,0 +1,9 @@
+tema,regra
+janela temporal,manter eventos de OS com DATA_OS < 2026-01-01
+odometro,"usar delta entre leituras consecutivas, remover deltas invalidos e prorratear KM entre meses-calendario"
+piso de quilometragem,calcular alvos por km apenas para meses com km_rodado_mes >= 500
+alvo preventivo,classificar OS preventiva por linha de mao de obra VMRS PM/PREVENTIVE; pecas entram como preventivas quando a OS tem linha preventiva
+zero manutencao,"manter meses com km valido e custo preventivo zero, pois representam custo esperado mensal para orcamento"
+custos negativos,preservar no diagnostico; excluir alvo negativo apenas na modelagem preditiva
+tipo_manutencao,usar MAINT como populacao principal da modelagem e tratar NET/MIX como segmentos/caveats
+contratos,ligar por ID_CARRETA e mes vigente dentro de DATA_INICIO e DATA_FIM

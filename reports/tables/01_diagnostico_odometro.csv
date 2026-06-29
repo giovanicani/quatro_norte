@@ -1,0 +1,9 @@
+metrica,valor
+leituras,290535.0
+carretas,10412.0
+km_acumulado_nulo,0.0
+km_acumulado_negativo,0.0
+leituras_com_reset,2505.0
+delta_km_negativo,2443.0
+delta_km_acima_limite,278.0
+limite_delta_km_usado,109592.39700000855

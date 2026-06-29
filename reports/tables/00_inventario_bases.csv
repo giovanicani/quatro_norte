@@ -1,0 +1,8 @@
+base,linhas,colunas,grao,carretas_distintas,chave_primaria,pk_distintas,pk_duplicadas,data_entrada_servico_min,data_entrada_servico_max,data_entrada_servico_nulos,data_inicio_min,data_inicio_max,data_inicio_nulos,data_fim_min,data_fim_max,data_fim_nulos,data_hora_gps_min,data_hora_gps_max,data_hora_gps_nulos,data_leitura_min,data_leitura_max,data_leitura_nulos,data_os_min,data_os_max,data_os_nulos
+dim_carretas,10412,18,uma carreta,10412,ID_CARRETA,10412.0,0.0,1993-01-01,2024-09-24,5006.0,,,,,,,,,,,,,,,
+fato_contratos,32232,10,uma carreta-contrato,10349,ID_CONTRATO_CARRETA,32232.0,0.0,,,,2005-05-12,2026-04-14 13:43:00,2.0,2015-01-01 09:19:33,2026-03-31 22:14:00,9895.0,,,,,,,,,
+fato_gps,227795,7,um ponto GPS por carreta/dia,2569,,,,,,,,,,,,,2025-09-30 21:01:32,2025-12-31 23:58:35,0.0,,,,,,
+fato_readings,290535,8,uma leitura de odometro,10412,ID_LEITURA,290535.0,0.0,,,,,,,,,,,,,2020-01-01 07:00:23,2025-12-31 21:23:54,0.0,,,
+fato_wo,238818,12,uma ordem de servico,9860,ID_OS,238818.0,0.0,,,,,,,,,,,,,,,,2020-01-01 09:15:10,2026-01-01 02:44:00,0.0
+fato_wo_labour,759813,12,uma linha de mao de obra,9857,ID_LINHA_MAO_OBRA,759813.0,0.0,,,,,,,,,,,,,,,,2020-01-01 09:15:10,2026-01-01 02:44:00,0.0
+fato_wo_parts,738754,13,uma linha de peca,9728,ID_LINHA_PECA,738754.0,0.0,,,,,,,,,,,,,,,,2020-01-01 12:31:00,2026-01-01 00:23:00,0.0

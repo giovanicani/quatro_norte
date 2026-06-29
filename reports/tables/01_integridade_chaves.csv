@@ -1,0 +1,8 @@
+base,linhas,ids_carreta_fora_dim,pk,pk_nulos,pk_duplicadas,id_os_fora_fato_wo
+dim_carretas,10412,0,id_carreta,0.0,0.0,
+fato_wo,238818,0,id_os,0.0,0.0,
+fato_wo_labour,759813,0,id_linha_mao_obra,0.0,0.0,0.0
+fato_wo_parts,738754,0,id_linha_peca,0.0,0.0,0.0
+fato_readings,290535,0,id_leitura,0.0,0.0,
+fato_contratos,32232,0,id_contrato_carreta,0.0,0.0,
+fato_gps,227795,0,,,,
