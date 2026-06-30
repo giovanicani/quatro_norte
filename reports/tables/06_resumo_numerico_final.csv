@@ -1,0 +1,13 @@
+indicador,valor
+carretas na base,10412
+observacoes mensais,749664
+observacoes MAINT com alvo preventivo valido,332756
+share zero preventivo na populacao modelada,0.7977857649448845
+custo preventivo/km deflacionado mediano,0.0
+custo preventivo/km deflacionado medio,0.03276011629022342
+modelo recomendado,random_forest
+RMSE teste,0.0961520145129817
+MAE teste,0.0464344113270779
+AUC hurdle ocorrencia,0.6801236184443444
+average precision hurdle ocorrencia,0.3325346069878774
+R2 alvo espelho mao obra,0.0818965018655254

@@ -1,0 +1,7 @@
+hipotese,evidencia,status
+Contratos de maior duracao tendem a maior custo por km,Ocorrencia: Spearman = 0.029; magnitude positiva: Spearman duracao vs custo/km = -0.038,nao suportada nesta EDA
+Carretas mais antigas tendem a ter maior custo por km,Ocorrencia: Spearman = -0.068; spread de taxa por quintil = 0.094; magnitude positiva: Spearman idade vs custo/km = 0.354,suportada
+Maior quilometragem mensal esta associada ao custo absoluto,Spearman km_rodado_mes vs custo_preventivo_total_mes = 0.079; ocorrencia = 0.081; custo/km positivo = -0.572 (relacao mecanica com denominador),nao suportada nesta EDA
+Historico de manutencoes ajuda a prever custo futuro,"Maior |Spearman| entre proxies historicos = 0.261; principais proxies: intervalo_medio_os: ocorrencia=-0.141, magnitude=0.261; custo_preventivo_medio_movel_3m: ocorrencia=-0.123, magnitude=-0.205; meses_desde_ultima_os: ocorrencia=0.050, magnitude=0.193; custo_medio_movel_3m: ocorrencia=-0.046, magnitude=-0.172",parcialmente suportada
+Caracteristicas contratuais influenciam o custo,"Razao media por tipo_contrato em MAINT = 1.50; mediana positiva = 1.99; tipo_manutencao na base completa e caveat estrutural NET/MIX, nao tamanho de efeito (25.93)",parcialmente suportada
+Componentes/sistemas concentram parte relevante do custo,Top 5 sistemas VMRS representam 64.0% do custo de mao de obra,suportada

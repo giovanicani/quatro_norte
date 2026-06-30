@@ -1,7 +1,17 @@
+# SO / ambiente
 .DS_Store
 .env
 .venv/
 __pycache__/
 *.py[cod]
 
+# Dados pesados - nao versionar (regenerados pela extracao SQL / notebooks)
+# Brutos (~300 MB no total) e bases processadas (>100 MB cada, bloqueadas pelo GitHub)
+data/raw/*.csv
+data/processed/*.csv
+# manter as pastas no repositorio
+!data/raw/.gitkeep
+!data/processed/.gitkeep
 
+# Backups e temporarios
+*.bak

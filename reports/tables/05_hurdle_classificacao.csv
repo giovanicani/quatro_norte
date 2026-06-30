@@ -1,0 +1,2 @@
+modelo,roc_auc,average_precision,brier_score,precision_threshold_0_5,recall_threshold_0_5,f1_threshold_0_5,share_positivo_teste,share_positivo_predito_0_5
+hurdle_sgd_classifier,0.6801236184443444,0.3325346069878774,0.20919877748445495,0.3336813760509974,0.5374402549123739,0.4117308018308188,0.21572596043687467,0.34745665622851907

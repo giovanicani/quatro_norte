@@ -1,0 +1,21 @@
+campo,descricao
+id_carreta,Identificador da carreta
+ano_mes,Mes de referencia da observacao
+custo_total_mes,Custo interno total de manutencao no mes
+custo_preventivo_total_mes,Custo preventivo aproximado: mao de obra VMRS PM/PREVENTIVE + pecas de OS preventiva
+custo_preventivo_mao_obra_mes,Custo de mao de obra preventiva atribuivel diretamente por linha VMRS PM/PREVENTIVE
+km_rodado_mes,Quilometragem mensal prorrateada a partir de intervalos entre leituras tratadas
+km_acumulado,"Odometro acumulado defasado ate o mes anterior, para evitar uso de leitura do mes corrente"
+km_acumulado_fim_mes,"Odometro maximo observado no mes corrente; mantido para auditoria, nao usado como feature preditiva"
+km_valido_modelagem_flag,"1 quando km_rodado_mes >= 500, piso usado para alvos por km"
+custo_manutencao_preventiva_por_km,"Variavel-alvo primaria nominal: custo_preventivo_total_mes / km_rodado_mes, com piso de km"
+custo_preventivo_mao_obra_por_km,"Alvo-espelho nominal mais limpo: mao de obra preventiva / km_rodado_mes, com piso de km"
+custo_manutencao_interno_por_km,"Alvo secundario nominal: custo_total_mes / km_rodado_mes, com piso de km"
+custo_acum_manutencao,Custo historico acumulado ate o mes anterior
+custo_preventivo_acum,Custo preventivo historico acumulado ate o mes anterior
+n_os_acum,Quantidade historica de OS ate o mes anterior
+n_os_preventivas_acum,Quantidade historica de OS preventivas ate o mes anterior
+intervalo_medio_os,"Intervalo medio historico entre OS, defasado"
+duracao_contrato_meses,Duracao observada/esperada do contrato vigente em meses
+prop_pecas_garantia,Proporcao de linhas de pecas em garantia no mes
+regiao_operacao,"Regiao aproximada por provincia/estado ou local da OS, carregada para frente por carreta"

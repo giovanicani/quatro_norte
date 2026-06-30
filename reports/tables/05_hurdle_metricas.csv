@@ -1,0 +1,2 @@
+modelo,avaliacao,elegivel_recomendacao,r2,rmse,mae
+hurdle_sgd_gb,teste_temporal_completo,True,-0.03956344398034917,0.10127703339097371,0.06356718816949003

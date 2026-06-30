@@ -1,0 +1,8 @@
+tema,recomendacao
+orcamento de manutencao,"usar previsao mensal por carreta como apoio ao planejamento financeiro, comunicando desempenho preditivo modesto e alta proporcao de meses sem custo"
+zero-inflacao,"usar a probabilidade de ocorrencia do hurdle como sinal complementar de priorizacao, comunicando que o desempenho e moderado apos remover vazamento temporal"
+gestao de frota,"monitorar perfis com maior probabilidade prevista de custo preventivo e maior erro historico, usando os fatores recalculados do modelo como priorizacao"
+contratos,"comparar custo preventivo previsto por km com franquia, duracao e tipo de contrato; tratar NET/MIX separadamente de MAINT"
+manutencao preventiva,priorizar investigacao dos sistemas VMRS com maior concentracao de custo de mao de obra
+dados,preservar no extrato o vinculo peca-linha de mao de obra para reduzir ruido nas pecas preventivas; ampliar cobertura historica de GPS
+modelagem futura,"avaliar Mixed-Effects Random Forest/MERF, modelos hierarquicos e alternativas zero-infladas para representar efeito-carreta e ocorrencia de custo"

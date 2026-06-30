@@ -1,0 +1,9 @@
+risco,evidencia,tratamento_planejado
+GPS com cobertura parcial,"2025-09-30 21:01:32 a 2025-12-31 23:58:35, 2569 carretas","usar como analise complementar, nao como feature central para todo o historico"
+OS fora da janela declarada,3 registros com DATA_OS >= 2026-01-01,filtrar na base analitica mensal
+Custos negativos e zerados,185 OS com algum custo negativo,analisar como ajustes/estornos e filtrar apenas na modelagem se necessario
+Resets de odometro,2505 leituras com campos de reset,tratar deltas negativos ou anormais antes de calcular km do periodo
+Variavel-alvo ausente,nao ha coluna pronta de custo por km nos CSVs brutos,derivar custo por km no grao carreta x mes
+Alvo preventivo diferente de custo interno total,127684 linhas de mao de obra classificadas como preventivas por VMRS PM/PREVENTIVE,criar alvo primario custo_manutencao_preventiva_por_km e manter custo interno total como sensibilidade
+Tipo de manutencao contratual como confundidor,MAINT/NET/MIX alteram a responsabilidade economica sobre manutencao,usar MAINT como populacao principal de modelagem e reportar NET/MIX como segmentos/caveats
+Meses com baixa quilometragem distorcem razoes custo/km,piso metodologico definido: 500 km/mes,calcular alvos por km apenas para meses com km_rodado_mes >= piso
