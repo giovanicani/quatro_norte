@@ -11,7 +11,7 @@
 --   labour = CASE sublet_flag='Y' -> total_sublet ; senao cost_hours * hourly_cost
 --   parts  = CASE labour.sublet_flag='Y' -> parts.total_sublet ; senao nvl(item_average_cost,item_cost) * actual_qty
 --
--- Gera 7 CSVs em data/raw/. Executar com SQLcl:  sql user/pass@db @data/extract_custo_interno_km.sql
+-- Gera 8 CSVs em data/raw/. Executar com SQLcl:  sql user/pass@db @data/extract_custo_interno_km.sql
 -- SOMENTE LEITURA.
 -- ============================================================================
 
@@ -177,7 +177,126 @@ SELECT w.worord_id        AS id_os,
 SPOOL OFF
 
 -- ----------------------------------------------------------------------------
--- 4) fato_wo_labour  (mao de obra interna; internal_labour_cost = cost_hours*hourly_cost)
+-- 4) fato_wo_ml  (fato_wo enriquecido com atributos da unidade para modelagem)
+-- ----------------------------------------------------------------------------
+PROMPT Exporting fato_wo_ml
+SPOOL data/raw/fato_wo_ml_2020-01-01_to_2025-12-31.csv
+
+WITH frota AS (
+    SELECT u.uni_id,
+           u.description     AS descricao_carreta,
+           mk.code           AS cod_montadora,
+           md.code           AS cod_modelo,
+           u.year            AS ano_modelo,
+           u.in_service_date AS data_entrada_servico,
+           u.axles           AS eixos,
+           u.length          AS comprimento,
+           CASE WHEN u.uni_id_reefer IS NOT NULL THEN 'Y' ELSE 'N' END AS flag_refrigerado
+      FROM ym_units u
+      LEFT JOIN ym_unit_makes mk   ON mk.unimak_id = u.unimak_id
+      LEFT JOIN rla_unit_models md ON md.unimod_id = u.unimod_id
+     WHERE u.cus_id_owner = 4
+       AND u.active_flag = 'Y'
+       AND EXISTS (SELECT 1 FROM rep_unit_readings r
+                    WHERE r.uni_id = u.uni_id
+                      AND r.reading_uom = 'KM' AND r.void_flag = 'N'
+                      AND r.reading_date >= DATE '2020-01-01'
+                      AND r.reading_date <  DATE '2026-01-01')
+)
+SELECT w.worord_id        AS id_os,
+       w.uni_id           AS id_carreta,
+       f.descricao_carreta,
+       f.cod_montadora,
+       f.cod_modelo,
+       f.ano_modelo,
+       f.data_entrada_servico,
+       f.eixos,
+       TO_CHAR(f.comprimento, 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS comprimento,
+       f.flag_refrigerado,
+       w.wo_number        AS numero_os,
+       CAST(w.wo_date AS DATE)        AS data_os,
+       TO_CHAR(
+           bi_auxiliary_pkg.unit_actual_reading(
+               p_uni_id      => w.uni_id,
+               p_reading_uom => 'KM',
+               p_from_date   => TO_DATE('01011980', 'MMDDYYYY'),
+               p_to_date     => w.wo_date,
+               p_data_type   => 'TOTAL'
+           ),
+           'TM9',
+           'NLS_NUMERIC_CHARACTERS=''.,'''
+       ) AS km_acumulado_data_os,
+       TO_CHAR(
+           bi_auxiliary_pkg.unit_actual_reading(
+               p_uni_id      => w.uni_id,
+               p_reading_uom => 'KM',
+               p_from_date   => TO_DATE('01011980', 'MMDDYYYY'),
+               p_to_date     => w.wo_date,
+               p_data_type   => 'TOTAL'
+           )
+           -
+           LAG(bi_auxiliary_pkg.unit_actual_reading(
+               p_uni_id      => w.uni_id,
+               p_reading_uom => 'KM',
+               p_from_date   => TO_DATE('01011980', 'MMDDYYYY'),
+               p_to_date     => w.wo_date,
+               p_data_type   => 'TOTAL'
+           )) OVER (PARTITION BY w.uni_id ORDER BY w.wo_date, w.worord_id),
+           'TM9',
+           'NLS_NUMERIC_CHARACTERS=''.,'''
+       ) AS delta_km_desde_ultima_os,
+       w.repair_request   AS solicitacao_reparo,
+       loc.code           AS cod_local_os,
+       w.wo_location      AS endereco_os,
+       ps.code            AS cod_provincia_estado,
+       ps.name            AS provincia_estado,
+       TO_CHAR(
+           (SELECT nvl(round(SUM(CASE WHEN l.sublet_flag = 'Y'
+                                      THEN nvl(l.total_sublet, 0)
+                                      ELSE nvl(l.cost_hours, 0) * nvl(l.hourly_cost, 0)
+                                 END), 2), 0)
+              FROM rep_work_order_labour l
+             WHERE l.worord_id = w.worord_id
+               AND l.charge_flag = 'I'
+               AND l.deleted_flag = 'N')
+           +
+           (SELECT nvl(round(SUM(CASE WHEN l.sublet_flag = 'Y'
+                                      THEN nvl(p.total_sublet, 0)
+                                      ELSE nvl(nvl(p.item_average_cost, p.item_cost), 0) * nvl(p.actual_qty, 0)
+                                 END), 2), 0)
+              FROM rep_work_order_parts p
+              JOIN rep_work_order_labour l ON l.worordlab_id = p.worordlab_id
+             WHERE l.worord_id = w.worord_id
+               AND p.charge_flag = 'I'
+               AND p.deleted_flag = 'N'),
+           'TM9',
+           'NLS_NUMERIC_CHARACTERS=''.,'''
+       ) AS total_custo_interno
+  FROM rep_work_orders w
+  JOIN frota f ON f.uni_id = w.uni_id
+  LEFT JOIN rla_locations loc       ON loc.loc_id = w.loc_id
+  LEFT JOIN adm_province_states ps  ON ps.prosta_id = w.prosta_id_repair
+ WHERE w.void_date IS NULL
+   AND w.approved_date IS NOT NULL
+   AND w.completed_date IS NOT NULL
+   AND w.wo_date >= DATE '2020-01-01'
+   AND w.wo_date <  DATE '2026-01-01'
+   AND (EXISTS (SELECT 1
+                  FROM rep_work_order_labour l
+                 WHERE l.worord_id = w.worord_id
+                   AND l.charge_flag = 'I'
+                   AND l.deleted_flag = 'N')
+     OR EXISTS (SELECT 1
+                  FROM rep_work_order_parts p
+                  JOIN rep_work_order_labour l ON l.worordlab_id = p.worordlab_id
+                 WHERE l.worord_id = w.worord_id
+                   AND p.charge_flag = 'I'
+                   AND p.deleted_flag = 'N'));
+
+SPOOL OFF
+
+-- ----------------------------------------------------------------------------
+-- 5) fato_wo_labour  (mao de obra interna; internal_labour_cost = cost_hours*hourly_cost)
 -- ----------------------------------------------------------------------------
 PROMPT Exporting fato_wo_labour
 SPOOL data/raw/fato_wo_labour_2020-01-01_to_2025-12-31.csv
@@ -225,7 +344,7 @@ SELECT l.worordlab_id     AS id_linha_mao_obra,
 SPOOL OFF
 
 -- ----------------------------------------------------------------------------
--- 5) fato_wo_parts  (pecas internas; internal_part_cost = nvl(item_average_cost,item_cost)*actual_qty)
+-- 6) fato_wo_parts  (pecas internas; internal_part_cost = nvl(item_average_cost,item_cost)*actual_qty)
 -- ----------------------------------------------------------------------------
 PROMPT Exporting fato_wo_parts
 SPOOL data/raw/fato_wo_parts_2020-01-01_to_2025-12-31.csv
@@ -273,7 +392,7 @@ SELECT p.worordpar_id      AS id_linha_peca,
 SPOOL OFF
 
 -- ----------------------------------------------------------------------------
--- 6) fato_contratos  (contratos de leasing/rental por carreta)
+-- 7) fato_contratos  (contratos de leasing/rental por carreta)
 -- ----------------------------------------------------------------------------
 PROMPT Exporting fato_contratos
 SPOOL data/raw/fato_contratos_2020-01-01_to_2025-12-31.csv
@@ -308,7 +427,7 @@ SELECT lra.learenass_id           AS id_contrato_carreta,
 SPOOL OFF
 
 -- ----------------------------------------------------------------------------
--- 7) fato_gps  (posicoes GPS bewhere -- 1 ponto por carreta por dia)
+-- 8) fato_gps  (posicoes GPS bewhere -- 1 ponto por carreta por dia)
 --    Ligacao: ym_units.bewbea_id = tlm_bewhere_beacon_activity.id (id do beacon)
 --    TIMESTAMP e epoch Unix -> convertido por system_functions_pkg.unix_time_to_timestamp.
 --    Mantem o ULTIMO ponto de cada dia (ROW_NUMBER por carreta+dia, timestamp desc).

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Modelo de Dados — Quatro Norte</title>
-<meta name="description" content="Diagrama do modelo estrela: dim_carretas e os 6 fatos de custo interno por km, com chaves de junção id_carreta e id_os.">
+<meta name="description" content="Diagrama do modelo estrela: dim_carretas, fatos de custo interno por km e fato_wo_ml para modelagem, com chaves de junção id_carreta e id_os.">
 <style>
   :root{
     --ground:#e9edf2;
@@ -125,7 +125,7 @@
   <div class="head">
     <div class="eyebrow">Quatro Norte · MBA Grupo 01 · Custo interno por km</div>
     <h1>Modelo de dados — esquema estrela</h1>
-    <p class="sub">Uma dimensão de carretas no centro e seis fatos ao redor. Tudo se liga à <span class="card-mono">dim_carretas</span> por <b style="color:var(--carreta)">id_carreta</b>; as linhas da ordem de serviço se ligam ao <span class="card-mono">fato_wo</span> por <b style="color:var(--os)">id_os</b>. Janela 2020–2025.</p>
+    <p class="sub">Uma dimensão de carretas no centro, fatos normalizados ao redor e uma base enriquecida para ML (<span class="card-mono">fato_wo_ml</span>). Tudo se liga à <span class="card-mono">dim_carretas</span> por <b style="color:var(--carreta)">id_carreta</b>; as linhas da ordem de serviço se ligam ao <span class="card-mono">fato_wo</span> por <b style="color:var(--os)">id_os</b>. O alvo atual cobre todas as manutenções internalizadas, preventivas e corretivas. Janela 2020–2025.</p>
   </div>
 
   <div class="legend">
@@ -158,6 +158,7 @@
         <path d="M495,360 C420,250 360,180 292,150"/>            <!-- contratos -->
         <path d="M470,455 C400,452 360,449 292,447"/>            <!-- gps -->
         <path d="M495,560 C400,640 360,710 292,750"/>            <!-- readings -->
+        <path d="M600,355 C600,325 600,300 600,276"/>            <!-- wo_ml -->
         <path d="M730,415 C760,330 770,230 800,168"/>            <!-- wo -->
         <path d="M730,495 C800,500 850,508 898,512"/>            <!-- labour -->
         <path d="M650,590 C720,690 820,730 898,744"/>            <!-- parts -->
@@ -167,6 +168,7 @@
       <g fill="none" stroke="var(--os)" stroke-width="2" marker-start="url(#oneO)" marker-end="url(#crowO)">
         <path d="M965,250 C1010,320 1030,370 1042,442"/>         <!-- labour -->
         <path d="M935,250 C920,430 980,580 1030,662"/>           <!-- parts -->
+        <path d="M800,158 C770,158 755,158 730,158"/>             <!-- wo_ml -->
       </g>
       <!-- id_os optional : wo -> readings -->
       <g fill="none" stroke="var(--os)" stroke-width="1.7" stroke-dasharray="6 6" opacity="0.55" marker-end="url(#crowO)">
@@ -178,11 +180,13 @@
     <div class="rlabel c" style="left:372px;top:230px;">id_carreta</div>
     <div class="rlabel c" style="left:378px;top:438px;">id_carreta</div>
     <div class="rlabel c" style="left:372px;top:670px;">id_carreta</div>
+    <div class="rlabel c" style="left:600px;top:315px;">id_carreta</div>
     <div class="rlabel c" style="left:772px;top:300px;">id_carreta</div>
     <div class="rlabel c" style="left:812px;top:498px;">id_carreta</div>
     <div class="rlabel c" style="left:792px;top:700px;">id_carreta</div>
     <div class="rlabel o" style="left:1024px;top:352px;">id_os</div>
     <div class="rlabel o" style="left:940px;top:470px;">id_os</div>
+    <div class="rlabel o" style="left:765px;top:158px;">id_os</div>
     <div class="rlabel o" style="left:470px;top:470px;display:none;"></div>
     <div class="rlabel o" style="left:430px;top:512px;">id_os · opc.</div>
 
@@ -214,6 +218,21 @@
         <div class="row"><span class="fname">franquia_km_mensal</span></div>
       </div>
       <span class="count">≈ 32.232</span>
+    </div>
+
+    <!-- WO ML -->
+    <div class="node wo" style="left:470px;top:60px;width:260px;height:216px;">
+      <header><span class="nm">fato_wo_ml</span><span class="grao">1 OS para ML</span></header>
+      <div class="rows">
+        <div class="row k-os"><span class="fname">id_os</span><span class="tag pk">PK</span></div>
+        <div class="row k-carreta"><span class="fname">id_carreta</span><span class="tag fk">FK</span></div>
+        <div class="row"><span class="fname">descricao · montadora · modelo</span></div>
+        <div class="row"><span class="fname">ano_modelo · eixos · reefer</span></div>
+        <div class="row"><span class="fname">km_acumulado_data_os</span></div>
+        <div class="row"><span class="fname">delta_km_desde_ultima_os</span></div>
+        <div class="row"><span class="fname">total_custo_interno</span></div>
+      </div>
+      <span class="count">base ML</span>
     </div>
 
     <!-- GPS -->
@@ -296,12 +315,16 @@
       <code class="os">id_os</code> liga <span class="card-mono">fato_wo_labour</span> e <span class="card-mono">fato_wo_parts</span> ao cabeçalho <span class="card-mono">fato_wo</span>. As peças, na origem, pendem de uma linha de mão de obra; no CSV isso é resumido por <code class="os">id_os</code>.
     </div>
     <div class="note">
+      <h3>Base para ML</h3>
+      <span class="card-mono">fato_wo_ml</span> mantém 1 linha por OS, adiciona atributos da carreta, KM acumulado na data da OS, delta de KM desde a OS anterior e <span class="card-mono">total_custo_interno</span>.
+    </div>
+    <div class="note">
       <h3>Contrato é por período</h3>
       Uma carreta tem vários contratos ao longo do tempo. A junção usa <code>id_carreta</code> <b>e</b> a data: a OS/leitura cai no contrato cujo intervalo <span class="card-mono">data_inicio–data_fim</span> contém a data do evento.
     </div>
     <div class="note">
       <h3>O alvo: custo por km</h3>
-      Custo da OS = <span class="card-mono">mão_obra + peças</span> → agregar por carreta × mês → dividir pelo Δ de <span class="card-mono">km_acumulado</span> no mês (tratando resets de odômetro).
+      Custo da OS = <span class="card-mono">total_custo_interno</span> → agregar por carreta × mês → dividir pelo Δ de <span class="card-mono">km_acumulado</span>. O escopo inclui manutenções preventivas e corretivas internalizadas.
     </div>
   </div>
 </div>
