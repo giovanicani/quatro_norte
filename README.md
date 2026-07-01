@@ -5,8 +5,12 @@ ciencia de dados aplicada a uma operacao de leasing de carretas.
 
 O objetivo e analisar dados historicos de manutencao, contratos,
 quilometragem, garantias, pecas e telemetria para identificar os fatores que
-mais influenciam o custo de manutencao preventiva e desenvolver modelos capazes
-de estimar o custo futuro por quilometro.
+mais influenciam o custo de manutencao internalizada e desenvolver modelos
+capazes de estimar o custo futuro por quilometro.
+
+Neste momento, a analise nao esta limitada a manutencao preventiva. O escopo
+considera todas as ordens de servico com custo interno (`charge_flag = 'I'`),
+incluindo manutencoes preventivas e corretivas absorvidas pela operacao.
 
 ## Pergunta do problema
 
@@ -56,8 +60,12 @@ As bases devem ser integradas preferencialmente por `id_carreta`.
 ## Variavel-alvo
 
 ```text
-custo_manutencao_preventiva_por_km
+custo_manutencao_interno_por_km
 ```
+
+Esse alvo representa o custo total internalizado por quilometro. No nivel da
+ordem de servico, a base de modelagem `fato_wo_ml` usa `total_custo_interno`,
+calculado como mao de obra interna mais pecas internas.
 
 Os custos historicos devem ser deflacionados a valor presente, usando IPCA ou
 indice setorial adequado, antes da modelagem. Quando necessario, as previsoes
@@ -72,6 +80,8 @@ Variaveis derivadas inicialmente previstas:
 - `custo_acum_manutencao`
 - `n_os_corretivas`
 - `intervalo_medio_os`
+- `km_acumulado_data_os`
+- `delta_km_desde_ultima_os`
 - `prop_pecas_garantia`
 - `custo_por_componente`
 - `km_desde_ult_troca`
@@ -124,6 +134,22 @@ A EDA deve priorizar:
     └── processed/    # bases prontas para analise e modelagem
 ```
 
+## Bases extraidas
+
+A extracao principal esta em `data/extract_custo_interno_km.sql` e gera oito
+CSVs em `data/raw/`:
+
+| Base | Uso principal |
+| --- | --- |
+| `dim_carretas` | Atributos do ativo |
+| `fato_readings` | Leituras de odometro em KM |
+| `fato_wo` | Cabecalho da OS com custo interno separado em mao de obra e pecas |
+| `fato_wo_ml` | Base de OS enriquecida para modelagem, com atributos da carreta, KM na data da OS, delta de KM desde a OS anterior e `total_custo_interno` |
+| `fato_wo_labour` | Linhas de mao de obra interna |
+| `fato_wo_parts` | Linhas de pecas internas |
+| `fato_contratos` | Contratos de leasing/rental por carreta |
+| `fato_gps` | Posicoes GPS por carreta/dia |
+
 Estrutura recomendada para proximas etapas:
 
 ```text
@@ -158,4 +184,3 @@ src/            # scripts reutilizaveis de limpeza, features e modelos
 ## Status
 
 Repositorio em estruturacao inicial.
-
