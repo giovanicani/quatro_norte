@@ -17,7 +17,7 @@ O escopo analítico atual **não é restrito à manutenção preventiva**. O alv
 | `dim_carretas` | uma carreta | Dimensão — atributos do ativo |
 | `fato_readings` | uma leitura de odômetro | Quilometragem (KM acumulado) |
 | `fato_wo` | uma ordem de serviço | Cabeçalho da OS + totais internos |
-| `fato_wo_ml` | uma ordem de serviço | Base enriquecida para modelagem, com atributos da carreta, KM na data da OS e custo interno total |
+| `fato_wo_ml` | uma ordem de serviço | Base enriquecida para modelagem, com atributos da carreta, VMRS, KM na data da OS e custo interno total |
 | `fato_wo_labour` | uma linha de mão de obra | Custo interno de mão de obra |
 | `fato_wo_parts` | uma linha de peça | Custo interno de peças |
 | `fato_contratos` | uma carreta-contrato | Contrato de leasing/rental vigente |
@@ -63,7 +63,7 @@ erDiagram
 
 - `id_carreta` — presente em **todos** os arquivos; liga tudo à `dim_carretas`.
 - `id_os` — liga `fato_wo_labour` e `fato_wo_parts` ao `fato_wo`; também aparece (opcional) em `fato_readings` quando a leitura foi feita numa OS.
-- `fato_wo_ml` — mantém o mesmo grão de `fato_wo` e adiciona atributos da unidade e variáveis prontas para ML, evitando joins repetidos nos experimentos.
+- `fato_wo_ml` — mantém o mesmo grão de `fato_wo` e adiciona atributos da unidade, VMRS e variáveis prontas para ML, evitando joins repetidos nos experimentos.
 - **Contrato vigente:** liga-se por `id_carreta` **e** período — uma OS/leitura cai no contrato cujo intervalo `data_inicio`–`data_fim` contém a `data_os`/`data_leitura`. Uma carreta tem vários contratos ao longo do tempo.
 
 > Observação: peças pertencem a uma linha de mão de obra (relação interna via `worordlab_id`), mas no CSV essa ligação é resumida por `id_os` — suficiente para agregação por OS/carreta.
@@ -121,6 +121,7 @@ Grão: **uma ordem de serviço** com custo interno (aprovada, concluída, não c
 | `id_carreta` | NUMBER | `rep_work_orders.uni_id` | FK → `dim_carretas` |
 | `numero_os` | VARCHAR2(25) | `rep_work_orders.wo_number` | Número sequencial da OS |
 | `data_os` | DATE | `rep_work_orders.wo_date` (CAST DATE) | Data de abertura da OS |
+| `vmrs` | VARCHAR2 | `COALESCE(REGEXP_SUBSTR(rep_work_orders.repair_request, ...), '01')` | Código VMRS textual extraído da solicitação; quando ausente, assume `01` (MISC) |
 | `solicitacao_reparo` | VARCHAR2(2000) | `rep_work_orders.repair_request` | Texto livre da solicitação |
 | `cod_local_os` | VARCHAR2(25) | `rla_locations.code` (via `loc_id`) | Código do local cadastrado |
 | `local_os` | VARCHAR2(50) | `rla_locations.description` | Descrição do local |
@@ -149,6 +150,7 @@ Grão: **uma ordem de serviço** com custo interno, enriquecida para modelagem.
 | `flag_refrigerado` | VARCHAR2(1) | derivado de `ym_units.uni_id_reefer` | `Y` se há reefer acoplado; senão `N` |
 | `numero_os` | VARCHAR2(25) | `rep_work_orders.wo_number` | Número sequencial da OS |
 | `data_os` | DATE | `rep_work_orders.wo_date` (CAST DATE) | Data de abertura da OS |
+| `vmrs` | VARCHAR2 | `COALESCE(REGEXP_SUBSTR(rep_work_orders.repair_request, ...), '01')` | Código VMRS textual extraído da solicitação; quando ausente, assume `01` (MISC) |
 | `km_acumulado_data_os` | NUMBER | `bi_auxiliary_pkg.unit_actual_reading(...)` | Leitura acumulada em KM na data da OS |
 | `delta_km_desde_ultima_os` | NUMBER | diferença via `LAG(...) OVER (PARTITION BY id_carreta ORDER BY data_os, id_os)` | KM entre a OS atual e a OS anterior da mesma carreta |
 | `solicitacao_reparo` | VARCHAR2(2000) | `rep_work_orders.repair_request` | Texto livre da solicitação |
@@ -159,6 +161,34 @@ Grão: **uma ordem de serviço** com custo interno, enriquecida para modelagem.
 | `total_custo_interno` | NUMBER | soma de mão de obra interna + peças internas | Custo total internalizado da OS, usado como `Y` no grão da OS |
 
 > `km_acumulado_data_os` usa a função `bi_auxiliary_pkg.unit_actual_reading` com `p_data_type = 'TOTAL'`, `p_reading_uom = 'KM'`, início fixo em `1980-01-01` e fim em `data_os`.
+
+> `vmrs` é uma feature derivada de texto. O regex captura o primeiro token após `VMRS:`; exemplos esperados incluem `PM`, `01`, `02` e `09`. Quando a solicitação não contém esse padrão, o campo assume `01`, que representa MISC/MISCELLANEOUS.
+
+Tabela de referência dos códigos `vmrs`:
+
+| Código | Significado |
+|---|---|
+| `01` | MISCELLANEOUS |
+| `02` | AIR EQUIPMENT |
+| `03` | LIGHTS AND WIRING |
+| `04` | BRAKES |
+| `05` | LANDING GEAR |
+| `06` | BOGIE |
+| `07` | DOORS |
+| `08` | EXTERIOR BODY |
+| `09` | TIRES AND ACCESSORIES (ATA 017) |
+| `10` | REEFER |
+| `12` | LIFT GATE |
+| `13` | INTERIOR BODY |
+| `14` | ABS |
+| `15` | SCREENS |
+| `16` | AUTO GREASER SYSTEM |
+| `17` | GPS SYSTEMS |
+| `CL` | CLEAN & SWEEP INTERIOR |
+| `FS` | FUEL SURCHARGE |
+| `MC` | MILEAGE CHARGE |
+| `MF` | MANAGEMENT FEES |
+| `PM` | PREVENTIVE MAINTENANCE |
 
 ### 3.5 `fato_wo_labour`
 Grão: **uma linha de mão de obra interna** (`charge_flag = 'I'`, não deletada).

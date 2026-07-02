@@ -7,7 +7,6 @@ __pycache__/
 
 # Dados pesados - nao versionar (regenerados pela extracao SQL / notebooks)
 # Brutos (~300 MB no total) e bases processadas (>100 MB cada, bloqueadas pelo GitHub)
-data/raw/*.csv
 data/processed/*.csv
 # manter as pastas no repositorio
 !data/raw/.gitkeep

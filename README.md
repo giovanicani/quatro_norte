@@ -176,7 +176,7 @@ A extração principal está em `data/extract_custo_interno_km.sql` e gera
 | `dim_carretas` | uma carreta | Dimensão — atributos do ativo |
 | `fato_readings` | uma leitura de odômetro | Quilometragem (KM acumulado) |
 | `fato_wo` | uma ordem de serviço | Cabeçalho da OS + totais internos |
-| `fato_wo_ml` | uma ordem de serviço | Base enriquecida para modelagem (atributos da carreta, KM na data da OS, `total_custo_interno`) |
+| `fato_wo_ml` | uma ordem de serviço | Base enriquecida para modelagem (atributos da carreta, VMRS extraído por regex, KM na data da OS, `total_custo_interno`) |
 | `fato_wo_labour` | uma linha de mão de obra | Custo interno de mão de obra |
 | `fato_wo_parts` | uma linha de peça | Custo interno de peças |
 | `fato_contratos` | uma carreta-contrato | Contrato de leasing/rental vigente |
@@ -243,6 +243,7 @@ podem ser reexpressas em valor nominal futuro para fins de orçamento.
 | `cod_modelo` | dim_carretas / fato_wo_ml |
 | `flag_refrigerado` | dim_carretas / fato_wo_ml |
 | `provincia_estado` | fato_wo_ml |
+| `vmrs` | fato_wo / fato_wo_ml |
 | `classe` / `grupo_manutencao` | dim_carretas |
 | `tipo_contrato` (RENTAL/LEASE) | fato_contratos |
 | `tipo_manutencao` (MAINT/NET/MIX) | fato_contratos |
@@ -253,8 +254,35 @@ podem ser reexpressas em valor nominal futuro para fins de orçamento.
 ### 9.3 Feature engineering
 
 **Já implementadas** (presentes em `fato_wo_ml`):
+- `vmrs` (extraído de `solicitacao_reparo` por regex quando há padrão `VMRS:`; quando ausente, assume `01`, que representa MISC)
 - `km_acumulado_data_os`
 - `delta_km_desde_ultima_os`
+
+Referência dos códigos `vmrs`:
+
+| Código | Significado |
+|---|---|
+| `01` | MISCELLANEOUS |
+| `02` | AIR EQUIPMENT |
+| `03` | LIGHTS AND WIRING |
+| `04` | BRAKES |
+| `05` | LANDING GEAR |
+| `06` | BOGIE |
+| `07` | DOORS |
+| `08` | EXTERIOR BODY |
+| `09` | TIRES AND ACCESSORIES (ATA 017) |
+| `10` | REEFER |
+| `12` | LIFT GATE |
+| `13` | INTERIOR BODY |
+| `14` | ABS |
+| `15` | SCREENS |
+| `16` | AUTO GREASER SYSTEM |
+| `17` | GPS SYSTEMS |
+| `CL` | CLEAN & SWEEP INTERIOR |
+| `FS` | FUEL SURCHARGE |
+| `MC` | MILEAGE CHARGE |
+| `MF` | MANAGEMENT FEES |
+| `PM` | PREVENTIVE MAINTENANCE |
 
 **Ainda planejadas:**
 - `idade_carreta` (a partir de `data_entrada_servico`)
@@ -337,6 +365,7 @@ associação:
 | `flag_refrigerado` | Quali. | | |
 | `tipo_contrato` | Quali. | | |
 | `tipo_manutencao` | Quali. | | |
+| `vmrs` | Quali. | | |
 | `sistema_vmrs` | Quali. | | |
 | ... | | | |
 

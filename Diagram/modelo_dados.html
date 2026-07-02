@@ -221,13 +221,14 @@
     </div>
 
     <!-- WO ML -->
-    <div class="node wo" style="left:470px;top:60px;width:260px;height:216px;">
+    <div class="node wo" style="left:470px;top:60px;width:260px;height:232px;">
       <header><span class="nm">fato_wo_ml</span><span class="grao">1 OS para ML</span></header>
       <div class="rows">
         <div class="row k-os"><span class="fname">id_os</span><span class="tag pk">PK</span></div>
         <div class="row k-carreta"><span class="fname">id_carreta</span><span class="tag fk">FK</span></div>
         <div class="row"><span class="fname">descricao · montadora · modelo</span></div>
         <div class="row"><span class="fname">ano_modelo · eixos · reefer</span></div>
+        <div class="row"><span class="fname">vmrs</span></div>
         <div class="row"><span class="fname">km_acumulado_data_os</span></div>
         <div class="row"><span class="fname">delta_km_desde_ultima_os</span></div>
         <div class="row"><span class="fname">total_custo_interno</span></div>
@@ -316,7 +317,7 @@
     </div>
     <div class="note">
       <h3>Base para ML</h3>
-      <span class="card-mono">fato_wo_ml</span> mantém 1 linha por OS, adiciona atributos da carreta, KM acumulado na data da OS, delta de KM desde a OS anterior e <span class="card-mono">total_custo_interno</span>.
+      <span class="card-mono">fato_wo_ml</span> mantém 1 linha por OS, adiciona atributos da carreta, VMRS extraído da solicitação (fallback <span class="card-mono">01 = MISC</span>), KM acumulado na data da OS, delta de KM desde a OS anterior e <span class="card-mono">total_custo_interno</span>.
     </div>
     <div class="note">
       <h3>Contrato é por período</h3>

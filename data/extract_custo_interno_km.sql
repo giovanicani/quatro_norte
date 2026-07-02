@@ -72,7 +72,6 @@ SELECT u.uni_id                AS id_carreta,
   LEFT JOIN adm_unit_classification cl ON cl.unicla_id = u.unicla_id
   LEFT JOIN pm_maintenance_groups mg   ON mg.maigro_id = u.maigro_id
   LEFT JOIN adm_equipment_status es    ON es.equsta_id = u.equsta_id;
-
 SPOOL OFF
 
 -- ----------------------------------------------------------------------------
@@ -107,7 +106,6 @@ SELECT r.unirea_id        AS id_leitura,
    AND r.reading_date >= DATE '2020-01-01'
    AND r.reading_date <  DATE '2026-01-01'
  ORDER BY r.uni_id, r.reading_date;
-
 SPOOL OFF
 
 -- ----------------------------------------------------------------------------
@@ -131,7 +129,8 @@ SELECT w.worord_id        AS id_os,
        w.uni_id           AS id_carreta,
        w.wo_number        AS numero_os,
        CAST(w.wo_date AS DATE)        AS data_os,
-       w.repair_request   AS solicitacao_reparo,
+       COALESCE(UPPER(REGEXP_SUBSTR(w.repair_request, 'VMRS[[:space:]]*:[[:space:]]*([^[:space:]*]+)', 1, 1, 'i', 1)), '01') AS vmrs,
+       REPLACE(REPLACE(w.repair_request, CHR(13), ' '), CHR(10), ' ') AS solicitacao_reparo,
        loc.code           AS cod_local_os,
        w.wo_location      AS endereco_os,
        ps.code            AS cod_provincia_estado,
@@ -173,7 +172,6 @@ SELECT w.worord_id        AS id_os,
                  WHERE l.worord_id = w.worord_id
                    AND p.charge_flag = 'I'
                    AND p.deleted_flag = 'N'));
-
 SPOOL OFF
 
 -- ----------------------------------------------------------------------------
@@ -215,6 +213,7 @@ SELECT w.worord_id        AS id_os,
        f.flag_refrigerado,
        w.wo_number        AS numero_os,
        CAST(w.wo_date AS DATE)        AS data_os,
+       COALESCE(UPPER(REGEXP_SUBSTR(w.repair_request, 'VMRS[[:space:]]*:[[:space:]]*([^[:space:]*]+)', 1, 1, 'i', 1)), '01') AS vmrs,
        TO_CHAR(
            bi_auxiliary_pkg.unit_actual_reading(
                p_uni_id      => w.uni_id,
@@ -245,7 +244,7 @@ SELECT w.worord_id        AS id_os,
            'TM9',
            'NLS_NUMERIC_CHARACTERS=''.,'''
        ) AS delta_km_desde_ultima_os,
-       w.repair_request   AS solicitacao_reparo,
+       REPLACE(REPLACE(w.repair_request, CHR(13), ' '), CHR(10), ' ') AS solicitacao_reparo,
        loc.code           AS cod_local_os,
        w.wo_location      AS endereco_os,
        ps.code            AS cod_provincia_estado,
@@ -292,7 +291,6 @@ SELECT w.worord_id        AS id_os,
                  WHERE l.worord_id = w.worord_id
                    AND p.charge_flag = 'I'
                    AND p.deleted_flag = 'N'));
-
 SPOOL OFF
 
 -- ----------------------------------------------------------------------------
@@ -340,7 +338,6 @@ SELECT l.worordlab_id     AS id_linha_mao_obra,
    AND w.completed_date IS NOT NULL
    AND w.wo_date >= DATE '2020-01-01'
    AND w.wo_date <  DATE '2026-01-01';
-
 SPOOL OFF
 
 -- ----------------------------------------------------------------------------
@@ -388,7 +385,6 @@ SELECT p.worordpar_id      AS id_linha_peca,
    AND w.completed_date IS NOT NULL
    AND w.wo_date >= DATE '2020-01-01'
    AND w.wo_date <  DATE '2026-01-01';
-
 SPOOL OFF
 
 -- ----------------------------------------------------------------------------
@@ -423,7 +419,6 @@ SELECT lra.learenass_id           AS id_contrato_carreta,
   LEFT JOIN ym_customers cus ON cus.cus_id = lra.cus_id_invoice_to
   LEFT JOIN rla_locations loc ON loc.loc_id = lra.loc_id_revenue
  WHERE lra.void_date IS NULL;
-
 SPOOL OFF
 
 -- ----------------------------------------------------------------------------
@@ -479,5 +474,4 @@ SELECT uni_id        AS id_carreta,
   FROM pos_dia
  WHERE rn = 1
  ORDER BY uni_id, data_hora_gps;
-
 SPOOL OFF
