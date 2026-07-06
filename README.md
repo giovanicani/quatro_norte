@@ -211,6 +211,11 @@ Dicionário de dados completo (schema, tipos, origem por campo): ver
 5. Enriquecer com `dim_carretas` (idade, classe, reefer) e `fato_contratos`
    (tipo, franquia).
 
+Durante a limpeza, a `id_carreta = 8441` é removida das bases analíticas.
+Essa identificação representa trabalhos genéricos no pátio, não uma carreta
+individual comparável ao restante da frota; mantê-la distorceria custos,
+frequência de OS e indicadores por km.
+
 ## 8. Variável-alvo (Y)
 
 ```text
@@ -218,9 +223,41 @@ custo_manutencao_interno_por_km
 ```
 
 Grão de origem: `total_custo_interno` em `fato_wo_ml` (uma OS), agregado
-para carreta × mês e dividido pelo KM rodado no período. Deflacionado a
-valor presente via IPCA (ou índice setorial) antes da modelagem; previsões
-podem ser reexpressas em valor nominal futuro para fins de orçamento.
+para carreta × mês e dividido pelo KM rodado no período. Os valores monetários
+da base estão em **dólares canadenses (CAD)**. Portanto, para análise temporal
+e modelagem, os custos históricos devem ser trazidos a valor presente pelo
+**CPI canadense (Consumer Price Index)**, e não pelo IPCA brasileiro. A série
+recomendada é o **All-items CPI, Canada**, anual, não dessazonalizado, da
+Statistics Canada, tabela `18-10-0005-01` (`2002=100`).
+
+Referência para deflação a valor presente em CAD:
+
+| Ano | All-items CPI, Canada (`2002=100`) |
+| --- | ---: |
+| 2020 | 137.0 |
+| 2021 | 141.6 |
+| 2022 | 151.2 |
+| 2023 | 157.1 |
+| 2024 | 160.9 |
+| 2025 | 164.2 |
+
+Fonte: [Statistics Canada, Table 18-10-0005-01, Consumer Price Index, annual average, not seasonally adjusted](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000501).
+
+Exemplo de fórmula para trazer um custo histórico ao valor presente de 2025:
+
+```text
+custo_real_2025 = custo_nominal_ano * (CPI_2025 / CPI_ano)
+```
+
+Exemplo numérico:
+
+```text
+custo_real_2025 = 1.000 CAD em 2020 * (164.2 / 137.0)
+custo_real_2025 = 1.198,54 CAD
+```
+
+Previsões podem ser reexpressas em valor nominal futuro para fins de orçamento,
+desde que seja adotada uma premissa explícita de inflação canadense.
 
 ## 9. Variáveis explicativas (X)
 
@@ -240,8 +277,13 @@ podem ser reexpressas em valor nominal futuro para fins de orçamento.
 | Variável | Origem |
 | --- | --- |
 | `cod_montadora` | dim_carretas / fato_wo_ml |
-| `cod_modelo` | dim_carretas / fato_wo_ml |
+| `cod_modelo` | dim_carretas |
 | `flag_refrigerado` | dim_carretas / fato_wo_ml |
+| `tailgate_flag` | dim_carretas / fato_wo_ml |
+| `unit_subtype` | dim_carretas / fato_wo_ml |
+| `tire_size` | dim_carretas / fato_wo_ml |
+| `suspension_type` | dim_carretas / fato_wo_ml |
+| `new_used_indicator` | dim_carretas / fato_wo_ml |
 | `provincia_estado` | fato_wo_ml |
 | `vmrs` | fato_wo / fato_wo_ml |
 | `classe` / `grupo_manutencao` | dim_carretas |
@@ -294,7 +336,7 @@ Referência dos códigos `vmrs`:
 - `custo_por_componente` (agregando por `sistema_vmrs`)
 - `km_desde_ult_troca`
 - `regiao_operacao`
-- `custo_deflacionado_ipca`
+- `custo_deflacionado_cpi`
 
 > ✏️ Atualizar esta divisão conforme cada feature for de fato calculada.
 
@@ -427,8 +469,10 @@ quantitativas (naturais + engineered):
 
 1. Extração e consolidação das bases (`extract_custo_interno_km.sql` →
    `data/raw/*.csv`).
-2. Limpeza e tratamento de dados faltantes, outliers e resets de odômetro.
-3. Deflação dos custos históricos via IPCA.
+2. Limpeza e tratamento de dados faltantes, outliers, resets de odômetro e
+   remoção da `id_carreta = 8441` por representar trabalhos genéricos no
+   pátio.
+3. Deflação dos custos históricos via CPI canadense (`All-items CPI, Canada`).
 4. Feature engineering (variáveis derivadas listadas na seção 9.3).
 5. Agregação carreta × mês e cálculo do indicador `custo_interno_por_km`.
 6. Integração das bases por `id_carreta` (e por período, no caso de

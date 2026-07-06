@@ -84,10 +84,15 @@ Grão: **uma carreta**. Dimensão de atributos do ativo.
 | `cod_montadora` | VARCHAR2(25) | `ym_unit_makes.code` | Código da montadora |
 | `cod_modelo` | VARCHAR2(25) | `rla_unit_models.code` | Código do modelo |
 | `ano_modelo` | NUMBER | `ym_units.year` | Ano do modelo |
-| `data_entrada_servico` | DATE | `ym_units.in_service_date` | Entrada em serviço (base para idade) |
+| `data_entrada_servico` | DATE | `ym_units.in_service_date`; fallback `ano_modelo-01-01` quando nulo | Entrada em serviço (base para idade) |
 | `eixos` | NUMBER | `ym_units.axles` | Nº de eixos |
 | `comprimento` | NUMBER | `ym_units.length` | Comprimento do ativo |
 | `flag_refrigerado` | VARCHAR2(1) | derivado de `ym_units.uni_id_reefer` | `Y` se há reefer acoplado; senão `N` |
+| `tailgate_flag` | VARCHAR2(1) | `ym_units.tailgate_flag` | Indica se o ativo possui tailgate |
+| `unit_subtype` | VARCHAR2(25) | `ym_unit_subtypes.code` | Subtipo do ativo |
+| `tire_size` | VARCHAR2(25) | `ym_unit_tire_sizes.code` | Código do tamanho/configuração de pneu |
+| `suspension_type` | VARCHAR2(25) | `ym_unit_suspension_types.code` | Tipo de suspensão |
+| `new_used_indicator` | VARCHAR2(25) | `ym_units.new_used_indicator` | Indica se o ativo foi adquirido novo ou usado |
 | `cod_classe` | VARCHAR2(25) | `adm_unit_classification.code` | Código da classe (faixa etária) |
 | `classe` | VARCHAR2(100) | `adm_unit_classification.description` | Descrição da classe |
 | `idade_classe_de` | NUMBER | `adm_unit_classification.age_from` | Início da faixa etária (anos) |
@@ -142,12 +147,16 @@ Grão: **uma ordem de serviço** com custo interno, enriquecida para modelagem.
 | `id_carreta` | NUMBER | `rep_work_orders.uni_id` | FK → `dim_carretas` |
 | `descricao_carreta` | VARCHAR2(250) | `ym_units.description` | Descrição livre do ativo |
 | `cod_montadora` | VARCHAR2(25) | `ym_unit_makes.code` | Código da montadora |
-| `cod_modelo` | VARCHAR2(25) | `rla_unit_models.code` | Código do modelo |
 | `ano_modelo` | NUMBER | `ym_units.year` | Ano do modelo |
-| `data_entrada_servico` | DATE | `ym_units.in_service_date` | Entrada em serviço |
+| `data_entrada_servico` | DATE | `ym_units.in_service_date`; fallback `ano_modelo-01-01` quando nulo | Entrada em serviço |
 | `eixos` | NUMBER | `ym_units.axles` | Nº de eixos |
 | `comprimento` | NUMBER | `ym_units.length` | Comprimento do ativo |
 | `flag_refrigerado` | VARCHAR2(1) | derivado de `ym_units.uni_id_reefer` | `Y` se há reefer acoplado; senão `N` |
+| `tailgate_flag` | VARCHAR2(1) | `ym_units.tailgate_flag` | Indica se o ativo possui tailgate |
+| `unit_subtype` | VARCHAR2(25) | `ym_unit_subtypes.code` | Subtipo do ativo |
+| `tire_size` | VARCHAR2(25) | `ym_unit_tire_sizes.code` | Código do tamanho/configuração de pneu |
+| `suspension_type` | VARCHAR2(25) | `ym_unit_suspension_types.code` | Tipo de suspensão |
+| `new_used_indicator` | VARCHAR2(25) | `ym_units.new_used_indicator` | Indica se o ativo foi adquirido novo ou usado |
 | `numero_os` | VARCHAR2(25) | `rep_work_orders.wo_number` | Número sequencial da OS |
 | `data_os` | DATE | `rep_work_orders.wo_date` (CAST DATE) | Data de abertura da OS |
 | `vmrs` | VARCHAR2 | `COALESCE(REGEXP_SUBSTR(rep_work_orders.repair_request, ...), '01')` | Código VMRS textual extraído da solicitação; quando ausente, assume `01` (MISC) |
