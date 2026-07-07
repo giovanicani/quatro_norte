@@ -323,8 +323,8 @@ SELECT w.worord_id        AS id_os,
                  WHERE l.worord_id = w.worord_id
                    AND p.charge_flag = 'I'
                    AND p.deleted_flag = 'N'))
- ORDER BY w.uni_id, w.wo_date, w.worord_id
- FETCH FIRST 20000 ROWS ONLY;
+ ORDER BY w.uni_id, w.wo_date, w.worord_id;
+ --FETCH FIRST 20000 ROWS ONLY;
 SPOOL OFF
 
 -- ----------------------------------------------------------------------------
