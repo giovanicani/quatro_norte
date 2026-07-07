@@ -176,7 +176,7 @@
   <div class="note">Parte relevante do custo é <strong>absorvida pela empresa — o custo interno</strong> — e precisa ser prevista para orçamento anual e precificação de contratos.</div>
   <div class="grid g4" style="margin-top:24px">
     <div class="stat"><div class="n">10.412</div><div class="l">carretas na frota própria</div></div>
-    <div class="stat"><div class="n">238.818</div><div class="l">ordens de serviço (2020–2025)</div></div>
+    <div class="stat"><div class="n">223.590</div><div class="l">ordens de serviço (2020–2025)</div></div>
     <div class="stat"><div class="n o">CAD 79 mi</div><div class="l">custo interno de manutenção no período</div></div>
     <div class="stat"><div class="n">6 anos</div><div class="l">de histórico: OS, odômetro, contratos, GPS</div></div>
   </div>
@@ -306,7 +306,7 @@
   </ul>
 
   <div class="grid g3">
-    <div class="stat"><div class="n">352.038</div><div class="l">observações carreta × mês com Y válido (≥ 500 km/mês)</div></div>
+    <div class="stat"><div class="n">351.956</div><div class="l">observações carreta × mês com Y válido (≥ 500 km/mês)</div></div>
     <div class="stat"><div class="n o">67,1%</div><div class="l">dos meses com custo zero — mantidos (informação legítima)</div></div>
     <div class="stat"><div class="n">0,091</div><div class="l">CAD/km de média · mediana dos meses com custo: 0,101</div></div>
   </div>
@@ -315,7 +315,7 @@
   <p style="margin-bottom:16px">Sem a correção, o modelo confundiria "custos subindo" com "dinheiro valendo menos". Todos os custos convertidos ao dólar de dez/2025 via CPI all-items (StatCan).</p>
   <div class="grid g3">
     <div class="stat"><div class="n o">≈ +20%</div><div class="l">inflação canadense acumulada 2020 → 2025</div></div>
-    <div class="stat"><div class="n">CAD 84,3 mi</div><div class="l">custo interno a valores de dez/2025 (nominal: 79,0 mi)</div></div>
+    <div class="stat"><div class="n">CAD 82,3 mi</div><div class="l">custo interno a valores de dez/2025 (nominal: 77,0 mi)</div></div>
     <div class="stat"><div class="n b">CPI StatCan</div><div class="l">corrige a versão anterior, que usava IPCA (Brasil)</div></div>
   </div>
 
@@ -346,7 +346,7 @@
 <!-- EDA -->
 <section id="eda">
   <div class="kicker"><span class="secnum">08</span> Pergunta 8 · Análise exploratória</div>
-  <h2>352.038 observações · variável a variável</h2>
+  <h2>351.956 observações · variável a variável</h2>
   <p class="lead">Protocolo: quantitativas (histograma + boxplot + descritivas), qualitativas (boxplot de Y por categoria + η), complementares (Pearson/Spearman, VIF, evolução temporal). Leitura em duas partes: ocorrência de custo (67% zeros) e magnitude.</p>
 
   <h3 class="sub">Distribuição do custo interno por km</h3>
@@ -386,15 +386,18 @@
 
   <h3 class="sub">Força de separação — qualitativas (η eta)</h3>
   <div class="bars">
-    <div class="bar"><span class="lbl">regiao_operacao · H5</span><div class="track"><div class="fill o" style="width:100%"></div></div><span class="val">0,084</span></div>
-    <div class="bar"><span class="lbl">cod_montadora</span><div class="track"><div class="fill o" style="width:81%"></div></div><span class="val">0,068</span></div>
-    <div class="bar"><span class="lbl">flag_refrigerado</span><div class="track"><div class="fill o" style="width:75%"></div></div><span class="val">0,063</span></div>
-    <div class="bar"><span class="lbl">cod_classe</span><div class="track"><div class="fill o" style="width:66.7%"></div></div><span class="val">0,056</span></div>
-    <div class="bar"><span class="lbl">tipo_manutencao</span><div class="track"><div class="fill o" style="width:54.8%"></div></div><span class="val">0,046</span></div>
-    <div class="bar"><span class="lbl">tipo_contrato · H1</span><div class="track"><div class="fill o" style="width:47.6%"></div></div><span class="val">0,040</span></div>
-    <div class="bar"><span class="lbl">cod_grupo_manutencao</span><div class="track"><div class="fill o" style="width:19%"></div></div><span class="val">0,016</span></div>
+    <div class="bar"><span class="lbl">unit_subtype</span><div class="track"><div class="fill o" style="width:100%"></div></div><span class="val">0,128</span></div>
+    <div class="bar"><span class="lbl">regiao_operacao · H5</span><div class="track"><div class="fill o" style="width:65.6%"></div></div><span class="val">0,084</span></div>
+    <div class="bar"><span class="lbl">cod_montadora</span><div class="track"><div class="fill o" style="width:36.7%"></div></div><span class="val">0,047</span></div>
+    <div class="bar"><span class="lbl">flag_refrigerado</span><div class="track"><div class="fill o" style="width:50%"></div></div><span class="val">0,064</span></div>
+    <div class="bar"><span class="lbl">cod_classe</span><div class="track"><div class="fill o" style="width:43%"></div></div><span class="val">0,055</span></div>
+    <div class="bar"><span class="lbl">tipo_manutencao</span><div class="track"><div class="fill o" style="width:33.6%"></div></div><span class="val">0,043</span></div>
+    <div class="bar"><span class="lbl">suspension_type</span><div class="track"><div class="fill o" style="width:32.8%"></div></div><span class="val">0,042</span></div>
+    <div class="bar"><span class="lbl">tipo_contrato · H1</span><div class="track"><div class="fill o" style="width:28.1%"></div></div><span class="val">0,036</span></div>
+    <div class="bar"><span class="lbl">tire_size</span><div class="track"><div class="fill o" style="width:25.8%"></div></div><span class="val">0,033</span></div>
+    <div class="bar"><span class="lbl">cod_grupo_manutencao</span><div class="track"><div class="fill o" style="width:12.5%"></div></div><span class="val">0,016</span></div>
   </div>
-  <div class="note">A região é a categórica mais forte (clima, estradas, custo de oficina local). Reefer adiciona um sistema inteiro que gera OS próprias — figura entre os fatores importantes do modelo final.</div>
+  <div class="note">O subtipo da unidade (unit_subtype) é a categórica mais forte (η = 0,128) — foi a variável nova que mais agregou sinal; a região vem em seguida (clima, estradas, custo de oficina local). Reefer adiciona um sistema inteiro que gera OS próprias — figura entre os fatores importantes do modelo final.</div>
 
   <h3 class="sub">Multicolinearidade & outliers</h3>
   <div class="grid g2">
@@ -430,10 +433,10 @@
     <table>
       <thead><tr><th>Modelo</th><th class="num">R²</th><th class="num">RMSE</th><th class="num">MAE</th></tr></thead>
       <tbody>
-        <tr class="hi"><td>random_forest ◀</td><td class="num">0,086</td><td class="num">0,242</td><td class="num">0,132</td></tr>
-        <tr><td>gradient_boosting</td><td class="num">0,077</td><td class="num">0,244</td><td class="num">0,133</td></tr>
-        <tr><td>hurdle_sgd_gb</td><td class="num">0,071</td><td class="num">0,245</td><td class="num">0,145</td></tr>
-        <tr><td>arvore_decisao</td><td class="num">0,042</td><td class="num">0,248</td><td class="num">0,133</td></tr>
+        <tr class="hi"><td>random_forest ◀</td><td class="num">0,085</td><td class="num">0,243</td><td class="num">0,131</td></tr>
+        <tr><td>gradient_boosting</td><td class="num">0,079</td><td class="num">0,243</td><td class="num">0,132</td></tr>
+        <tr><td>hurdle_sgd_gb</td><td class="num">0,072</td><td class="num">0,244</td><td class="num">0,138</td></tr>
+        <tr><td>arvore_decisao</td><td class="num">0,055</td><td class="num">0,247</td><td class="num">0,129</td></tr>
         <tr><td>ridge / linear múltipla / polinomial g2</td><td class="num">0,041</td><td class="num">0,248</td><td class="num">0,137</td></tr>
         <tr><td>ridge_log1p · knn · linear_simples</td><td class="num">≤ 0,036</td><td class="num">0,249+</td><td class="num">0,127+</td></tr>
       </tbody>
@@ -487,7 +490,7 @@
     </div>
     <div class="card" style="display:grid;grid-template-columns:44px 1fr auto;gap:16px;align-items:center">
       <span class="code o" style="font-size:14px">H5</span>
-      <div><strong>Operação e contrato influenciam.</strong> <span style="color:var(--muted)">região η = 0,084 · reefer e montadora deslocam; contrato fraco.</span></div>
+      <div><strong>Operação e contrato influenciam.</strong> <span style="color:var(--muted)">unit_subtype η = 0,128 (mais forte) · região 0,084 · reefer desloca; contrato fraco.</span></div>
       <span class="pill part">Parcial</span>
     </div>
   </div>

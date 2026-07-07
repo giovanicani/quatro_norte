@@ -73,11 +73,13 @@ idade_x_km_acumulado
 reefer_x_idade
 ```
 
-### 3. HTML v2 pode estar defasado
+### 3. HTML/PPTX v2 — ATUALIZADOS
 
-`docs/entregas/Apresentacao_QuatroNorte_v2.html` ainda é válido na abordagem,
-mas deve ser regenerado ou revisado se for circular como entrega, pois a última
-rodada trouxe R² = 0,085 e `unit_subtype` como fator relevante.
+`docs/entregas/Apresentacao_QuatroNorte_v2.html` e
+`Apresentacao_QuatroNorte_v2.pptx` foram atualizados in-place (não têm gerador
+reprodutível): métricas (R² 0,085 / RMSE 0,243 / MAE 0,131), custo (CAD 77,0 mi
+nominal / 82,3 mi real), 351.956 observações, e `unit_subtype` incluída como a
+categórica mais forte (η = 0,128) no gráfico e nas conclusões (H5).
 
 ### 4. Resultados grandes ainda precisam de decisão
 
@@ -96,5 +98,5 @@ avaliado antes de qualquer publicação externa.
 5. (Opcional, maior potencial) Testar agregação do alvo em grão mais grosso
    (trimestral/anual) para reduzir a zero-inflação.
 6. Revisar visualmente o deck gerado.
-7. Atualizar `docs/entregas/Apresentacao_QuatroNorte_v2.html` ou marcá-lo como
-   histórico se não for mais usado.
+7. ~~Atualizar `docs/entregas/Apresentacao_QuatroNorte_v2.html` / `.pptx`.~~
+   **Feito** (atualizados in-place com R² 0,085 e `unit_subtype`).

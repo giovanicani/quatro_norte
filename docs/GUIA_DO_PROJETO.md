@@ -198,7 +198,7 @@ Fonte canônica: `reports/tables/` + `reports/sumario_executivo.md`.
 |---|---|---|
 | `docs/entregas/Apresentacao_QuatroNorte_v2.pptx` | Deck de apresentação (56 slides), versão mais recente, revisada | ✅ **Deck vigente** |
 | `docs/entregas/Apresentacao_QuatroNorte.pptx` | Deck gerado por `notebooks/08_build_apresentacao.ipynb` a partir de `reports/` | ✅ Base reprodutível (regenerável) |
-| `docs/entregas/Apresentacao_QuatroNorte_v2.html` | Relatório web (página única) espelhando o deck v2 — CAD/CPI, grão mensal | ⚠️ **Vigente na abordagem, mas com números da rodada anterior (R² 0,086)**: regerar após a última reexecução (R² 0,085 + `unit_subtype`) |
+| `docs/entregas/Apresentacao_QuatroNorte_v2.html` | Relatório web (página única) — CAD/CPI, grão mensal | ✅ **Vigente** (atualizado: R² 0,085, `unit_subtype`, 8441 excluída) |
 | `docs/historico/PrevCustManut_jeison.html` | Relatório web preliminar — R$/IPCA, grão por OS, R² 0,192 | ❌ **Obsoleto** (não circular como resultado) |
 
 Os dois HTMLs compartilham o **mesmo design** (papel creme sobre fundo escuro,
