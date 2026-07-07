@@ -36,8 +36,9 @@ SPOOL data/raw/dim_carretas_2020-01-01_to_2025-12-31.csv
 
 WITH frota AS (
     SELECT u.uni_id
-      FROM ym_units u
+     FROM ym_units u
      WHERE u.cus_id_owner = 4
+       AND u.uni_id <> 8441
        AND u.active_flag = 'Y'
        AND EXISTS (SELECT 1
                      FROM rep_unit_readings r
@@ -54,10 +55,20 @@ SELECT u.uni_id                AS id_carreta,
        mk.code                 AS cod_montadora,
        md.code                 AS cod_modelo,
        u.year                  AS ano_modelo,
-       u.in_service_date       AS data_entrada_servico,
+       COALESCE(
+           u.in_service_date,
+           CASE
+               WHEN u.year IS NOT NULL THEN TO_DATE(TO_CHAR(u.year) || '-01-01', 'YYYY-MM-DD')
+           END
+       ) AS data_entrada_servico,
        u.axles                 AS eixos,
        TO_CHAR(u.length, 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS comprimento,
        CASE WHEN u.uni_id_reefer IS NOT NULL THEN 'Y' ELSE 'N' END AS flag_refrigerado,
+       u.tailgate_flag          AS tailgate_flag,
+       ust.code                 AS unit_subtype,
+       uts.code                 AS tire_size,
+       sus.code                 AS suspension_type,
+       u.new_used_indicator     AS new_used_indicator,
        cl.code                 AS cod_classe,
        cl.description          AS classe,
        cl.age_from             AS idade_classe_de,
@@ -69,6 +80,9 @@ SELECT u.uni_id                AS id_carreta,
   JOIN frota f                         ON f.uni_id = u.uni_id
   LEFT JOIN ym_unit_makes mk           ON mk.unimak_id = u.unimak_id
   LEFT JOIN rla_unit_models md         ON md.unimod_id = u.unimod_id
+  LEFT JOIN ym_unit_subtypes ust       ON ust.unisubtyp_id = u.unisubtyp_id
+  LEFT JOIN ym_unit_tire_sizes uts     ON uts.unitirsiz_id = u.unitirsiz_id
+  LEFT JOIN ym_unit_suspension_types sus ON sus.unisustyp_id = u.unisustyp_id
   LEFT JOIN adm_unit_classification cl ON cl.unicla_id = u.unicla_id
   LEFT JOIN pm_maintenance_groups mg   ON mg.maigro_id = u.maigro_id
   LEFT JOIN adm_equipment_status es    ON es.equsta_id = u.equsta_id;
@@ -82,8 +96,9 @@ SPOOL data/raw/fato_readings_2020-01-01_to_2025-12-31.csv
 
 WITH frota AS (
     SELECT u.uni_id
-      FROM ym_units u
+     FROM ym_units u
      WHERE u.cus_id_owner = 4
+       AND u.uni_id <> 8441
        AND u.active_flag = 'Y'
        AND EXISTS (SELECT 1 FROM rep_unit_readings r
                     WHERE r.uni_id = u.uni_id
@@ -116,8 +131,9 @@ SPOOL data/raw/fato_wo_2020-01-01_to_2025-12-31.csv
 
 WITH frota AS (
     SELECT u.uni_id
-      FROM ym_units u
+     FROM ym_units u
      WHERE u.cus_id_owner = 4
+       AND u.uni_id <> 8441
        AND u.active_flag = 'Y'
        AND EXISTS (SELECT 1 FROM rep_unit_readings r
                     WHERE r.uni_id = u.uni_id
@@ -184,16 +200,28 @@ WITH frota AS (
     SELECT u.uni_id,
            u.description     AS descricao_carreta,
            mk.code           AS cod_montadora,
-           md.code           AS cod_modelo,
            u.year            AS ano_modelo,
-           u.in_service_date AS data_entrada_servico,
+           COALESCE(
+               u.in_service_date,
+               CASE
+                   WHEN u.year IS NOT NULL THEN TO_DATE(TO_CHAR(u.year) || '-01-01', 'YYYY-MM-DD')
+               END
+           ) AS data_entrada_servico,
            u.axles           AS eixos,
            u.length          AS comprimento,
-           CASE WHEN u.uni_id_reefer IS NOT NULL THEN 'Y' ELSE 'N' END AS flag_refrigerado
+           CASE WHEN u.uni_id_reefer IS NOT NULL THEN 'Y' ELSE 'N' END AS flag_refrigerado,
+           u.tailgate_flag   AS tailgate_flag,
+           ust.code          AS unit_subtype,
+           uts.code          AS tire_size,
+           sus.code          AS suspension_type,
+           u.new_used_indicator AS new_used_indicator
       FROM ym_units u
       LEFT JOIN ym_unit_makes mk   ON mk.unimak_id = u.unimak_id
-      LEFT JOIN rla_unit_models md ON md.unimod_id = u.unimod_id
+      LEFT JOIN ym_unit_subtypes ust ON ust.unisubtyp_id = u.unisubtyp_id
+      LEFT JOIN ym_unit_tire_sizes uts ON uts.unitirsiz_id = u.unitirsiz_id
+      LEFT JOIN ym_unit_suspension_types sus ON sus.unisustyp_id = u.unisustyp_id
      WHERE u.cus_id_owner = 4
+       AND u.uni_id <> 8441
        AND u.active_flag = 'Y'
        AND EXISTS (SELECT 1 FROM rep_unit_readings r
                     WHERE r.uni_id = u.uni_id
@@ -205,12 +233,16 @@ SELECT w.worord_id        AS id_os,
        w.uni_id           AS id_carreta,
        f.descricao_carreta,
        f.cod_montadora,
-       f.cod_modelo,
        f.ano_modelo,
        f.data_entrada_servico,
        f.eixos,
        TO_CHAR(f.comprimento, 'TM9', 'NLS_NUMERIC_CHARACTERS=''.,''') AS comprimento,
        f.flag_refrigerado,
+       f.tailgate_flag,
+       f.unit_subtype,
+       f.tire_size,
+       f.suspension_type,
+       f.new_used_indicator,
        w.wo_number        AS numero_os,
        CAST(w.wo_date AS DATE)        AS data_os,
        COALESCE(UPPER(REGEXP_SUBSTR(w.repair_request, 'VMRS[[:space:]]*:[[:space:]]*([^[:space:]*]+)', 1, 1, 'i', 1)), '01') AS vmrs,
@@ -290,7 +322,9 @@ SELECT w.worord_id        AS id_os,
                   JOIN rep_work_order_labour l ON l.worordlab_id = p.worordlab_id
                  WHERE l.worord_id = w.worord_id
                    AND p.charge_flag = 'I'
-                   AND p.deleted_flag = 'N'));
+                   AND p.deleted_flag = 'N'))
+ ORDER BY w.uni_id, w.wo_date, w.worord_id;
+ --FETCH FIRST 20000 ROWS ONLY;
 SPOOL OFF
 
 -- ----------------------------------------------------------------------------
@@ -301,8 +335,9 @@ SPOOL data/raw/fato_wo_labour_2020-01-01_to_2025-12-31.csv
 
 WITH frota AS (
     SELECT u.uni_id
-      FROM ym_units u
+     FROM ym_units u
      WHERE u.cus_id_owner = 4
+       AND u.uni_id <> 8441
        AND u.active_flag = 'Y'
        AND EXISTS (SELECT 1 FROM rep_unit_readings r
                     WHERE r.uni_id = u.uni_id
@@ -348,8 +383,9 @@ SPOOL data/raw/fato_wo_parts_2020-01-01_to_2025-12-31.csv
 
 WITH frota AS (
     SELECT u.uni_id
-      FROM ym_units u
+     FROM ym_units u
      WHERE u.cus_id_owner = 4
+       AND u.uni_id <> 8441
        AND u.active_flag = 'Y'
        AND EXISTS (SELECT 1 FROM rep_unit_readings r
                     WHERE r.uni_id = u.uni_id
@@ -395,8 +431,9 @@ SPOOL data/raw/fato_contratos_2020-01-01_to_2025-12-31.csv
 
 WITH frota AS (
     SELECT u.uni_id
-      FROM ym_units u
+     FROM ym_units u
      WHERE u.cus_id_owner = 4
+       AND u.uni_id <> 8441
        AND u.active_flag = 'Y'
        AND EXISTS (SELECT 1 FROM rep_unit_readings r
                     WHERE r.uni_id = u.uni_id
@@ -432,8 +469,9 @@ SPOOL data/raw/fato_gps_2020-01-01_to_2025-12-31.csv
 
 WITH frota AS (
     SELECT u.uni_id, u.bewbea_id
-      FROM ym_units u
+     FROM ym_units u
      WHERE u.cus_id_owner = 4
+       AND u.uni_id <> 8441
        AND u.active_flag = 'Y'
        AND u.bewbea_id IS NOT NULL
        AND EXISTS (SELECT 1 FROM rep_unit_readings r

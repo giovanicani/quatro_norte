@@ -256,11 +256,11 @@ nominal futuro para fins de orçamento.
 | `cod_montadora` | dim_carretas / fato_wo_ml | Comparar padrões de custo entre fabricantes e identificar diferenças sistemáticas de manutenção. |
 | `cod_modelo` | dim_carretas / fato_wo_ml | Capturar diferenças específicas de projeto/modelo que podem não aparecer apenas pela montadora. |
 | `flag_refrigerado` | dim_carretas / fato_wo_ml | Identificar carretas com sistema de refrigeração, potencialmente mais complexas e caras de manter. |
-| `tailgate_flag` | dim_carretas / fato_wo_ml | Indicar presença de plataforma elevatória, componente adicional sujeito a manutenção. |
-| `unit_subtype` | dim_carretas / fato_wo_ml | Segmentar subtipos operacionais de carreta, que podem ter padrões diferentes de uso e custo. |
-| `tire_size` | dim_carretas / fato_wo_ml | Avaliar se dimensões de pneus estão associadas a custos e desgaste diferenciados. |
-| `suspension_type` | dim_carretas / fato_wo_ml | Capturar diferenças de suspensão, relevantes para desgaste, conforto operacional e manutenção. |
-| `new_used_indicator` | dim_carretas / fato_wo_ml | Diferenciar ativos adquiridos novos ou usados, pois o histórico prévio pode influenciar custo futuro. |
+| `tailgate_flag` | fato_wo_ml | Indicar presença de plataforma elevatória, componente adicional sujeito a manutenção. |
+| `unit_subtype` | fato_wo_ml | Segmentar subtipos operacionais de carreta, que podem ter padrões diferentes de uso e custo. |
+| `tire_size` | fato_wo_ml | Avaliar se dimensões de pneus estão associadas a custos e desgaste diferenciados. |
+| `suspension_type` | fato_wo_ml | Capturar diferenças de suspensão, relevantes para desgaste, conforto operacional e manutenção. |
+| `new_used_indicator` | fato_wo_ml | Diferenciar ativos adquiridos novos ou usados, pois o histórico prévio pode influenciar custo futuro. |
 | `provincia_estado` | fato_wo_ml | Representar localização operacional ou administrativa associada à OS; serve como proxy geográfica. |
 | `vmrs` | fato_wo / fato_wo_ml | Classificar o sistema/componente da manutenção, permitindo decompor o custo por tipo de problema. |
 | `classe` / `grupo_manutencao` | dim_carretas | Agrupar carretas por perfil técnico ou de manutenção para comparar custos entre classes. |
@@ -394,55 +394,45 @@ Análises complementares:
 
 ### 10.2 Tabela-resumo de estatísticas descritivas
 
-> **Nota de versão:** os números desta seção foram calculados na rodada
-> anterior da base analítica, antes da exclusão sistemática da
-> `id_carreta = 8441` e antes da inclusão das novas features candidatas da
-> seção 9.3. Devem ser recalculados após a atualização da base.
-
-Calculada sobre as **352.038** observações carreta × mês com Y válido
-(`km_rodado_mes ≥ 500`). Fonte: `reports/tables/03b_estatisticas_descritivas.csv`
-(gerada por `notebooks/03b_eda_variaveis.ipynb`).
+Calculada sobre as **351.956** observações carreta × mês com Y válido
+(`km_rodado_mes ≥ 500`), **após a exclusão da `id_carreta = 8441`** e com as
+novas variáveis do ativo integradas a partir de `fato_wo_ml`. Fonte:
+`reports/tables/03b_estatisticas_descritivas.csv` (gerada por
+`notebooks/03b_eda_variaveis.ipynb`).
 
 | Variável | Tipo | N | Média | DP | Min | Q1 | Mediana | Q3 | Max | Assim. |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `custo_manutencao_interno_por_km_deflacionado` (Y) | Y | 352.038 | 0,091 | 0,374 | 0,000 | 0,000 | 0,000 | 0,032 | 29,28 | 14,44 |
-| `ano_modelo` | Quant. | 352.006 | 2016,3 | 4,70 | 1981 | 2013 | 2017 | 2019 | 2026 | −0,59 |
-| `eixos` | Quant. | 351.608 | 2,08 | 0,29 | 1 | 2 | 2 | 2 | 4 | 3,06 |
-| `comprimento` | Quant. | 347.492 | 52,04 | 4,20 | 28 | 53 | 53 | 53 | 60 | −4,42 |
-| `idade_carreta` | Quant. | 223.515 | 6,23 | 4,21 | 0,0 | 3,08 | 5,33 | 8,53 | 27,86 | 0,98 |
-| `km_rodado_mes` | Quant. | 352.038 | 2.874 | 2.862 | 500 | 994 | 1.937 | 3.789 | 108.359 | 4,62 |
-| `km_acumulado` | Quant. | 348.087 | 128.370 | 135.066 | 0 | 36.134 | 85.563 | 179.530 | 7.210.786 | 3,19 |
-| `km_por_mes` | Quant. | 223.132 | 1.822 | 2.088 | 0 | 336 | 923 | 2.847 | 23.385 | 1,96 |
-| `franquia_km_mensal` | Quant. | 273.524 | 0,66 | 28,71 | 0 | 0 | 0 | 0 | 1.667 | 45,09 |
-| `duracao_contrato_meses` | Quant. | 350.236 | 63,7 | 34,2 | 0 | 39,5 | 60,0 | 79,7 | 211,0 | 0,86 |
-| `idade_contrato_meses_no_mes` | Quant. | 350.236 | 37,9 | 31,1 | 0 | 14,0 | 30,9 | 53,9 | 209,0 | 1,16 |
-| `custo_acum_manutencao` | Quant. | 352.038 | 4.467 | 13.669 | −310 | 604 | 1.962 | 5.229 | 1.934.021 | 94,22 |
-| `custo_preventivo_acum` | Quant. | 352.038 | 1.347 | 1.920 | −538 | 215 | 636 | 1.673 | 26.240 | 3,23 |
-| `n_os_acum` | Quant. | 352.038 | 14,6 | 94,2 | 0 | 4 | 9 | 18 | 15.006 | 136,45 |
-| `n_os_preventivas_acum` | Quant. | 352.038 | 6,67 | 6,12 | 0 | 2 | 5 | 9 | 38 | 1,41 |
-| `custo_medio_movel_3m` | Quant. | 351.028 | 161,3 | 405,6 | −1.846 | 0 | 40,8 | 165,9 | 39.095 | 32,18 |
-| `custo_preventivo_medio_movel_3m` | Quant. | 351.028 | 49,3 | 140,7 | −249 | 0 | 4,6 | 34,9 | 4.093 | 8,42 |
-| `intervalo_medio_os` | Quant. | 319.900 | 101,4 | 75,9 | 0 | 50,0 | 80,6 | 138,7 | 1.644 | 2,57 |
-| `meses_desde_ultima_os` | Quant. | 341.714 | 3,37 | 3,64 | 1 | 1 | 2 | 4 | 60 | 4,97 |
+| `custo_manutencao_interno_por_km_deflacionado` (Y) | Y | 351.956 | 0,091 | 0,37 | 0 | 0 | 0 | 0,03 | 29,28 | 14,42 |
+| `ano_modelo` | Quant. | 351.924 | 2.016,263 | 4,70 | 1.994 | 2.013 | 2.017 | 2.019 | 2.026 | -0,57 |
+| `eixos` | Quant. | 351.526 | 2,084 | 0,29 | 1 | 2 | 2 | 2 | 4 | 3,06 |
+| `comprimento` | Quant. | 347.428 | 52,043 | 4,20 | 28 | 53 | 53 | 53 | 60 | -4,42 |
+| `idade_carreta` | Quant. | 223.460 | 6,231 | 4,21 | 0 | 3,08 | 5,33 | 8,53 | 27,86 | 0,98 |
+| `km_rodado_mes` | Quant. | 351.956 | 2.873,162 | 2.852,53 | 500,001 | 993,81 | 1.936,51 | 3.788,44 | 108.359,49 | 4,48 |
+| `km_acumulado` | Quant. | 348.006 | 128.330,659 | 133.972,48 | 0 | 36.158,25 | 85.574 | 179.544 | 6.288.901 | 2,42 |
+| `km_por_mes` | Quant. | 223.078 | 1.820,236 | 2.084,59 | 0 | 335,98 | 922,11 | 2.846,16 | 23.385,08 | 1,95 |
+| `franquia_km_mensal` | Quant. | 273.460 | 0,659 | 28,71 | 0 | 0 | 0 | 0 | 1.667 | 45,09 |
+| `duracao_contrato_meses` | Quant. | 350.172 | 63,718 | 34,17 | 0 | 39,46 | 60,02 | 79,67 | 210,99 | 0,86 |
+| `idade_contrato_meses_no_mes` | Quant. | 350.172 | 37,933 | 31,07 | 0 | 13,96 | 30,95 | 53,95 | 208,99 | 1,16 |
+| `custo_acum_manutencao` | Quant. | 351.956 | 4.383,007 | 6.714,96 | -309,980 | 604,83 | 1.962,93 | 5.228,59 | 114.018,52 | 3,75 |
+| `custo_preventivo_acum` | Quant. | 351.956 | 1.347,194 | 1.920,10 | -537,810 | 214,61 | 635,81 | 1.673,26 | 26.239,79 | 3,23 |
+| `n_os_acum` | Quant. | 351.956 | 13,911 | 15,38 | 0 | 4 | 9 | 18 | 147 | 2,39 |
+| `n_os_preventivas_acum` | Quant. | 351.956 | 6,668 | 6,12 | 0 | 2 | 5 | 9 | 38 | 1,41 |
+| `custo_medio_movel_3m` | Quant. | 350.946 | 159,611 | 327,27 | -1.845,587 | 0 | 40,78 | 165,91 | 8.790,87 | 5,23 |
+| `custo_preventivo_medio_movel_3m` | Quant. | 350.946 | 49,260 | 140,69 | -249,250 | 0 | 4,59 | 34,86 | 4.092,85 | 8,41 |
+| `intervalo_medio_os` | Quant. | 319.873 | 101,370 | 75,93 | 0 | 49,99 | 80,60 | 138,67 | 1.644 | 2,57 |
+| `meses_desde_ultima_os` | Quant. | 341.633 | 3,372 | 3,63 | 1 | 1 | 2 | 4 | 60 | 4,96 |
 
 Notas de leitura:
-- **Y** é zero-inflado (mediana 0, 67% de meses sem custo) e de cauda muito
+- **Y** é zero-inflado (mediana 0, ~67% de meses sem custo) e de cauda muito
   longa (assimetria 14,4) → exige `log1p`/perda robusta e leitura em duas partes.
-- Assimetrias extremas em `n_os_acum` (máx 15.006) e `custo_acum_manutencao`
-  (máx 1.934.021) sinalizam **anomalia de cadastro** em pouquíssimas carretas
-  (ver §10.5 e diagnóstico de outliers `03d_diagnostico_outliers.csv`). A
-  reexecução sem a `id_carreta = 8441` deve confirmar se esses extremos eram
-  decorrentes dos trabalhos genéricos de pátio.
-- `km_rodado_mes` tem máx de 108.359 km/mês (reset de odômetro residual);
+- A **anomalia de cadastro** que antes inflava `n_os_acum` (máx 15.006) e
+  `custo_acum_manutencao` (máx 1.934.021) **era a `id_carreta = 8441`**: com ela
+  excluída, os máximos caem para **147** e **~114 mil**, respectivamente — o que
+  confirma que se tratava de trabalhos genéricos de pátio, não de uma carreta.
+- `km_rodado_mes` tem máx de ~108.359 km/mês (reset de odômetro residual);
   tratado por winsorização/robustez de árvore.
 
 ### 10.3 Correlação com a variável-alvo (seleção de variáveis)
-
-> **Nota de versão:** as correlações e associações abaixo também pertencem à
-> rodada anterior da base. A matriz deve ser recalculada após a remoção da
-> `id_carreta = 8441`, a atualização do grão mensal e a inclusão das novas
-> variáveis candidatas, incluindo `tailgate_flag`, `unit_subtype`,
-> `tire_size`, `suspension_type` e `new_used_indicator`.
 
 Para decidir quais variáveis entram no modelo, calcular a correlação de
 cada X com Y (`custo_manutencao_interno_por_km`) e ranqueá-las por força de
@@ -469,36 +459,46 @@ Fontes: `reports/tables/03b_correlacao_com_y.csv` (quantitativas) e
 
 | Variável | Pearson | Spearman | Prioridade | Hipótese |
 | --- | --- | --- | --- | --- |
-| `n_os_acum` | +0,127 | **+0,220** | Alta | H4 |
-| `custo_acum_manutencao` | +0,155 | **+0,197** | Alta | H4 |
-| `intervalo_medio_os` | −0,051 | **−0,193** | Alta | H4 |
+| `n_os_acum` | +0,116 | **+0,219** | Alta | H4 |
+| `custo_acum_manutencao` | +0,122 | **+0,197** | Alta | H4 |
+| `intervalo_medio_os` | −0,050 | **−0,193** | Alta | H4 |
 | `n_os_preventivas_acum` | +0,098 | +0,190 | Alta | H4 |
-| `custo_preventivo_acum` | +0,104 | +0,165 | Média | H4 |
-| `km_acumulado` | +0,066 | +0,155 | Média | H3 |
-| `km_por_mes` | −0,014 | +0,123 | Média | H3 |
-| `km_rodado_mes` | −0,081 | +0,094 | Cautela (denominador do Y) | H3 |
-| `custo_medio_movel_3m` | +0,101 | +0,085 | Média | H4 |
+| `custo_preventivo_acum` | +0,105 | +0,165 | Média | H4 |
+| `km_acumulado` | +0,062 | +0,155 | Média | H3 |
+| `km_por_mes` | −0,014 | +0,124 | Média | H3 |
+| `km_rodado_mes` | −0,082 | +0,094 | Cautela (denominador do Y) | H3 |
+| `custo_medio_movel_3m` | +0,051 | +0,085 | Média | H4 |
 | `comprimento` | −0,022 | −0,067 | Baixa | — |
-| `meses_desde_ultima_os` | −0,007 | −0,062 | Baixa | H4 |
-| `idade_contrato_meses_no_mes` | +0,023 | +0,049 | Baixa | H1 |
-| `ano_modelo` | −0,055 | +0,045 | Baixa | H2 |
+| `meses_desde_ultima_os` | −0,006 | −0,061 | Baixa | H4 |
+| `idade_contrato_meses_no_mes` | +0,023 | +0,048 | Baixa | H1 |
+| `ano_modelo` | −0,050 | +0,045 | Baixa | H2 |
 | `idade_carreta` | +0,082 | +0,037 | Baixa | H2 |
-| `custo_preventivo_medio_movel_3m` | +0,007 | −0,021 | Baixa | H4 |
-| `duracao_contrato_meses` | −0,015 | +0,019 | Baixa | H1 |
+| `custo_preventivo_medio_movel_3m` | +0,007 | −0,021 | Nula | H4 |
+| `duracao_contrato_meses` | −0,015 | +0,019 | Nula | H1 |
 | `eixos` | +0,020 | +0,004 | Nula | — |
 | `franquia_km_mensal` | +0,001 | −0,004 | Nula | H1 |
 
 **Qualitativas (η — força de separação do Y entre categorias):**
 
+Inclui as variáveis novas do ativo (de `fato_wo_ml`). **`unit_subtype` é agora a
+categórica mais forte (η = 0,128)**, acima de `regiao_operacao`; as demais novas
+(`suspension_type`, `tire_size`, `tailgate_flag`, `new_used_indicator`) são
+fracas isoladamente.
+
 | Variável | η | Categorias | Prioridade |
 | --- | --- | --- | --- |
-| `regiao_operacao` | 0,084 | 46 | Média (a mais forte; H5) |
-| `cod_montadora` | 0,068 | 22 | Média |
-| `flag_refrigerado` | 0,063 | 2 | Média (reefer desloca o custo) |
-| `cod_classe` | 0,056 | 5 | Baixa |
-| `tipo_manutencao` | 0,046 | 4 | Fixada em MAINT na modelagem |
-| `tipo_contrato` | 0,040 | 3 | Baixa (H1/H5) |
+| `unit_subtype` | 0,128 | 27 | Alta (a mais forte) |
+| `regiao_operacao` | 0,084 | 46 | Média (H5) |
+| `flag_refrigerado` | 0,064 | 2 | Média (reefer desloca o custo) |
+| `cod_classe` | 0,055 | 5 | Média |
+| `cod_montadora` | 0,047 | 22 | Baixa |
+| `tipo_manutencao` | 0,043 | 4 | Fixada em MAINT na modelagem |
+| `suspension_type` | 0,042 | 9 | Baixa |
+| `tipo_contrato` | 0,036 | 3 | Baixa (H1/H5) |
+| `tire_size` | 0,033 | 22 | Baixa |
 | `cod_grupo_manutencao` | 0,016 | 11 | Nula |
+| `tailgate_flag` | 0,012 | 2 | Nula |
+| `new_used_indicator` | 0,007 | 3 | Nula |
 
 ### 10.4 Multicolinearidade
 
@@ -517,22 +517,48 @@ quantitativas (naturais + engineered):
   correlacionadas, combiná-las (ex: PCA) ou usar métodos robustos a
   colinearidade (árvores, Random Forest, Gradient Boosting).
 
-> ✏️ Preencher após o cálculo: tabela de VIF por variável e decisão tomada
-> (manter, remover ou combinar).
+VIF calculado sobre as X quantitativas da EDA (fonte: `reports/tables/03b_vif.csv`).
+Só dois pares elevam o VIF acima de 10 — `n_os_acum` e `custo_acum_manutencao`,
+que carregam a mesma informação de histórico acumulado. Como o modelo final é de
+árvore/ensemble (robusto a colinearidade), mantêm-se ambas; em modelos lineares,
+manter apenas uma.
 
 | Variável | VIF | Decisão |
 | --- | --- | --- |
-| `ano_modelo` | | |
-| `eixos` | | |
-| `comprimento` | | |
-| `km_acumulado` | | |
-| `km_rodado_mes` | | |
-| `franquia_km_mensal` | | |
-| ... | | |
+| `n_os_acum` | 11,2 | colinear — robusto em árvore/RF |
+| `custo_acum_manutencao` | 11,1 | colinear — robusto em árvore/RF |
+| `custo_preventivo_acum` | 6,0 | atenção (moderada) |
+| `n_os_preventivas_acum` | 5,7 | atenção (moderada) |
+| `idade_contrato_meses_no_mes` | 5,7 | atenção (moderada) |
+| `duracao_contrato_meses` | 5,3 | atenção (moderada) |
+| `custo_medio_movel_3m` | 2,5 | manter |
+| `custo_preventivo_medio_movel_3m` | 2,2 | manter |
+| `idade_carreta` | 2,1 | manter |
+| `ano_modelo` | 1,9 | manter |
+| `km_por_mes` | 1,9 | manter |
+| `km_rodado_mes` | 1,5 | manter |
+| `km_acumulado` | 1,4 | manter |
+| `intervalo_medio_os` | 1,3 | manter |
+| `comprimento` | 1,3 | manter |
+| `meses_desde_ultima_os` | 1,1 | manter |
+| `eixos` | 1,1 | manter |
+| `franquia_km_mensal` | 1,0 | manter |
 
 ### 10.5 Achados
 
-> ✏️ A preencher após execução da EDA.
+- **A `id_carreta = 8441` era a anomalia** que inflava os extremos de custo e de
+  nº de OS; excluí-la derrubou `n_os_acum` máx de 15.006 → 147 e `custo_acum`
+  máx de ~1,9 mi → ~114 mil (§10.2).
+- **O histórico operacional domina (H4)**: `n_os_acum` (ρ +0,22),
+  `custo_acum_manutencao` (+0,20) e `intervalo_medio_os` (−0,19) são as X mais
+  associadas ao Y. Atributos fixos (ano, eixos, comprimento) e contrato pesam pouco.
+- **Nenhuma X isolada é forte** (máx |ρ| ≈ 0,22); o ganho preditivo vem de
+  interações — o que favorece árvores/ensembles sobre regressão linear.
+- **`unit_subtype` é o atributo categórico mais informativo** (η = 0,128) e o
+  2º fator na importância por permutação do Random Forest, atrás só de
+  `km_rodado_mes` — a variável nova que mais agregou sinal.
+- **Y é zero-inflado** (~67% de meses sem custo) e de cauda longa, o que limita o
+  teto de desempenho de um regressor único e motivou o modelo *hurdle*.
 
 ## 11. Técnicas previstas
 
@@ -645,27 +671,21 @@ próprio notebook. Para apenas consultar resultados já gerados, use
 
 ## 16. Status
 
-Pipeline completo executado na rodada anterior e agora consolidado inteiramente
-em `notebooks/` (a lógica antes em `src/*.py` foi convertida célula a célula):
+Pipeline completo executado e consolidado inteiramente em `notebooks/` (a lógica
+antes em `src/*.py` foi convertida célula a célula), **já com a `id_carreta = 8441`
+excluída e as 5 variáveis novas do ativo integradas a partir de `fato_wo_ml`**:
 
-> **Nota de versão:** os resultados abaixo ainda refletem a base anterior à
-> exclusão sistemática da `id_carreta = 8441` e anterior à inclusão das novas
-> variáveis candidatas da seção 9.3. A EDA, as correlações, o VIF e a
-> modelagem devem ser reexecutados quando a base atualizada estiver fechada.
-
-- Base analítica mensal construída: 749.664 linhas carreta × mês
-  (`data/processed/base_mensal_carreta.csv`), 352.038 observações com alvo
+- Base analítica mensal construída: 749.592 linhas carreta × mês
+  (`data/processed/base_mensal_carreta.csv`), 351.956 observações com alvo
   válido (km ≥ 500/mês).
-- Deflação corrigida: custos em CAD deflacionados pelo **CPI Canadá**
-  (StatCan v41690973, base dez/2025) — substituindo o IPCA usado em versão
-  anterior (`notebooks/04_deflacao_custos_cpi_canada.ipynb`).
+- Deflação: custos em CAD deflacionados pelo **CPI Canadá** (StatCan v41690973,
+  base dez/2025) — `notebooks/04_deflacao_custos_cpi_canada.ipynb`.
 - EDA variável-a-variável completa (histogramas, boxplots, frequências,
-  correlações, eta, VIF) em `reports/figures/eda/` e `reports/tables/03b_*`
-  para a rodada anterior.
+  correlações, eta, VIF) em `reports/figures/eda/` e `reports/tables/03b_*`.
 - Modelagem com alvo `custo_manutencao_interno_por_km_deflacionado`
   (população MAINT, split temporal): **Random Forest recomendado — R² =
-  0,086, RMSE = 0,242, MAE = 0,132** no teste temporal; zero-inflação de
-  67% dos meses. Esses indicadores devem ser recalculados após a atualização
-  da base.
+  0,085, RMSE = 0,243, MAE = 0,131** no teste temporal; zero-inflação de
+  ~67% dos meses. `unit_subtype` é a variável nova de maior sinal (η = 0,128;
+  2º fator na importância por permutação).
 - Apresentação acadêmica: `docs/entregas/Apresentacao_QuatroNorte.pptx`
-  (63 slides, perguntas 1–11 da disciplina).
+  (regenerável via `notebooks/08_build_apresentacao.ipynb`).

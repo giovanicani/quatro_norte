@@ -18,9 +18,9 @@ Os fatores dominantes sao o **historico operacional da carreta**: numero de
 OS acumuladas (Spearman +0,22), custo interno acumulado (+0,20) e intervalo
 medio entre OS (-0,19). Atributos estaticos (ano do modelo, eixos,
 comprimento) e caracteristicas contratuais (duracao, franquia) tem efeito
-fraco isoladamente. Entre as categoricas, regiao de operacao (eta = 0,084),
-montadora (0,068) e flag reefer (0,063) deslocam o custo, mas nenhuma e
-forte sozinha.
+fraco isoladamente. Entre as categoricas, o subtipo da unidade
+(unit_subtype, eta = 0,128) e a mais informativa, seguido de regiao de
+operacao (0,084) e flag reefer (0,064); as demais sao fracas sozinhas.
 
 A capacidade de identificar fatores e maior que a de prever o valor pontual:
 a base e zero-inflada (67,1% dos meses carreta x mes sem custo interno) e o
@@ -29,21 +29,21 @@ planejamento orcamentario, nao previsao pontual precisa.
 
 ## Dados e deflacao
 
-- Base mensal: 749.664 linhas carreta x mes; 352.038 observacoes com alvo
-  valido (km_rodado_mes >= 500).
+- Base mensal: 749.592 linhas carreta x mes; 351.956 observacoes com alvo
+  valido (km_rodado_mes >= 500), apos excluir a id_carreta = 8441.
 - Custos em CAD deflacionados pelo CPI all-items Canada (StatCan v41690973),
-  mes-base dez/2025. Custo interno total: CAD 79,0 mi nominais = CAD 84,3 mi
+  mes-base dez/2025. Custo interno total: CAD 77,0 mi nominais = CAD 82,3 mi
   reais.
 - Mesmo em valores reais, o custo medio por km cresceu de CAD 0,074 (2020)
-  para CAD 0,126 (2025) — tendencia genuina, nao inflacao.
+  para CAD 0,125 (2025) — tendencia genuina, nao inflacao.
 
 ## Desempenho preditivo (teste temporal, populacao MAINT)
 
 - Modelo recomendado: **Random Forest** (menor RMSE entre os elegiveis).
-- R2 = 0,086 | RMSE = 0,2424 | MAE = 0,1317.
-- Comparacao: gradient boosting R2 = 0,077; hurdle (ocorrencia x magnitude)
-  R2 = 0,071; modelos lineares R2 = 0,036-0,041; KNN (benchmark amostral)
-  R2 = 0,005.
+- R2 = 0,085 | RMSE = 0,2426 | MAE = 0,1305.
+- Comparacao: gradient boosting R2 = 0,079; hurdle (ocorrencia x magnitude)
+  R2 = 0,072; modelos lineares R2 = 0,036-0,044; KNN (benchmark amostral)
+  R2 = 0,014.
 - Anti-vazamento aplicado: features historicas defasadas, split temporal
   (teste = ultimos 12 meses) e `regiao_operacao` defasada em 1 mes por
   carreta.
@@ -52,10 +52,10 @@ planejamento orcamentario, nao previsao pontual precisa.
 
 1. km_rodado_mes (atencao: tambem denominador do alvo — relacao em parte
    mecanica; para uso futuro requer km planejado/previsto)
-2. custo_acum_manutencao
+2. unit_subtype
 3. custo_preventivo_medio_movel_3m
-4. flag_refrigerado
-5. intervalo_medio_os
+4. custo_acum_manutencao
+5. km_rodado_acum
 
 ## Hipoteses avaliadas
 
@@ -65,8 +65,8 @@ planejamento orcamentario, nao previsao pontual precisa.
 - H3 quilometragem => custo: PARCIAL (km_acumulado +0,16; km mensal tem
   relacao mecanica com o denominador).
 - H4 historico preve custo futuro: SUPORTADA (bloco mais forte do ranking).
-- H5 operacao/contrato influenciam: PARCIAL (regiao eta 0,084; reefer e
-  montadora deslocam medianas; efeito contratual fraco).
+- H5 operacao/contrato influenciam: PARCIAL (unit_subtype eta 0,128; regiao
+  eta 0,084; reefer desloca medianas; efeito contratual fraco).
 
 ## Limitacoes
 

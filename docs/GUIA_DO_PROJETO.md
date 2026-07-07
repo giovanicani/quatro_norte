@@ -28,8 +28,8 @@
   e contrato pesam pouco. O problema é **zero-inflado** (67% dos meses sem custo);
   o modelo serve para **priorizar frota e apoiar orçamento**, não para previsão
   pontual precisa.
-- **Modelo recomendado:** **Random Forest** — R² = 0,086 · RMSE = 0,242 ·
-  MAE = 0,132 (teste temporal 2025).
+- **Modelo recomendado:** **Random Forest** — R² = 0,085 · RMSE = 0,243 ·
+  MAE = 0,131 (teste temporal 2025).
 
 ---
 
@@ -43,16 +43,17 @@ descrevem uma versão **antiga** do projeto e não devem ser usados como verdade
 | 1 | **`docs/GUIA_DO_PROJETO.md`** (este) | Ponto de entrada e mapa geral | ✅ Vigente |
 | 2 | `reports/sumario_executivo.md` | Resposta ao problema, resultados e recomendações (1 página) | ✅ Vigente |
 | 3 | `docs/curadoria_2026-07-07.md` | Curadoria estrutural: o que foi organizado, validado e o que falta ajustar | ✅ Vigente |
-| 4 | `docs/registro_alteracoes_2026-07-06.md` | Log histórico da revisão alvo interno/CPI; não é o passo a passo operacional atual | 🕓 Histórico metodológico |
-| 5 | `README.md` | Especificação completa (contexto, dados, hipóteses, técnicas) | ⚠️ Vigente; §10.2 e §10.3 preenchidos, mas §10.4 (VIF) e §10.5 (achados) ainda têm placeholders `✏️` (ver VIF e achados no §6 deste guia) |
-| 6 | `docs/dicionario_de_dados.md` | Schema, tipos e origem de cada campo das 7 bases | ✅ Vigente |
-| 7 | `docs/dicionario_variaveis_candidatas.md` | Especificação metodológica das 46 X candidatas: grão, fórmula, defasagem, vazamento e hipótese | ✅ Vigente |
-| 8 | `docs/historico/Plano_Analises.md` | Plano de análises original, mantido para rastreio metodológico | 🕓 Histórico |
-| 9 | `docs/historico/revisao_feedback.md` | Feedback de revisão anterior | 🕓 Histórico |
-| 10 | `AGENTS.md` | Guia de estilo/escopo p/ assistentes de IA | ✅ Vigente |
-| 11 | `notebooks/` (00 → 08, ordem em `notebooks/README.md`) | Pipeline reprodutível célula a célula — **fonte única do projeto** | ✅ Ponto de entrada operacional |
-| 12 | `notebooks/07_painel_resultados.ipynb` | Painel visual que lê as saídas de `reports/` sem reexecutar tudo | ✅ Recomendado para inspeção rápida |
-| 13 | `docs/historico/PrevCustManut_jeison.html` | Relatório visual (site) preliminar | ❌ **Obsoleto**: usa **R$/IPCA** (Brasil), grão **por OS** e R² antigo (0,192) |
+| 4 | `docs/revisao_pos_base_nova_2026-07-07.md` | Revisão após nova extração, novos resultados e pontos ainda pendentes | ✅ Vigente |
+| 5 | `docs/registro_alteracoes_2026-07-06.md` | Log histórico da revisão alvo interno/CPI; não é o passo a passo operacional atual | 🕓 Histórico metodológico |
+| 6 | `README.md` | Especificação completa (contexto, dados, hipóteses, técnicas) | ✅ Vigente |
+| 7 | `docs/dicionario_de_dados.md` | Schema, tipos e origem de cada campo das 7 bases | ✅ Vigente |
+| 8 | `docs/dicionario_variaveis_candidatas.md` | Especificação metodológica das 46 X candidatas: grão, fórmula, defasagem, vazamento e hipótese | ✅ Vigente |
+| 9 | `docs/historico/Plano_Analises.md` | Plano de análises original, mantido para rastreio metodológico | 🕓 Histórico |
+| 10 | `docs/historico/revisao_feedback.md` | Feedback de revisão anterior | 🕓 Histórico |
+| 11 | `AGENTS.md` | Guia de estilo/escopo p/ assistentes de IA | ✅ Vigente |
+| 12 | `notebooks/` (00 → 08, ordem em `notebooks/README.md`) | Pipeline reprodutível célula a célula — **fonte única do projeto** | ✅ Ponto de entrada operacional |
+| 13 | `notebooks/07_painel_resultados.ipynb` | Painel visual que lê as saídas de `reports/` sem reexecutar tudo | ✅ Recomendado para inspeção rápida |
+| 14 | `docs/historico/PrevCustManut_jeison.html` | Relatório visual (site) preliminar | ❌ **Obsoleto**: usa **R$/IPCA** (Brasil), grão **por OS** e R² antigo (0,192) |
 
 **Regra de ouro:** em caso de conflito, vale **sumário executivo + registro de
 alterações + notebooks vigentes + tabelas `reports/`**.
@@ -104,9 +105,9 @@ Estas quatro decisões definem a análise atual. Detalhe completo no
   04 Freios, 09 Pneus, 10 Reefer…). Usado como **dimensão de análise**, não como
   filtro do alvo. Tabela de códigos no README §9.3.
 - **Bases processadas** (`data/processed/`): `base_mensal_carreta.csv`
-  (749.664 linhas carreta × mês) e `base_mensal_carreta_deflacionada.csv`
-  (com custos em CAD reais, dez/2025). **352.038** observações têm alvo válido
-  (km ≥ 500/mês).
+  (749.592 linhas carreta × mês) e `base_mensal_carreta_deflacionada.csv`
+  (com custos em CAD reais, dez/2025). **351.956** observações têm alvo válido
+  (km ≥ 500/mês), após excluir a `id_carreta = 8441`.
 
 ---
 
@@ -124,7 +125,7 @@ Para apenas consultar resultados já gerados, use
 
 | Ordem | Notebook | Faz |
 |---|---|---|
-| 1 | `notebooks/02_base_analitica_mensal.ipynb` | monta a base mensal carreta × mês (749.664 linhas) |
+| 1 | `notebooks/02_base_analitica_mensal.ipynb` | monta a base mensal carreta × mês (749.592 linhas; exclui a 8441) |
 | 2 | `notebooks/04_deflacao_custos_cpi_canada.ipynb` | deflaciona custos (CAD) pelo CPI Canadá → base deflacionada |
 | 3 | `notebooks/03b_eda_variaveis.ipynb` | EDA variável-a-variável (protocolo acadêmico, pergunta 8) |
 | 4 | `notebooks/03c_estatisticas_resumo.ipynb` | estatísticas complementares do Y para o deck |
@@ -152,26 +153,27 @@ Fonte canônica: `reports/tables/` + `reports/sumario_executivo.md`.
   longa (assimetria ≈ 14,4). Média CAD 0,091/km; mediana condicional aos meses
   com custo CAD 0,101/km. → pede `log1p`, perda robusta e leitura em duas partes
   (ocorrência × magnitude).
-- **Evolução real:** custo médio por km subiu **+71%** em termos reais
-  (0,074 → 0,126 CAD/km, 2020→2025) — tendência genuína, já **sem** inflação.
+- **Evolução real:** custo médio por km subiu **+69%** em termos reais
+  (0,074 → 0,125 CAD/km, 2020→2025) — tendência genuína, já **sem** inflação.
 - **Preditores mais fortes (Spearman com Y):** `n_os_acum` +0,22 ·
   `custo_acum_manutencao` +0,20 · `n_os_preventivas_acum` +0,19 ·
   `intervalo_medio_os` −0,19 · `km_acumulado` +0,16. **Nenhuma variável isolada
   passa de ρ ≈ 0,22** → o ganho vem de interações (favorece árvores).
-- **Categóricas (η):** `regiao_operacao` 0,084 (a mais forte) · `cod_montadora`
-  0,068 · `flag_refrigerado` 0,063 — fracas isoladamente.
-- **Colinearidade:** VIF alto em `custo_acum` (33,9) e `n_os_acum` (25,4);
-  mantidos porque o modelo final é de árvore (robusto a colinearidade).
+- **Categóricas (η):** `unit_subtype` 0,128 (a mais forte) · `regiao_operacao`
+  0,084 · `flag_refrigerado` 0,064 — as demais fracas isoladamente.
+- **Colinearidade:** VIF acima de 10 apenas em `n_os_acum` (11,2) e
+  `custo_acum_manutencao` (11,1); mantidos porque o modelo final é de árvore
+  (robusto a colinearidade).
 
 ### Modelagem (teste temporal 2025, população MAINT)
 
 | Modelo | R² | RMSE | MAE |
 |---|---|---|---|
-| **Random Forest** ◀ recomendado | **0,086** | **0,242** | **0,132** |
-| Gradient Boosting | 0,077 | 0,244 | 0,133 |
-| Hurdle (ocorrência × magnitude) | 0,071 | 0,245 | 0,145 |
-| Lineares (ridge, múltipla, polinomial) | 0,036–0,041 | 0,248 | 0,137 |
-| KNN (benchmark amostral) | 0,005 | — | — |
+| **Random Forest** ◀ recomendado | **0,085** | **0,243** | **0,131** |
+| Gradient Boosting | 0,079 | 0,243 | 0,132 |
+| Hurdle (ocorrência × magnitude) | 0,072 | 0,244 | 0,138 |
+| Lineares (ridge, múltipla, polinomial) | 0,036–0,044 | 0,248 | 0,134 |
+| KNN (benchmark amostral) | 0,014 | — | — |
 
 - **R² ≈ 9%**: modesto, mas suficiente para **ordenar carretas** por risco e
   apoiar orçamento. Não é previsão pontual precisa.
@@ -196,7 +198,7 @@ Fonte canônica: `reports/tables/` + `reports/sumario_executivo.md`.
 |---|---|---|
 | `docs/entregas/Apresentacao_QuatroNorte_v2.pptx` | Deck de apresentação (56 slides), versão mais recente, revisada | ✅ **Deck vigente** |
 | `docs/entregas/Apresentacao_QuatroNorte.pptx` | Deck gerado por `notebooks/08_build_apresentacao.ipynb` a partir de `reports/` | ✅ Base reprodutível (regenerável) |
-| `docs/entregas/Apresentacao_QuatroNorte_v2.html` | Relatório web (página única) espelhando o deck v2 — CAD/CPI, grão mensal, R² 0,086 | ✅ **Relatório web vigente** |
+| `docs/entregas/Apresentacao_QuatroNorte_v2.html` | Relatório web (página única) espelhando o deck v2 — CAD/CPI, grão mensal | ⚠️ **Vigente na abordagem, mas com números da rodada anterior (R² 0,086)**: regerar após a última reexecução (R² 0,085 + `unit_subtype`) |
 | `docs/historico/PrevCustManut_jeison.html` | Relatório web preliminar — R$/IPCA, grão por OS, R² 0,192 | ❌ **Obsoleto** (não circular como resultado) |
 
 Os dois HTMLs compartilham o **mesmo design** (papel creme sobre fundo escuro,
@@ -209,16 +211,24 @@ correta. O antigo do Jeison é útil apenas como material exploratório históri
 
 - Os notebooks vigentes (02, 03b/03c/03d, 04, 05, 06) já refletem o alvo
   interno total + CPI Canadá; são a fonte oficial de resultados.
-- **Preencher os placeholders `✏️`** do README (§10.2, 10.3, 10.5) com os
-  números reais desta consolidação.
+- **Inventário e qualidade atualizados:** os notebooks 00 e 01 foram
+  reexecutados sobre a nova extração; as tabelas `reports/tables/00_*` e
+  `reports/tables/01_*` estão atualizadas e coerentes com os CSVs vigentes.
+- **Implementar e testar as features candidatas adicionais** do
+  `docs/dicionario_variaveis_candidatas.md` que ainda não entraram na base
+  mensal: janelas 3/6/12 meses, densidade por 10 mil km, reincidência por
+  sistema e interações.
+- **Avaliar versionamento de artefatos grandes** em `reports/tables/`,
+  especialmente `02_os_preventivas_mistas.csv`.
 - `docs/historico/PrevCustManut_jeison.html`: portar para o grão mensal +
   CAD/CPI, ou manter apenas como histórico.
 - **Limitações metodológicas** a comunicar: `km_rodado_mes` é denominador do Y
   **e** feature; cap de outliers (p99,5) calculado antes do split; duração de
   contratos vigentes censurada em 2025-12; GPS parcial (região derivada da OS);
   custos negativos (estornos) excluídos.
-- **Anomalia de dado a investigar na fonte:** `n_os_acum` com máx ~15.006
-  (195× o p99) em pouquíssimas carretas — provável erro de cadastro.
+- **Anomalia 8441 resolvida na base analítica:** o máximo de `n_os_acum` caiu
+  de 15.006 para 147 após excluir a identificação de trabalhos genéricos de
+  pátio.
 
 ---
 

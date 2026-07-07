@@ -2,11 +2,11 @@ indicador,valor
 alvo,custo_manutencao_interno_por_km_deflacionado
 deflator,"CPI all-items Canada (StatCan v41690973), base 2025-12"
 populacao,tipo_manutencao = MAINT; km_rodado_mes >= 500
-observacoes_alvo_valido,352038
+observacoes_alvo_valido,351956
 share_meses_custo_zero,0.6709
-custo_interno_nominal_cad,78996520.64
-custo_interno_deflacionado_cad,84347955.35
+custo_interno_nominal_cad,77029326.66
+custo_interno_deflacionado_cad,82266629.62
 modelo_recomendado,random_forest
-r2_teste_temporal,0.0863
-rmse_teste_temporal,0.2424
-mae_teste_temporal,0.1317
+r2_teste_temporal,0.0851
+rmse_teste_temporal,0.2426
+mae_teste_temporal,0.1305

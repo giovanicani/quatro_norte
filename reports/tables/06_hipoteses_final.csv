@@ -3,4 +3,4 @@ H1 duracao de contrato => custo,nao suportada,"Spearman duracao_contrato_meses v
 H2 idade => custo,parcialmente suportada,"efeito direto fraco (+0,04); idade opera via historico acumulado (km_acumulado, n_os_acum)"
 H3 quilometragem => custo,parcialmente suportada,"km_acumulado +0,16; km mensal tem relacao mecanica com o denominador do alvo"
 H4 historico preve custo futuro,suportada,"n_os_acum +0,22; custo_acum_manutencao +0,20; intervalo_medio_os -0,19"
-H5 operacao/contrato influenciam,parcialmente suportada,"regiao eta 0,084; montadora 0,068; reefer 0,063; efeito contratual fraco"
+H5 operacao/contrato influenciam,parcialmente suportada,"unit_subtype eta 0,128; regiao eta 0,084; reefer 0,064; efeito contratual fraco"
