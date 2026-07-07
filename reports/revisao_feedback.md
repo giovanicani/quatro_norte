@@ -1,5 +1,12 @@
 # Revisao do feedback metodologico
 
+> **NOTA (2026-07-06): documento historico.** Os numeros abaixo referem-se
+> a fase em que o alvo era o custo preventivo e a deflacao usava IPCA.
+> A trilha vigente usa alvo `custo_manutencao_interno_por_km_deflacionado`
+> e CPI Canada; resultados atuais em `reports/sumario_executivo.md` e
+> `docs/registro_alteracoes_2026-07-06.md`. As correcoes anti-vazamento
+> descritas aqui (C1, C2...) permanecem incorporadas a base.
+
 Data da revisao: 2026-06-28
 
 ## Veredito

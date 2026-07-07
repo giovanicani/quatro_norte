@@ -1,7 +1,8 @@
 checagem,valor
-linhas,749664
-meses_sem_ipca,0
-alvo_preventivo_deflacionado_valido,352066
-alvo_mao_obra_preventiva_deflacionado_valido,352066
-mes_base,2025-12
-fonte,BCB SGS 433 - IPCA mensal
+linhas_base,749664
+meses_sem_cpi,0
+mes_base,2025-12-01
+indice_base,165.0
+fator_min,0.9975816203143894
+fator_max,1.2159174649963156
+fonte,StatCan v41690973 - CPI all-items Canada (2002=100)

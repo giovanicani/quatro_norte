@@ -8,6 +8,10 @@ __pycache__/
 # Dados pesados - nao versionar (regenerados pela extracao SQL / notebooks)
 # Brutos (~300 MB no total) e bases processadas (>100 MB cada, bloqueadas pelo GitHub)
 data/processed/*.csv
+# Brutos: dados reais de OS/GPS/contratos/odometro - confidenciais, nunca versionar
+data/raw/*.csv
+# excecao: series publicas de indices (CPI) podem ser versionadas
+!data/raw/cpi_canada_statcan_2020_2025.csv
 # manter as pastas no repositorio
 !data/raw/.gitkeep
 !data/processed/.gitkeep

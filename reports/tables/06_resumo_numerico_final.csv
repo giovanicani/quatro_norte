@@ -1,13 +1,12 @@
 indicador,valor
-carretas na base,10412
-observacoes mensais,749664
-observacoes MAINT com alvo preventivo valido,332756
-share zero preventivo na populacao modelada,0.7977857649448845
-custo preventivo/km deflacionado mediano,0.0
-custo preventivo/km deflacionado medio,0.03276011629022342
-modelo recomendado,random_forest
-RMSE teste,0.0961520145129817
-MAE teste,0.0464344113270779
-AUC hurdle ocorrencia,0.6801236184443444
-average precision hurdle ocorrencia,0.3325346069878774
-R2 alvo espelho mao obra,0.0818965018655254
+alvo,custo_manutencao_interno_por_km_deflacionado
+deflator,"CPI all-items Canada (StatCan v41690973), base 2025-12"
+populacao,tipo_manutencao = MAINT; km_rodado_mes >= 500
+observacoes_alvo_valido,352038
+share_meses_custo_zero,0.6709
+custo_interno_nominal_cad,78996520.64
+custo_interno_deflacionado_cad,84347955.35
+modelo_recomendado,random_forest
+r2_teste_temporal,0.0863
+rmse_teste_temporal,0.2424
+mae_teste_temporal,0.1317

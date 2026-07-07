@@ -1,81 +1,93 @@
 # Sumario executivo - Projeto Quatro Norte
 
+Atualizado em 2026-07-06. Alvo oficial do projeto:
+`custo_manutencao_interno_por_km_deflacionado` (custo interno total por km,
+CAD deflacionados pelo CPI Canada, base dez/2025). Substitui a versao
+anterior (alvo preventivo + IPCA), preservada como historico em
+`reports/revisao_feedback.md`.
+
+## Pergunta da pesquisa
+
+Quais sao os fatores que mais influenciam o custo de manutencao interno das
+carretas — e como prever esse custo por km futuro com base nos dados
+historicos?
+
 ## Resposta ao problema
 
-Os custos preventivos de manutencao por km foram aproximados de forma reprodutivel no grao carreta x mes, usando linhas VMRS PM/PREVENTIVE e pecas de OS com linha preventiva. A identificacao de fatores e mais forte do que a capacidade preditiva pura: a base e zero-inflada, com 79.8% dos meses modelados sem custo preventivo, e parte do alvo tem erro de medicao por OS mistas.
+Os fatores dominantes sao o **historico operacional da carreta**: numero de
+OS acumuladas (Spearman +0,22), custo interno acumulado (+0,20) e intervalo
+medio entre OS (-0,19). Atributos estaticos (ano do modelo, eixos,
+comprimento) e caracteristicas contratuais (duracao, franquia) tem efeito
+fraco isoladamente. Entre as categoricas, regiao de operacao (eta = 0,084),
+montadora (0,068) e flag reefer (0,063) deslocam o custo, mas nenhuma e
+forte sozinha.
 
-O principal achado metodologico e que o problema se divide em duas partes: ocorrencia de custo e magnitude condicional. Depois de remover vazamento temporal, a ocorrencia deixa de parecer quase deterministica e passa a mostrar sinal preditivo moderado; a magnitude do custo por km permanece mais ruidosa. Assim, o R2 baixo do modelo direto deve ser lido como evidencia da dificuldade de estimar valor, nao como ausencia completa de sinal operacional.
+A capacidade de identificar fatores e maior que a de prever o valor pontual:
+a base e zero-inflada (67,1% dos meses carreta x mes sem custo interno) e o
+custo mensal tem forte componente aleatorio. O modelo apoia priorizacao e
+planejamento orcamentario, nao previsao pontual precisa.
 
-## Desempenho preditivo
+## Dados e deflacao
 
-- Modelo recomendado: random_forest
-- Criterio: menor RMSE no conjunto de teste temporal da populacao MAINT
-- Alvo: custo_manutencao_preventiva_por_km_deflacionado
-- Populacao: tipo_manutencao = MAINT; km_rodado_mes >= piso metodologico
-- RMSE no teste temporal: 0.0962
-- MAE no teste temporal: 0.0464
-- R2 no teste temporal: 0.0630
+- Base mensal: 749.664 linhas carreta x mes; 352.038 observacoes com alvo
+  valido (km_rodado_mes >= 500).
+- Custos em CAD deflacionados pelo CPI all-items Canada (StatCan v41690973),
+  mes-base dez/2025. Custo interno total: CAD 79,0 mi nominais = CAD 84,3 mi
+  reais.
+- Mesmo em valores reais, o custo medio por km cresceu de CAD 0,074 (2020)
+  para CAD 0,126 (2025) — tendencia genuina, nao inflacao.
 
-- Hurdle ROC AUC para ocorrencia de custo: 0.6801
-- Hurdle average precision: 0.3325
-- Hurdle Brier score: 0.2092
-- Hurdle RMSE da previsao esperada: 0.1013
+## Desempenho preditivo (teste temporal, populacao MAINT)
 
-O hurdle nao venceu a Random Forest no RMSE da previsao esperada. Ainda assim, ele ajuda a explicar a natureza do problema: existe algum sinal para estimar a ocorrencia de custo, mas a previsao da magnitude continua sendo o componente mais instavel.
+- Modelo recomendado: **Random Forest** (menor RMSE entre os elegiveis).
+- R2 = 0,086 | RMSE = 0,2424 | MAE = 0,1317.
+- Comparacao: gradient boosting R2 = 0,077; hurdle (ocorrencia x magnitude)
+  R2 = 0,071; modelos lineares R2 = 0,036-0,041; KNN (benchmark amostral)
+  R2 = 0,005.
+- Anti-vazamento aplicado: features historicas defasadas, split temporal
+  (teste = ultimos 12 meses) e `regiao_operacao` defasada em 1 mes por
+  carreta.
 
+## Principais fatores do modelo (permutation importance, teste temporal)
 
-## Alvo-espelho: mao de obra preventiva
-
-A mao de obra preventiva e a parcela mais limpa do alvo, porque e atribuida diretamente por linha VMRS. As pecas seguem alocadas no nivel da OS, o que gera ruido quando a OS mistura tarefas preventivas e nao preventivas.
-
-A comparacao entre alvos deve ser sustentada principalmente pelo R2, que e adimensional. O RMSE e o MAE sao reportados como contexto, mas nao devem ser interpretados como ganho proporcional, pois o alvo de mao de obra tem escala menor que o alvo total com pecas.
-
-- Alvo preventivo total por km - Random Forest: R2 = 0.0630; RMSE = 0.0962; MAE = 0.0464
-- Alvo apenas mao de obra preventiva por km - Random Forest: R2 = 0.0819; RMSE = 0.0218; MAE = 0.0122
-- Interpretacao: o alvo de mao de obra preventiva e apenas marginalmente mais previsivel (delta R2 = 0.019); isso e sugestivo, mas nao conclusivo, de ruido adicional nas pecas alocadas no nivel da OS. A queda de RMSE e ilustrativa, mas parcialmente mecanica pela diferenca de escala.
-
-
-## Principais fatores do modelo
-
-O ranking abaixo vem da Random Forest interpretativa, priorizando permutation importance no teste temporal quando disponivel. Ele deve ser lido **dentro da populacao MAINT**, nao como ranking global de toda a frota. O efeito de `tipo_manutencao` deve ser interpretado na EDA comparativa, pois a modelagem principal fixa essa populacao para reduzir confundimento.
-
-- km_rodado_mes: 0.0048
-- custo_preventivo_medio_movel_3m: 0.0036
-- n_os_acum: 0.0020
-- flag_refrigerado: 0.0019
-- n_os_preventivas_acum: 0.0017
-- km_rodado_acum: 0.0016
-- custo_acum_manutencao: 0.0013
-- intervalo_medio_os: 0.0011
+1. km_rodado_mes (atencao: tambem denominador do alvo — relacao em parte
+   mecanica; para uso futuro requer km planejado/previsto)
+2. custo_acum_manutencao
+3. custo_preventivo_medio_movel_3m
+4. flag_refrigerado
+5. intervalo_medio_os
 
 ## Hipoteses avaliadas
 
-- Contratos de maior duracao tendem a maior custo por km: nao suportada nesta EDA (Ocorrencia: Spearman = 0.029; magnitude positiva: Spearman duracao vs custo/km = -0.038)
-- Carretas mais antigas tendem a ter maior custo por km: suportada (Ocorrencia: Spearman = -0.068; spread de taxa por quintil = 0.094; magnitude positiva: Spearman idade vs custo/km = 0.354)
-- Maior quilometragem mensal esta associada ao custo absoluto: nao suportada nesta EDA (Spearman km_rodado_mes vs custo_preventivo_total_mes = 0.079; ocorrencia = 0.081; custo/km positivo = -0.572 (relacao mecanica com denominador))
-- Historico de manutencoes ajuda a prever custo futuro: parcialmente suportada (Maior |Spearman| entre proxies historicos = 0.261; principais proxies: intervalo_medio_os: ocorrencia=-0.141, magnitude=0.261; custo_preventivo_medio_movel_3m: ocorrencia=-0.123, magnitude=-0.205; meses_desde_ultima_os: ocorrencia=0.050, magnitude=0.193; custo_medio_movel_3m: ocorrencia=-0.046, magnitude=-0.172)
-- Caracteristicas contratuais influenciam o custo: parcialmente suportada (Razao media por tipo_contrato em MAINT = 1.50; mediana positiva = 1.99; tipo_manutencao na base completa e caveat estrutural NET/MIX, nao tamanho de efeito (25.93))
-- Componentes/sistemas concentram parte relevante do custo: suportada (Top 5 sistemas VMRS representam 64.0% do custo de mao de obra)
-
-## Recomendacoes
-
-- orcamento de manutencao: usar previsao mensal por carreta como apoio ao planejamento financeiro, comunicando desempenho preditivo modesto e alta proporcao de meses sem custo
-- zero-inflacao: usar a probabilidade de ocorrencia do hurdle como sinal complementar de priorizacao, comunicando que o desempenho e moderado apos remover vazamento temporal
-- gestao de frota: monitorar perfis com maior probabilidade prevista de custo preventivo e maior erro historico, usando os fatores recalculados do modelo como priorizacao
-- contratos: comparar custo preventivo previsto por km com franquia, duracao e tipo de contrato; tratar NET/MIX separadamente de MAINT
-- manutencao preventiva: priorizar investigacao dos sistemas VMRS com maior concentracao de custo de mao de obra
-- dados: preservar no extrato o vinculo peca-linha de mao de obra para reduzir ruido nas pecas preventivas; ampliar cobertura historica de GPS
-- modelagem futura: avaliar Mixed-Effects Random Forest/MERF, modelos hierarquicos e alternativas zero-infladas para representar efeito-carreta e ocorrencia de custo
+- H1 duracao de contrato => custo: NAO SUPORTADA (Spearman +0,02).
+- H2 idade => custo: PARCIAL (efeito direto fraco, +0,04; idade opera via
+  historico acumulado).
+- H3 quilometragem => custo: PARCIAL (km_acumulado +0,16; km mensal tem
+  relacao mecanica com o denominador).
+- H4 historico preve custo futuro: SUPORTADA (bloco mais forte do ranking).
+- H5 operacao/contrato influenciam: PARCIAL (regiao eta 0,084; reefer e
+  montadora deslocam medianas; efeito contratual fraco).
 
 ## Limitacoes
 
-- GPS tem cobertura parcial, concentrada no fim de 2025.
-- A manutencao preventiva e uma aproximacao por VMRS PM/PREVENTIVE; a mao de obra e atribuivel por linha, mas pecas foram alocadas no nivel da OS porque o CSV nao traz o vinculo da peca com a linha de mao de obra.
-- Entre OS com linha preventiva, 85.3% tambem possuem linhas nao-preventivas, sinalizando ruido de medicao no alvo preventivo.
-- A distribuicao e zero-inflada; o modelo direto tem desempenho preditivo modesto e o hurdle mostra sinal moderado para prever ocorrencia de custo.
-- A base praticamente nao registra pecas em garantia; por isso `prop_pecas_garantia` foi mantida como diagnostico, mas retirada da modelagem principal.
-- NET/MIX foram tratados como caveat/segmento; a modelagem principal usa MAINT.
-- Meses com baixa quilometragem foram excluidos dos alvos por km pelo piso metodologico de 500 km/mes.
-- Custos negativos podem representar estornos ou ajustes contabeis.
-- O modelo deve ser usado como apoio a decisao, nao como substituto de validacao operacional.
-- MERF/modelos hierarquicos sao uma extensao recomendada para tratar explicitamente o efeito individual de cada carreta.
+- Zero-inflacao de 67%; desempenho pontual modesto — usar como apoio a
+  decisao.
+- km_rodado_mes e denominador do alvo e feature.
+- Cap de outliers (p99,5) calculado antes do split temporal (limitacao
+  conhecida).
+- Duracao de contratos vigentes censurada em 2025-12.
+- GPS com cobertura parcial; regiao derivada das OS (defasada na modelagem).
+- Custos negativos (estornos) excluidos da modelagem.
+
+## Recomendacoes
+
+- Orcamento: usar a previsao mensal por carreta como apoio, comunicando o
+  desempenho moderado e a alta proporcao de meses sem custo.
+- Priorizacao de frota: monitorar carretas com maior historico de OS e
+  menor intervalo entre manutencoes — melhor sinal individual de custo.
+- Contratos: caracteristicas contratuais nao mostraram efeito relevante;
+  precificar pelo perfil operacional (uso, reefer, regiao), nao pela duracao.
+- Dados: preservar vinculo peca-linha de mao de obra na extracao; ampliar
+  cobertura de GPS para regiao mais precisa.
+- Evolucao: Mixed-Effects Random Forest / modelos hierarquicos e modelos
+  zero-inflados como proximos passos.

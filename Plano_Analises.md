@@ -1,5 +1,39 @@
 # Plano Analítico em Jupyter Notebooks — Projeto Quatro Norte
 
+> **ATUALIZAÇÃO (2026-07-06):** por decisão do projeto, o alvo principal
+> voltou a ser **`custo_manutencao_interno_por_km_deflacionado`** (custo
+> interno total por km), conforme objetivo formal do MBA. O alvo
+> preventivo descrito abaixo passou a ser análise de sensibilidade. A
+> deflação foi corrigida de IPCA para **CPI Canadá** (custos em CAD). A
+> trilha vigente está em `src/` (`run_02` → `run_04_deflacao_cpi` →
+> `run_03b`/`run_03c`/`run_03d` → `run_05b_modelagem_interno` →
+> `run_06_resultados_interno` → `build_ppt`); ver
+> `docs/registro_alteracoes_2026-07-06.md`.
+
+## Trilha vigente (2026-07-06) — resumo
+
+- **Alvo:** `custo_manutencao_interno_por_km_deflacionado` (custo interno
+  total, todas as categorias VMRS, por km; CAD de dez/2025). Preventivo e
+  mão de obra preventiva: sensibilidade/alvo-espelho.
+- **Deflator:** CPI all-items Canada (StatCan v41690973), base dez/2025.
+- **População:** `tipo_manutencao = MAINT`, `km_rodado_mes >= 500`;
+  352.038 observações com alvo válido; 67,1% dos meses com custo zero.
+- **Anti-vazamento:** features históricas defasadas; `regiao_operacao`
+  defasada 1 mês por carreta; split temporal (teste = últimos 12 meses).
+- **Resultado:** Random Forest recomendado — R² = 0,086, RMSE = 0,2424,
+  MAE = 0,1317 no teste temporal. Detalhes em
+  `reports/sumario_executivo.md`.
+
+---
+
+# ANEXO HISTÓRICO — desenho original da trilha
+
+> ⚠️ **Tudo abaixo desta linha documenta o desenho anterior** (alvo
+> preventivo como principal e deflação via IPCA) e é mantido apenas para
+> rastreabilidade metodológica. **Não usar como material de entrega nem
+> citar os números daqui como resultado do projeto.** Onde houver conflito,
+> vale a seção "Trilha vigente" acima.
+
 ## Summary
 
 Construir uma trilha reprodutível de análise em notebooks para responder à pergunta central:
@@ -11,8 +45,8 @@ A solução implementada organiza o trabalho em 7 notebooks sequenciais, partind
 
 Após revisão crítica, a trilha foi ajustada para responder melhor ao objetivo formal do projeto:
 
-- O alvo principal passou a ser `custo_manutencao_preventiva_por_km`, aproximado por linhas VMRS `PM` / `PREVENTIVE MAINTENANCE` e peças de OS com linha preventiva.
-- `custo_manutencao_interno_por_km` foi mantido como alvo secundário/sensibilidade, pois custo interno não é sinônimo de manutenção preventiva.
+- ~~O alvo principal passou a ser `custo_manutencao_preventiva_por_km`~~ **(revertido em 2026-07-06: o alvo principal é `custo_manutencao_interno_por_km_deflacionado`, conforme a pergunta da pesquisa; o preventivo é sensibilidade)**. A aproximação preventiva (linhas VMRS `PM`/`PREVENTIVE` e peças de OS com linha preventiva) continua calculada na base.
+- ~~`custo_manutencao_interno_por_km` foi mantido como alvo secundário/sensibilidade~~ **(revertido: é o alvo principal desde 2026-07-06; o preventivo é que passou a sensibilidade)**. Vale a distinção conceitual: custo interno não é sinônimo de manutenção preventiva.
 - `tipo_manutencao` (`MAINT` / `NET` / `MIX`) passou a ser tratado como variável de segmentação e possível confundidor; a modelagem principal usa população `MAINT`.
 - Meses com custo preventivo zero foram mantidos, pois representam custo esperado mensal para orçamento.
 - Foi definido piso metodológico de `500 km/mês` para cálculo das razões custo/km.
@@ -219,13 +253,16 @@ Saídas principais:
 - `reports/figures/03_evolucao_custo_por_km.png`
 - `reports/figures/03_correlacao_spearman.png`
 
-### 5. `04_deflacao_custos_ipca.ipynb`
+### 5. `04_deflacao_custos_cpi_canada.ipynb` (antes: `04_deflacao_custos_ipca.ipynb`)
 
-Objetivo: converter custos históricos nominais para valor presente antes da modelagem.
+Objetivo: converter custos históricos nominais (CAD) para valor presente antes da modelagem.
+
+> Corrigido em 2026-07-06: o deflator é o **CPI all-items Canada** (StatCan
+> v41690973). A versão IPCA foi movida para `notebooks/_obsoleto/`.
 
 Conteúdo:
 
-- Incorporar série mensal de IPCA do Banco Central do Brasil, SGS série 433.
+- Incorporar série mensal do CPI Canadá (StatCan Web Data Service).
 - Definir mês-base como `2025-12`.
 - Calcular fator de correção monetária.
 - Criar custos deflacionados:
@@ -243,21 +280,23 @@ Conteúdo:
 
 Saídas principais:
 
-- `data/raw/ipca_mensal_bcb_2020_2025.csv`
+- `data/raw/cpi_canada_statcan_2020_2025.csv`
 - `data/processed/base_mensal_carreta_deflacionada.csv`
-- `reports/tables/04_ipca_fatores.csv`
+- `reports/tables/04_cpi_fatores.csv`
 - `reports/tables/04_validacao_deflacao.csv`
 - `reports/tables/04_comparacao_nominal_deflacionado.csv`
 - `reports/figures/04_nominal_vs_deflacionado.png`
 
 ### 6. `05_modelagem_preditiva.ipynb`
 
-Objetivo: treinar e comparar modelos para prever custo preventivo futuro por km.
+Objetivo: treinar e comparar modelos para prever o custo interno futuro por km.
 
 Conteúdo:
 
 - Definir alvo principal:
-  - `custo_manutencao_preventiva_por_km_deflacionado`.
+  - `custo_manutencao_interno_por_km_deflacionado` **(trilha vigente;
+    o desenho original usava o preventivo — ver script
+    `src/run_05b_modelagem_interno.py`)**.
 - Definir população principal:
   - `tipo_manutencao = MAINT`;
   - `km_rodado_mes >= 500`;
@@ -377,11 +416,12 @@ Artefatos principais mantidos ou criados:
 - `notebooks/01_qualidade_integridade_dados.ipynb`
 - `notebooks/02_base_analitica_mensal.ipynb`
 - `notebooks/03_analise_exploratoria_hipoteses.ipynb`
-- `notebooks/04_deflacao_custos_ipca.ipynb`
+- `notebooks/04_deflacao_custos_cpi_canada.ipynb`
 - `notebooks/05_modelagem_preditiva.ipynb`
 - `notebooks/06_resultados_recomendacoes.ipynb`
+- `src/` (trilha vigente: `run_02` a `run_06_resultados_interno` + `build_ppt`)
 - `tools/create_analysis_notebooks.py`
-- `data/raw/ipca_mensal_bcb_2020_2025.csv`
+- `data/raw/cpi_canada_statcan_2020_2025.csv`
 - `data/processed/base_mensal_carreta.csv`
 - `data/processed/base_mensal_carreta_deflacionada.csv`
 - `reports/figures/`
@@ -396,9 +436,9 @@ Grão da base final:
 Colunas mínimas da base final:
 
 - identificadores: `id_carreta`, `ano_mes`;
-- alvo principal: `custo_manutencao_preventiva_por_km_deflacionado`;
+- alvo principal: `custo_manutencao_interno_por_km_deflacionado`;
+- sensibilidade: `custo_manutencao_preventiva_por_km_deflacionado`;
 - alvo-espelho: `custo_preventivo_mao_obra_por_km_deflacionado`;
-- alvo secundário: `custo_manutencao_interno_por_km_deflacionado`;
 - custos: `custo_total_mes`, `custo_mao_obra_mes`, `custo_pecas_mes`, `custo_preventivo_total_mes`;
 - operação: `km_rodado_mes`, `km_acumulado`, `km_valido_modelagem_flag`;
 - ativo: `idade_carreta`, `cod_montadora`, `cod_modelo`, `ano_modelo`, `flag_refrigerado`;
@@ -426,24 +466,28 @@ Cenários de validação:
 - A validação temporal expansiva evita KFold aleatório em dados de painel.
 - Métricas do modelo recomendado são calculadas no teste temporal completo.
 
-Resultados de validação mais recentes:
+Resultados de validação mais recentes (**trilha vigente, 2026-07-06 — alvo
+interno total, deflação CPI Canadá**):
 
-- Base mensal: `749.664` linhas e `64` colunas.
-- Base deflacionada: `749.664` linhas e `76` colunas.
-- Observações com alvo preventivo válido: `352.066`.
-- Observações `MAINT` usadas na modelagem principal: `332.756`.
-- Share de meses modelados com custo preventivo zero: `79,8%`.
-- OS com linha preventiva que também possuem linhas não preventivas: `85,3%`.
-- Custo interno total reconciliado: `78.996.520,64`.
-- Custo preventivo identificado: `24.833.687,14`.
-- Validação antileakage: `meses_desde_ultima_os_zero = 0` e `km_acumulado` defasado com `591.923` valores válidos.
+- Base mensal: `749.664` linhas; base deflacionada com colunas `*_deflacionado`.
+- Observações com alvo interno válido (`km_rodado_mes >= 500`): `352.038`.
+- Share de meses com custo interno zero: `67,1%`.
+- Custo interno total reconciliado: `CAD 78.996.520,64` nominais
+  (`CAD 84,3 mi` em valores de dez/2025).
+- Validação antileakage: features históricas defasadas, split temporal e
+  `regiao_operacao` defasada em 1 mês por carreta.
 - Modelo recomendado: `Random Forest`.
-- Alvo do modelo: `custo_manutencao_preventiva_por_km_deflacionado`.
+- Alvo do modelo: `custo_manutencao_interno_por_km_deflacionado`.
 - População do modelo: `tipo_manutencao = MAINT` e `km_rodado_mes >= 500`.
-- Métricas no teste temporal: `R2 = 0,063`, `RMSE = 0,0962`, `MAE = 0,0464`.
-- Modelo hurdle: `ROC AUC = 0,680`, `average precision = 0,333` e `RMSE = 0,1013` na previsão esperada, abaixo da Random Forest direta.
-- Alvo-espelho de mão de obra preventiva: `R2 = 0,082` contra `R2 = 0,063` do alvo preventivo total (`delta R2 = 0,019`), indicando ganho apenas marginal. `RMSE = 0,0218` e `MAE = 0,0122` são reportados apenas como contexto, pois o alvo de mão de obra tem escala menor que o alvo total com peças.
-- Hipótese de histórico de manutenção: reclassificada como `parcialmente suportada` ao considerar múltiplos proxies históricos, não apenas `custo_preventivo_acum`.
+- Métricas no teste temporal: `R2 = 0,086`, `RMSE = 0,2424`, `MAE = 0,1317`.
+- Comparação: gradient boosting `R2 = 0,077`; hurdle `R2 = 0,071`;
+  lineares `R2 = 0,036–0,041`; KNN (benchmark amostral) `R2 = 0,005`.
+
+Resultados históricos da fase anterior (alvo preventivo + IPCA — apenas
+para rastreabilidade; não citar como resultado do projeto): R2 = 0,063,
+RMSE = 0,0962, MAE = 0,0464; hurdle ROC AUC = 0,680; alvo-espelho de mão de
+obra R2 = 0,082; share de zeros preventivos 79,8%; OS preventivas mistas
+85,3%; custo preventivo identificado CAD 24,8 mi.
 
 ## Premissas e limitações
 
@@ -458,7 +502,7 @@ Resultados de validação mais recentes:
 - A razão por `tipo_manutencao` na base completa é tratada como caveat estrutural de `NET`/`MIX`, não como tamanho de efeito contratual.
 - `km_rodado_mes` é usado como denominador do alvo por km e como feature operacional; por isso, sua interpretação exige cautela e a hipótese de quilometragem também foi avaliada contra custo absoluto.
 - `prop_pecas_garantia` foi mantida como diagnóstico, mas retirada da modelagem principal porque a base quase não registra peças em garantia.
-- `custo_manutencao_interno_por_km` permanece como sensibilidade, mas não é o alvo principal do projeto.
+- `custo_manutencao_interno_por_km_deflacionado` é o alvo principal do projeto (desde 2026-07-06); o preventivo permanece calculado como sensibilidade.
 - `NET` e `MIX` não devem ser misturados de forma acrítica com `MAINT` nas conclusões de modelagem.
 - GPS é usado apenas como referência limitada, pois sua cobertura está concentrada entre setembro e dezembro de 2025.
 - `regiao_operacao` é derivada de `provincia_estado` ou `cod_local_os`, não de cluster geoespacial de GPS.
