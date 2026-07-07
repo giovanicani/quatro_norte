@@ -42,18 +42,20 @@ descrevem uma versão **antiga** do projeto e não devem ser usados como verdade
 |---|---|---|---|
 | 1 | **`docs/GUIA_DO_PROJETO.md`** (este) | Ponto de entrada e mapa geral | ✅ Vigente |
 | 2 | `reports/sumario_executivo.md` | Resposta ao problema, resultados e recomendações (1 página) | ✅ Vigente |
-| 3 | `docs/registro_alteracoes_2026-07-06.md` | **Log da revisão**: o que mudou, por quê, e como reprocessar | ✅ Vigente |
-| 4 | `README.md` | Especificação completa (contexto, dados, hipóteses, técnicas) | ⚠️ Vigente na maior parte, mas as seções 10.2/10.3/10.5 têm placeholders `✏️` (ver resultados reais no §6 deste guia) |
-| 5 | `data/dicionario_de_dados.md` | Schema, tipos e origem de cada campo das 7 bases | ✅ Vigente |
-| 6 | `Plano_Analises.md` | Plano de análises (alvo e resultados vigentes; números antigos mantidos como rastreio) | ✅ Vigente |
-| 7 | `reports/revisao_feedback.md` | Feedback de revisão anterior | 🕓 Histórico |
-| 8 | `AGENTS.md` | Guia de estilo/escopo p/ assistentes de IA | ⚠️ **Desatualizado** no alvo: ainda cita `custo_manutencao_preventiva_por_km` e deflação por IPCA |
-| 9 | `notebooks/03_*`, `05_*`, `06_*` | Notebooks originais de EDA/modelagem | ⚠️ **Desatualizados**: ainda referenciam o **alvo preventivo**. O fluxo vigente está nos scripts `src/run_*` |
-| 10 | `docs/PrevCustManut_jeison.html` | Relatório visual (site) preliminar | ❌ **Obsoleto**: usa **R$/IPCA** (Brasil), grão **por OS** e R² antigo (0,192) |
+| 3 | `docs/curadoria_2026-07-07.md` | Curadoria estrutural: o que foi organizado, validado e o que falta ajustar | ✅ Vigente |
+| 4 | `docs/registro_alteracoes_2026-07-06.md` | Log histórico da revisão alvo interno/CPI; não é o passo a passo operacional atual | 🕓 Histórico metodológico |
+| 5 | `README.md` | Especificação completa (contexto, dados, hipóteses, técnicas) | ⚠️ Vigente; §10.2 e §10.3 preenchidos, mas §10.4 (VIF) e §10.5 (achados) ainda têm placeholders `✏️` (ver VIF e achados no §6 deste guia) |
+| 6 | `docs/dicionario_de_dados.md` | Schema, tipos e origem de cada campo das 7 bases | ✅ Vigente |
+| 7 | `docs/dicionario_variaveis_candidatas.md` | Especificação metodológica das 46 X candidatas: grão, fórmula, defasagem, vazamento e hipótese | ✅ Vigente |
+| 8 | `docs/historico/Plano_Analises.md` | Plano de análises original, mantido para rastreio metodológico | 🕓 Histórico |
+| 9 | `docs/historico/revisao_feedback.md` | Feedback de revisão anterior | 🕓 Histórico |
+| 10 | `AGENTS.md` | Guia de estilo/escopo p/ assistentes de IA | ✅ Vigente |
+| 11 | `notebooks/` (00 → 08, ordem em `notebooks/README.md`) | Pipeline reprodutível célula a célula — **fonte única do projeto** | ✅ Ponto de entrada operacional |
+| 12 | `notebooks/07_painel_resultados.ipynb` | Painel visual que lê as saídas de `reports/` sem reexecutar tudo | ✅ Recomendado para inspeção rápida |
+| 13 | `docs/historico/PrevCustManut_jeison.html` | Relatório visual (site) preliminar | ❌ **Obsoleto**: usa **R$/IPCA** (Brasil), grão **por OS** e R² antigo (0,192) |
 
 **Regra de ouro:** em caso de conflito, vale **sumário executivo + registro de
-alterações + scripts `src/` + tabelas `reports/`**. Notebooks e AGENTS.md podem
-estar defasados.
+alterações + notebooks vigentes + tabelas `reports/`**.
 
 ---
 
@@ -69,11 +71,12 @@ Estas quatro decisões definem a análise atual. Detalhe completo no
 | **População de modelagem** | `tipo_manutencao = MAINT` · `km_rodado_mes ≥ 500` | mantida | Isola o efeito do tipo de contrato e evita razão custo/km explosiva |
 | **Anti-vazamento** | features históricas **defasadas** + split **temporal** (teste = 2025) + `regiao_operacao` defasada 1 mês | havia vazamento temporal | Métricas antigas eram infladas por "colar" informação do futuro |
 
-> ⚠️ **Ponto de atenção ainda aberto:** o **deck v2** e os scripts `src/run_05b`
-> usam o alvo **interno total**. Alguns **notebooks** (03/05/06) ainda trazem, no
-> texto e nas saídas, o alvo **preventivo**. Se alguém abrir os notebooks vai ver
-> números diferentes (ex.: ~80% de zeros, R² ~0,063). **Os números válidos são os
-> do alvo interno total** (§6). Sincronizar os notebooks é uma pendência (§8).
+> ⚠️ **Decisão de organização:** os **notebooks em `notebooks/` são a fonte
+> única e reprodutível** — a lógica antes em `src/*.py` foi convertida célula a
+> célula e os scripts `.py` foram removidos. Execute na ordem de
+> `notebooks/README.md` para ver resultado a resultado. Para inspeção rápida sem
+> reexecutar tudo, use `notebooks/07_painel_resultados.ipynb`. **Os números
+> válidos são os do alvo interno total** (§6).
 
 ---
 
@@ -96,7 +99,7 @@ Estas quatro decisões definem a análise atual. Detalhe completo no
   | `fato_contratos` | uma carreta-contrato | tipo, franquia de km, vigência |
   | `fato_gps` | uma posição/dia | telemetria lat/long (cobertura parcial) |
 
-- **Dicionário completo:** `data/dicionario_de_dados.md`.
+- **Dicionário completo:** `docs/dicionario_de_dados.md`.
 - **VMRS** ("CID da oficina"): código padronizado do sistema reparado (PM,
   04 Freios, 09 Pneus, 10 Reefer…). Usado como **dimensão de análise**, não como
   filtro do alvo. Tabela de códigos no README §9.3.
@@ -109,36 +112,34 @@ Estas quatro decisões definem a análise atual. Detalhe completo no
 
 ## 5. Pipeline reprodutível
 
-O código vive em **`src/`** (extraído dos notebooks, porque o ambiente não tinha
-Jupyter). Cada script corresponde a uma etapa; as saídas caem em `reports/`
-(tabelas `.csv` e figuras `.png`) e em `data/processed/`.
+O código vigente vive inteiramente em **`notebooks/`**. A lógica que antes
+estava em scripts `.py` em `src/` foi convertida célula a célula em notebooks,
+para que o pipeline seja executado e auditado passo a passo. **Não há mais
+scripts `.py`.** Cada notebook corresponde a uma etapa; as saídas caem em
+`reports/` (tabelas `.csv` e figuras `.png`) e em `data/processed/`.
 
-| Ordem | Script | Faz |
+Ordem e função documentadas em [`notebooks/README.md`](../notebooks/README.md).
+Para apenas consultar resultados já gerados, use
+`notebooks/07_painel_resultados.ipynb`.
+
+| Ordem | Notebook | Faz |
 |---|---|---|
-| 1 | `src/run_02_base_mensal.py` | monta a base mensal carreta × mês (749.664 linhas) |
-| 2 | `src/run_04_deflacao_cpi.py` | deflaciona custos (CAD) pelo CPI Canadá → base deflacionada |
-| 3 | `src/run_03b_eda_variaveis.py` | EDA variável-a-variável (protocolo acadêmico, pergunta 8) |
-| 4 | `src/run_03c_stats_ppt.py` | estatísticas complementares do Y para o deck |
-| 5 | `src/run_03d_outliers.py` | diagnóstico de outliers por variável |
-| 6 | `src/run_05b_modelagem_interno.py` | modelagem (split temporal, 9 modelos + hurdle, métricas, importâncias) |
-| 7 | `src/run_06_resultados_interno.py` | tabelas de resultado (`reports/tables/06_*`) |
-| 8 | `src/build_ppt.py` | gera `docs/Apresentacao_QuatroNorte.pptx` a partir de `reports/` |
+| 1 | `notebooks/02_base_analitica_mensal.ipynb` | monta a base mensal carreta × mês (749.664 linhas) |
+| 2 | `notebooks/04_deflacao_custos_cpi_canada.ipynb` | deflaciona custos (CAD) pelo CPI Canadá → base deflacionada |
+| 3 | `notebooks/03b_eda_variaveis.ipynb` | EDA variável-a-variável (protocolo acadêmico, pergunta 8) |
+| 4 | `notebooks/03c_estatisticas_resumo.ipynb` | estatísticas complementares do Y para o deck |
+| 5 | `notebooks/03d_diagnostico_outliers.ipynb` | diagnóstico de outliers por variável |
+| 6 | `notebooks/05_modelagem_preditiva.ipynb` | modelagem (split temporal, 9 modelos + hurdle, métricas, importâncias) |
+| 7 | `notebooks/06_resultados_recomendacoes.ipynb` | tabelas de resultado (`reports/tables/06_*`) |
+| 8 | `notebooks/08_build_apresentacao.ipynb` | gera `docs/entregas/Apresentacao_QuatroNorte.pptx` a partir de `reports/` (requer `python-pptx`) |
 
-**Rodar tudo do zero** (Windows / PowerShell, com os CSVs em `data/raw/`):
+> Antes de rodar 00–01 (contexto/qualidade) e 02, é preciso ter os CSVs em
+> `data/raw/`. A EDA (03b/03c/03d) roda **depois** da deflação (04), pois usa o
+> alvo deflacionado. Execute cada notebook na ordem acima e veja o resultado
+> célula a célula.
 
-```powershell
-py src\run_02_base_mensal.py
-py src\run_04_deflacao_cpi.py
-py src\run_03b_eda_variaveis.py
-py src\run_03c_stats_ppt.py
-py src\run_03d_outliers.py
-py src\run_05b_modelagem_interno.py
-py src\run_06_resultados_interno.py
-py src\build_ppt.py
-```
-
-> Scripts obsoletos (alvo preventivo / IPCA) foram movidos para `src/_obsoleto/`
-> e `notebooks/_obsoleto/`. Não usar.
+> Versões obsoletas (alvo preventivo / IPCA) foram removidas junto com os
+> scripts `.py`; o histórico permanece no controle de versão (git).
 
 ---
 
@@ -193,10 +194,10 @@ Fonte canônica: `reports/tables/` + `reports/sumario_executivo.md`.
 
 | Arquivo | O que é | Status |
 |---|---|---|
-| `docs/Apresentacao_QuatroNorte_v2.pptx` | Deck de apresentação (56 slides), versão mais recente, revisada | ✅ **Deck vigente** |
-| `docs/Apresentacao_QuatroNorte.pptx` | Deck gerado por `src/build_ppt.py` a partir de `reports/` | ✅ Base reprodutível (regenerável) |
-| `docs/Apresentacao_QuatroNorte_v2.html` | Relatório web (página única) espelhando o deck v2 — CAD/CPI, grão mensal, R² 0,086 | ✅ **Relatório web vigente** |
-| `docs/PrevCustManut_jeison.html` | Relatório web preliminar — R$/IPCA, grão por OS, R² 0,192 | ❌ **Obsoleto** (não circular como resultado) |
+| `docs/entregas/Apresentacao_QuatroNorte_v2.pptx` | Deck de apresentação (56 slides), versão mais recente, revisada | ✅ **Deck vigente** |
+| `docs/entregas/Apresentacao_QuatroNorte.pptx` | Deck gerado por `notebooks/08_build_apresentacao.ipynb` a partir de `reports/` | ✅ Base reprodutível (regenerável) |
+| `docs/entregas/Apresentacao_QuatroNorte_v2.html` | Relatório web (página única) espelhando o deck v2 — CAD/CPI, grão mensal, R² 0,086 | ✅ **Relatório web vigente** |
+| `docs/historico/PrevCustManut_jeison.html` | Relatório web preliminar — R$/IPCA, grão por OS, R² 0,192 | ❌ **Obsoleto** (não circular como resultado) |
 
 Os dois HTMLs compartilham o **mesmo design** (papel creme sobre fundo escuro,
 Archivo + IBM Plex, acentos laranja/azul), mas só o **v2** reflete a análise
@@ -206,12 +207,12 @@ correta. O antigo do Jeison é útil apenas como material exploratório históri
 
 ## 8. Pendências conhecidas
 
-- **Sincronizar os notebooks 03/05/06** com o alvo interno total (hoje o fluxo
-  vigente está nos scripts `src/run_*`).
-- **Atualizar `AGENTS.md`** (ainda cita alvo preventivo + IPCA).
+- Os notebooks vigentes (02, 03b/03c/03d, 04, 05, 06) já refletem o alvo
+  interno total + CPI Canadá; são a fonte oficial de resultados.
 - **Preencher os placeholders `✏️`** do README (§10.2, 10.3, 10.5) com os
   números reais desta consolidação.
-- `PrevCustManut_jeison.html`: portar para o grão mensal + CAD/CPI, ou aposentar.
+- `docs/historico/PrevCustManut_jeison.html`: portar para o grão mensal +
+  CAD/CPI, ou manter apenas como histórico.
 - **Limitações metodológicas** a comunicar: `km_rodado_mes` é denominador do Y
   **e** feature; cap de outliers (p99,5) calculado antes do split; duração de
   contratos vigentes censurada em 2025-12; GPS parcial (região derivada da OS);

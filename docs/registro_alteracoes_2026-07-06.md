@@ -3,6 +3,12 @@
 Documentação da revisão metodológica e da geração da apresentação acadêmica
 (entrega das Aulas 2–5 do MBA, perguntas 1–11 da agenda da disciplina).
 
+> **Nota de curadoria (2026-07-07):** este arquivo é mantido como registro
+> histórico da revisão que trocou o alvo preventivo/IPCA pelo alvo interno/CPI
+> Canadá. As referências a `src/*.py` descrevem a trilha usada naquela rodada.
+> A trilha operacional atual foi consolidada em `notebooks/`, conforme
+> `notebooks/README.md` e `docs/GUIA_DO_PROJETO.md`.
+
 ## 1. Decisões tomadas
 
 | Decisão | Antes | Depois |
@@ -40,7 +46,7 @@ extraído para scripts executáveis em `src/` (mesma lógica, mesmas saídas):
 | `src/run_03b_eda_variaveis.py` | **novo** — EDA variável-a-variável (protocolo acadêmico) com o novo Y |
 | `src/run_03c_stats_ppt.py` | **novo** — estatísticas complementares do Y para o deck |
 | `src/run_05b_modelagem_interno.py` | notebook 05 com o alvo trocado para `custo_manutencao_interno_por_km_deflacionado` |
-| `src/build_ppt.py` | **novo** — gera `docs/Apresentacao_QuatroNorte.pptx` a partir das tabelas/figuras de `reports/` |
+| `src/build_ppt.py` | **novo** — gera `docs/entregas/Apresentacao_QuatroNorte.pptx` a partir das tabelas/figuras de `reports/` |
 
 O notebook `04_deflacao_custos_ipca.ipynb` foi renomeado para
 `_obsoleto_04_deflacao_custos_ipca.ipynb` e substituído por
@@ -96,7 +102,7 @@ split temporal (teste = últimos 12 meses):
 
 ## 5. Apresentação gerada
 
-`docs/Apresentacao_QuatroNorte.pptx` — **66 slides**, 16:9, cobrindo as
+`docs/entregas/Apresentacao_QuatroNorte.pptx` — **66 slides**, 16:9, cobrindo as
 perguntas 1–11 da agenda:
 
 1. Capa + apresentação da Quatro Norte Consulting + agenda;
@@ -128,8 +134,8 @@ Para editar textos/comentários dos slides: dicionários `quant_coment` /
 - `.gitignore` passou a ignorar `data/raw/*.csv` (dados confidenciais),
   com exceção da série pública de CPI.
 - `reports/sumario_executivo.md` reescrito para a trilha vigente;
-  `reports/revisao_feedback.md` marcado como histórico;
-  `Plano_Analises.md` atualizado (alvo e resultados vigentes, com os
+  `docs/historico/revisao_feedback.md` marcado como histórico;
+  `docs/historico/Plano_Analises.md` atualizado (alvo e resultados vigentes, com os
   números antigos preservados como rastreabilidade).
 - Tabelas `06_*` regeneradas para o alvo interno
   (`src/run_06_resultados_interno.py`); descrição corrigida em
@@ -149,7 +155,7 @@ Para editar textos/comentários dos slides: dicionários `quant_coment` /
 - Notebooks 03/05/06 originais ainda referem o alvo preventivo — a versão
   vigente do fluxo com o alvo interno total está nos scripts `src/run_03b`,
   `src/run_05b` (os notebooks podem ser sincronizados depois, se necessário).
-- `docs/PrevCustManut_jeison.html` está **desatualizado** (alvo preventivo,
+- `docs/historico/PrevCustManut_jeison.html` está **desatualizado** (alvo preventivo,
   IPCA, R² antigos) — tratar como versão preliminar/histórica.
 - Limitações metodológicas registradas no deck: `km_rodado_mes` é
   denominador do Y e feature; cap de outliers p99,5 calculado antes do

@@ -4,7 +4,7 @@ Atualizado em 2026-07-06. Alvo oficial do projeto:
 `custo_manutencao_interno_por_km_deflacionado` (custo interno total por km,
 CAD deflacionados pelo CPI Canada, base dez/2025). Substitui a versao
 anterior (alvo preventivo + IPCA), preservada como historico em
-`reports/revisao_feedback.md`.
+`docs/historico/revisao_feedback.md`.
 
 ## Pergunta da pesquisa
 

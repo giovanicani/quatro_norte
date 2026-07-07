@@ -203,7 +203,10 @@ concluídas e não canceladas.
   item_cost) * actual_qty`
 
 Dicionário de dados completo (schema, tipos, origem por campo): ver
-[`data/dicionario_de_dados.md`](data/dicionario_de_dados.md).
+[`docs/dicionario_de_dados.md`](docs/dicionario_de_dados.md).
+O dicionário metodológico das variáveis candidatas (grão, fórmula,
+defasagem, risco de vazamento e hipótese associada) está em
+[`docs/dicionario_variaveis_candidatas.md`](docs/dicionario_variaveis_candidatas.md).
 
 ### 7.3 Como calcular o custo interno por KM
 
@@ -214,6 +217,11 @@ Dicionário de dados completo (schema, tipos, origem por campo): ver
 4. Indicador: `custo_interno_total_mes / km_rodado_mes` por carreta.
 5. Enriquecer com `dim_carretas` (idade, classe, reefer) e `fato_contratos`
    (tipo, franquia).
+
+Durante a limpeza, a `id_carreta = 8441` é removida das bases analíticas.
+Essa identificação representa trabalhos genéricos no pátio, não uma carreta
+individual comparável ao restante da frota; mantê-la distorceria custos,
+frequência de OS e indicadores por km.
 
 ## 8. Variável-alvo (Y)
 
@@ -232,30 +240,35 @@ nominal futuro para fins de orçamento.
 
 ### 9.1 Quantitativas naturais
 
-| Variável | Origem |
-| --- | --- |
-| `ano_modelo` | dim_carretas / fato_wo_ml |
-| `eixos` | dim_carretas / fato_wo_ml |
-| `comprimento` | dim_carretas / fato_wo_ml |
-| `km_acumulado_data_os` | fato_wo_ml |
-| `delta_km_desde_ultima_os` | fato_wo_ml |
-| `franquia_km_mensal` | fato_contratos |
+| Variável | Origem | Objetivo analítico |
+| --- | --- | --- |
+| `ano_modelo` | dim_carretas / fato_wo_ml | Representar idade tecnológica e geração do ativo; modelos mais antigos podem ter maior desgaste ou padrão de manutenção diferente. |
+| `eixos` | dim_carretas / fato_wo_ml | Capturar configuração estrutural da carreta, que pode influenciar capacidade de carga, desgaste e custo de manutenção. |
+| `comprimento` | dim_carretas / fato_wo_ml | Representar porte físico do equipamento; carretas maiores podem ter perfil operacional e custos distintos. |
+| `km_acumulado_data_os` | fato_wo_ml | Medir exposição acumulada ao uso até a OS; maior quilometragem tende a aumentar desgaste e probabilidade de manutenção. |
+| `delta_km_desde_ultima_os` | fato_wo_ml | Medir a distância rodada desde a manutenção anterior; ajuda a avaliar intervalo de desgaste entre eventos. |
+| `franquia_km_mensal` | fato_contratos | Representar intensidade contratual esperada de uso; útil para comparar uso previsto, desgaste e custo por km. |
 
 ### 9.2 Qualitativas naturais
 
-| Variável | Origem |
-| --- | --- |
-| `cod_montadora` | dim_carretas / fato_wo_ml |
-| `cod_modelo` | dim_carretas / fato_wo_ml |
-| `flag_refrigerado` | dim_carretas / fato_wo_ml |
-| `provincia_estado` | fato_wo_ml |
-| `vmrs` | fato_wo / fato_wo_ml |
-| `classe` / `grupo_manutencao` | dim_carretas |
-| `tipo_contrato` (RENTAL/LEASE) | fato_contratos |
-| `tipo_manutencao` (MAINT/NET/MIX) | fato_contratos |
-| `sistema_vmrs` | fato_wo_labour |
-| `flag_terceirizado` | fato_wo_labour / fato_wo_parts |
-| `flag_garantia` | fato_wo_parts |
+| Variável | Origem | Objetivo analítico |
+| --- | --- | --- |
+| `cod_montadora` | dim_carretas / fato_wo_ml | Comparar padrões de custo entre fabricantes e identificar diferenças sistemáticas de manutenção. |
+| `cod_modelo` | dim_carretas / fato_wo_ml | Capturar diferenças específicas de projeto/modelo que podem não aparecer apenas pela montadora. |
+| `flag_refrigerado` | dim_carretas / fato_wo_ml | Identificar carretas com sistema de refrigeração, potencialmente mais complexas e caras de manter. |
+| `tailgate_flag` | dim_carretas / fato_wo_ml | Indicar presença de plataforma elevatória, componente adicional sujeito a manutenção. |
+| `unit_subtype` | dim_carretas / fato_wo_ml | Segmentar subtipos operacionais de carreta, que podem ter padrões diferentes de uso e custo. |
+| `tire_size` | dim_carretas / fato_wo_ml | Avaliar se dimensões de pneus estão associadas a custos e desgaste diferenciados. |
+| `suspension_type` | dim_carretas / fato_wo_ml | Capturar diferenças de suspensão, relevantes para desgaste, conforto operacional e manutenção. |
+| `new_used_indicator` | dim_carretas / fato_wo_ml | Diferenciar ativos adquiridos novos ou usados, pois o histórico prévio pode influenciar custo futuro. |
+| `provincia_estado` | fato_wo_ml | Representar localização operacional ou administrativa associada à OS; serve como proxy geográfica. |
+| `vmrs` | fato_wo / fato_wo_ml | Classificar o sistema/componente da manutenção, permitindo decompor o custo por tipo de problema. |
+| `classe` / `grupo_manutencao` | dim_carretas | Agrupar carretas por perfil técnico ou de manutenção para comparar custos entre classes. |
+| `tipo_contrato` (RENTAL/LEASE) | fato_contratos | Testar se o modelo comercial do contrato influencia uso, responsabilidade e custo interno. |
+| `tipo_manutencao` (MAINT/NET/MIX) | fato_contratos | Segmentar regimes de manutenção, evitando misturar populações com regras econômicas diferentes. |
+| `sistema_vmrs` | fato_wo_labour | Detalhar o sistema afetado nas linhas de mão de obra, útil para análise de componentes críticos. |
+| `flag_terceirizado` | fato_wo_labour / fato_wo_parts | Identificar custos executados por terceiros, que podem ter estrutura de preço distinta. |
+| `flag_garantia` | fato_wo_parts | Medir participação de peças cobertas por garantia e possível redução do custo internalizado. |
 
 ### 9.3 Feature engineering
 
@@ -291,16 +304,71 @@ Referência dos códigos `vmrs`:
 | `PM` | PREVENTIVE MAINTENANCE |
 
 **Ainda planejadas:**
-- `idade_carreta` (a partir de `data_entrada_servico`)
-- `km_por_mes`
-- `custo_acum_manutencao`
-- `n_os_corretivas`
-- `intervalo_medio_os`
-- `prop_pecas_garantia` (agregando `flag_garantia` de `fato_wo_parts`)
-- `custo_por_componente` (agregando por `sistema_vmrs`)
-- `km_desde_ult_troca`
-- `regiao_operacao`
-- `custo_deflacionado_cpi` (CPI Canadá — custos em CAD)
+
+| Variável | Definição / origem | Objetivo analítico |
+| --- | --- | --- |
+| `idade_carreta` | Anos desde `data_entrada_servico` ou fabricação. | Medir envelhecimento do ativo e sua relação com aumento de manutenção. |
+| `km_por_mes` | Quilometragem média mensal da carreta. | Representar intensidade média de uso e exposição recorrente ao desgaste. |
+| `custo_acum_manutencao` | Soma histórica de custos internos, defasada até antes do mês previsto. | Capturar histórico acumulado de manutenção e perfil de ativo mais caro. |
+| `n_os_corretivas` | Quantidade de OS não preventivas, quando a classificação permitir. | Medir frequência de falhas ou intervenções não programadas. |
+| `intervalo_medio_os` | Média de dias ou meses entre OS anteriores. | Identificar recorrência de manutenção; intervalos menores podem indicar maior risco futuro. |
+| `prop_pecas_garantia` | Proporção de peças com `flag_garantia` em `fato_wo_parts`. | Avaliar efeito de garantia na redução ou deslocamento de custos internos. |
+| `custo_por_componente` | Custo agregado por `sistema_vmrs` ou componente. | Identificar quais sistemas concentram custos e ajudam a explicar o custo total por km. |
+| `km_desde_ult_troca` | Quilometragem desde a última troca relevante de peça/componente. | Aproximar desgaste técnico desde a última intervenção importante. |
+| `regiao_operacao` | Agrupamento por região, província, local da OS ou telemetria/GPS. | Capturar diferenças operacionais, climáticas, rodoviárias ou logísticas entre regiões. |
+
+Observação: `custo_deflacionado_cpi` não é tratado como variável explicativa
+`X`; é uma transformação monetária dos custos/da variável-alvo para permitir
+comparação em valor real ao longo do tempo.
+
+**Candidatas para próxima rodada de avaliação:**
+
+Estas variáveis devem ser calculadas sempre de forma **defasada**, usando
+apenas informação disponível antes do mês previsto, para evitar vazamento
+temporal. O objetivo é testar se sinais de recência, recorrência, intensidade
+de uso e desgaste melhoram a associação com
+`custo_manutencao_interno_por_km_deflacionado`.
+
+| Variável candidata | Definição | Objetivo analítico |
+| --- | --- | --- |
+| `custo_acum_12m` | Soma do custo interno da carreta nos 12 meses anteriores ao mês previsto. | Captura condição recente do ativo, sem carregar eventos muito antigos. |
+| `n_os_12m` | Quantidade de OS nos 12 meses anteriores. | Mede frequência recente de manutenção. |
+| `n_os_3m` | Quantidade de OS nos 3 meses anteriores. | Captura deterioração ou recorrência muito recente. |
+| `meses_com_os_12m` | Número de meses, nos 12 anteriores, com pelo menos uma OS. | Diferencia eventos concentrados de problemas persistentes ao longo do tempo. |
+| `flag_os_mes_anterior` | Indicador binário de existência de OS no mês imediatamente anterior. | Mede sinal de curto prazo associado a sequência de manutenção. |
+| `custo_mes_anterior` | Custo interno total no mês imediatamente anterior. | Mede intensidade recente do problema ou da intervenção. |
+| `custo_por_km_media_6m` | Média do custo interno por km nos 6 meses anteriores. | Resume o comportamento recente do próprio indicador-alvo, sem usar o mês previsto. Deve ser avaliada também em modelos sem persistência do Y, para medir quanto as demais variáveis explicam por si mesmas. |
+| `km_rodado_mes_lag_1m` | Quilometragem rodada no mês anterior. | Proxy de uso recente, mais adequada para previsão futura do que o KM contemporâneo. |
+| `km_rodado_media_3m` | Média de KM rodado nos 3 meses anteriores. | Captura intensidade recente de operação e exposição ao desgaste. |
+| `densidade_os_por_10k_km` | `n_os_acum / km_rodado_acum * 10000`. | Mede frequência histórica de OS ajustada pela exposição ao uso. |
+| `custo_acum_por_10k_km` | `custo_acum_manutencao / km_rodado_acum * 10000`. | Mede histórico de custo ajustado pela quilometragem acumulada. |
+| `n_sistemas_distintos_12m` | Quantidade de sistemas/componentes VMRS distintos com OS nos 12 meses anteriores. | Indica diversidade de problemas e possível desgaste geral do ativo. |
+| `flag_reincidencia_sistema_3m` | Indicador de repetição do mesmo sistema/componente em OS nos 3 meses anteriores. | Captura reincidência, possível falha recorrente ou manutenção incompleta. |
+| `idade_x_km_acumulado` | Interação entre `idade_carreta` e `km_acumulado`. | Testa se idade e quilometragem têm efeito conjunto sobre o custo. |
+| `reefer_x_idade` | Interação entre `flag_refrigerado` e `idade_carreta`. | Testa se o efeito da idade é diferente em carretas refrigeradas. |
+
+Com essa especificação, o universo conceitual inicial passa a ter **46
+variáveis explicativas candidatas (X)**, além da variável-alvo principal
+`custo_manutencao_interno_por_km_deflacionado`:
+
+| Grupo | Quantidade |
+| --- | ---: |
+| Variáveis quantitativas naturais | 6 |
+| Variáveis qualitativas naturais | 16 |
+| Features derivadas planejadas | 9 |
+| Novas features candidatas | 15 |
+| **Total conceitual de X candidatas** | **46** |
+| Variável-alvo principal (Y) | 1 |
+| **Total conceitual com Y** | **47** |
+
+Esse total representa o conjunto conceitual inicial para construção e avaliação
+da base analítica, não necessariamente o número final de colunas do dataset
+`carreta × mês`. Algumas variáveis nascem no grão de OS e precisam ser
+agregadas ou transformadas para o grão mensal; outras são proxies parcialmente
+sobrepostas, como `provincia_estado` e `regiao_operacao`. O modelo final deve
+usar apenas as variáveis aprovadas após análise de disponibilidade, baixa
+variância, correlação com Y, multicolinearidade, risco de vazamento temporal e
+desempenho preditivo.
 
 > ✏️ Atualizar esta divisão conforme cada feature for de fato calculada.
 
@@ -326,9 +394,14 @@ Análises complementares:
 
 ### 10.2 Tabela-resumo de estatísticas descritivas
 
+> **Nota de versão:** os números desta seção foram calculados na rodada
+> anterior da base analítica, antes da exclusão sistemática da
+> `id_carreta = 8441` e antes da inclusão das novas features candidatas da
+> seção 9.3. Devem ser recalculados após a atualização da base.
+
 Calculada sobre as **352.038** observações carreta × mês com Y válido
 (`km_rodado_mes ≥ 500`). Fonte: `reports/tables/03b_estatisticas_descritivas.csv`
-(gerada por `src/run_03b_eda_variaveis.py`).
+(gerada por `notebooks/03b_eda_variaveis.ipynb`).
 
 | Variável | Tipo | N | Média | DP | Min | Q1 | Mediana | Q3 | Max | Assim. |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -357,11 +430,19 @@ Notas de leitura:
   longa (assimetria 14,4) → exige `log1p`/perda robusta e leitura em duas partes.
 - Assimetrias extremas em `n_os_acum` (máx 15.006) e `custo_acum_manutencao`
   (máx 1.934.021) sinalizam **anomalia de cadastro** em pouquíssimas carretas
-  (ver §10.5 e diagnóstico de outliers `03d_diagnostico_outliers.csv`).
+  (ver §10.5 e diagnóstico de outliers `03d_diagnostico_outliers.csv`). A
+  reexecução sem a `id_carreta = 8441` deve confirmar se esses extremos eram
+  decorrentes dos trabalhos genéricos de pátio.
 - `km_rodado_mes` tem máx de 108.359 km/mês (reset de odômetro residual);
   tratado por winsorização/robustez de árvore.
 
 ### 10.3 Correlação com a variável-alvo (seleção de variáveis)
+
+> **Nota de versão:** as correlações e associações abaixo também pertencem à
+> rodada anterior da base. A matriz deve ser recalculada após a remoção da
+> `id_carreta = 8441`, a atualização do grão mensal e a inclusão das novas
+> variáveis candidatas, incluindo `tailgate_flag`, `unit_subtype`,
+> `tire_size`, `suspension_type` e `new_used_indicator`.
 
 Para decidir quais variáveis entram no modelo, calcular a correlação de
 cada X com Y (`custo_manutencao_interno_por_km`) e ranqueá-las por força de
@@ -444,8 +525,8 @@ quantitativas (naturais + engineered):
 | `ano_modelo` | | |
 | `eixos` | | |
 | `comprimento` | | |
-| `km_acumulado_data_os` | | |
-| `delta_km_desde_ultima_os` | | |
+| `km_acumulado` | | |
+| `km_rodado_mes` | | |
 | `franquia_km_mensal` | | |
 | ... | | |
 
@@ -477,7 +558,9 @@ quantitativas (naturais + engineered):
 
 1. Extração e consolidação das bases (`extract_custo_interno_km.sql` →
    `data/raw/*.csv`).
-2. Limpeza e tratamento de dados faltantes, outliers e resets de odômetro.
+2. Limpeza e tratamento de dados faltantes, outliers, resets de odômetro e
+   remoção da `id_carreta = 8441` por representar trabalhos genéricos no
+   pátio.
 3. Deflação dos custos históricos (CAD) via CPI Canadá (StatCan), base dez/2025.
 4. Feature engineering (variáveis derivadas listadas na seção 9.3).
 5. Agregação carreta × mês e cálculo do indicador `custo_interno_por_km`.
@@ -495,21 +578,43 @@ quantitativas (naturais + engineered):
 .
 ├── AGENTS.md
 ├── README.md
-└── data/
-    ├── dicionario_de_dados.md
-    ├── raw/          # dados originais, sem edição manual
-    ├── interim/      # dados intermediários
-    └── processed/    # bases prontas para análise e modelagem
+├── data/
+│   ├── extract_custo_interno_km.sql
+│   ├── raw/          # dados originais, sem edição manual
+│   ├── interim/      # dados intermediários
+│   └── processed/    # bases prontas para análise e modelagem
+├── docs/             # documentação viva, entregas, diagramas e histórico
+│   ├── entregas/     # apresentações e relatórios finais
+│   ├── diagramas/    # diagramas auxiliares do modelo de dados
+│   └── historico/    # materiais antigos ou substituídos
+├── notebooks/        # fonte reprodutível do projeto (pipeline célula a célula)
+└── reports/          # figuras, tabelas, sumário executivo e diagnósticos
 ```
 
-Estrutura recomendada para próximas etapas:
+Arquivos de referência:
 
 ```text
-docs/           # referências, briefing e entregas textuais
-notebooks/      # EDA, experimentos e modelagem
-reports/        # figuras, tabelas e resultados finais
-src/            # scripts reutilizáveis de limpeza, features e modelos
+docs/GUIA_DO_PROJETO.md                        # ordem recomendada de leitura
+docs/curadoria_2026-07-07.md                   # curadoria estrutural e pendências
+docs/dicionario_de_dados.md                    # schema, tipos e origem dos campos
+docs/dicionario_variaveis_candidatas.md        # grão, fórmula e uso das features
+reports/sumario_executivo.md                   # síntese dos resultados vigentes
+reports/tables/                                # tabelas intermediárias e finais
+reports/figures/                               # gráficos da EDA e resultados
+notebooks/02_base_analitica_mensal.ipynb       # construção da base mensal
+notebooks/04_deflacao_custos_cpi_canada.ipynb  # deflação por CPI Canadá
+notebooks/05_modelagem_preditiva.ipynb         # modelagem principal
+notebooks/06_resultados_recomendacoes.ipynb    # consolidação dos resultados
+docs/entregas/Apresentacao_QuatroNorte.pptx    # apresentação gerada pelo pipeline
+docs/historico/Plano_Analises.md               # plano analítico histórico
 ```
+
+Os **notebooks são a fonte única e reprodutível** do projeto: toda a lógica
+que antes vivia em scripts `.py` foi convertida célula a célula. Execute
+`notebooks/` na ordem documentada em [`notebooks/README.md`](notebooks/README.md)
+(00 → 01 → 02 → 04 → 03b/03c/03d → 05 → 06 → 08) para ver cada resultado no
+próprio notebook. Para apenas consultar resultados já gerados, use
+`notebooks/07_painel_resultados.ipynb`, que lê as saídas de `reports/`.
 
 ## 14. Cuidados com dados
 
@@ -540,19 +645,27 @@ src/            # scripts reutilizáveis de limpeza, features e modelos
 
 ## 16. Status
 
-Pipeline completo executado (notebooks 00–06 + scripts em `src/`):
+Pipeline completo executado na rodada anterior e agora consolidado inteiramente
+em `notebooks/` (a lógica antes em `src/*.py` foi convertida célula a célula):
+
+> **Nota de versão:** os resultados abaixo ainda refletem a base anterior à
+> exclusão sistemática da `id_carreta = 8441` e anterior à inclusão das novas
+> variáveis candidatas da seção 9.3. A EDA, as correlações, o VIF e a
+> modelagem devem ser reexecutados quando a base atualizada estiver fechada.
 
 - Base analítica mensal construída: 749.664 linhas carreta × mês
   (`data/processed/base_mensal_carreta.csv`), 352.038 observações com alvo
   válido (km ≥ 500/mês).
 - Deflação corrigida: custos em CAD deflacionados pelo **CPI Canadá**
   (StatCan v41690973, base dez/2025) — substituindo o IPCA usado em versão
-  anterior (`src/run_04_deflacao_cpi.py`).
+  anterior (`notebooks/04_deflacao_custos_cpi_canada.ipynb`).
 - EDA variável-a-variável completa (histogramas, boxplots, frequências,
-  correlações, eta, VIF) em `reports/figures/eda/` e `reports/tables/03b_*`.
+  correlações, eta, VIF) em `reports/figures/eda/` e `reports/tables/03b_*`
+  para a rodada anterior.
 - Modelagem com alvo `custo_manutencao_interno_por_km_deflacionado`
   (população MAINT, split temporal): **Random Forest recomendado — R² =
-  0,088, RMSE = 0,242, MAE = 0,132** no teste temporal; zero-inflação de
-  67% dos meses.
-- Apresentação acadêmica: `docs/Apresentacao_QuatroNorte.pptx` (63 slides,
-  perguntas 1–11 da disciplina).
+  0,086, RMSE = 0,242, MAE = 0,132** no teste temporal; zero-inflação de
+  67% dos meses. Esses indicadores devem ser recalculados após a atualização
+  da base.
+- Apresentação acadêmica: `docs/entregas/Apresentacao_QuatroNorte.pptx`
+  (63 slides, perguntas 1–11 da disciplina).

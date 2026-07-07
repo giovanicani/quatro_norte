@@ -8,7 +8,7 @@ km_rodado_mes,Quilometragem mensal prorrateada a partir de intervalos entre leit
 km_acumulado,"Odometro acumulado defasado ate o mes anterior, para evitar uso de leitura do mes corrente"
 km_acumulado_fim_mes,"Odometro maximo observado no mes corrente; mantido para auditoria, nao usado como feature preditiva"
 km_valido_modelagem_flag,"1 quando km_rodado_mes >= 500, piso usado para alvos por km"
-custo_manutencao_preventiva_por_km,"Variavel-alvo primaria nominal: custo_preventivo_total_mes / km_rodado_mes, com piso de km"
+custo_manutencao_preventiva_por_km,"Alvo complementar/sensibilidade nominal: custo_preventivo_total_mes / km_rodado_mes, com piso de km"
 custo_preventivo_mao_obra_por_km,"Alvo-espelho nominal mais limpo: mao de obra preventiva / km_rodado_mes, com piso de km"
 custo_manutencao_interno_por_km,"Alvo secundario nominal: custo_total_mes / km_rodado_mes, com piso de km"
 custo_acum_manutencao,Custo historico acumulado ate o mes anterior

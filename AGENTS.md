@@ -3,9 +3,9 @@
 ## Contexto do projeto
 
 Este repositorio e o projeto aplicado do MBA para a Quatro Norte Consulting.
-O tema central e a previsao de custos de manutencao preventiva de carretas em
-uma operacao de leasing, usando dados historicos e tecnicas de ciencia de dados
-para estimar o custo futuro por quilometro.
+O tema central e a previsao de custos de manutencao interna de carretas em
+uma operacao de leasing/rental, usando dados historicos e tecnicas de ciencia
+de dados para estimar o custo futuro por quilometro.
 
 Pergunta do problema:
 
@@ -43,11 +43,12 @@ das seguintes fontes por `id_carreta`:
 
 Variavel-alvo principal:
 
-- `custo_manutencao_preventiva_por_km`
+- `custo_manutencao_interno_por_km_deflacionado`
 
-Os custos historicos devem ser deflacionados a valor presente, por IPCA ou
-indice setorial apropriado, antes da modelagem. Quando necessario para
-orcamento, a previsao pode ser reexpressa em valor futuro nominal.
+Os custos historicos estao em dolares canadenses (CAD) e devem ser
+deflacionados a valor presente pelo CPI Canada, base dez/2025, antes da
+modelagem. Quando necessario para orcamento, a previsao pode ser reexpressa
+em valor futuro nominal.
 
 ## Hipoteses de trabalho
 
@@ -74,7 +75,7 @@ Ao preparar dados para analise ou modelagem, considere derivar variaveis como:
   suspensao ou estrutura.
 - `km_desde_ult_troca`: desgaste estimado desde a ultima troca relevante.
 - `regiao_operacao`: cluster de rota derivado de GPS ou telemetria.
-- `custo_deflacionado_ipca`: custo em reais a valor presente.
+- `custo_deflacionado_cpi`: custo em CAD a valor presente.
 
 ## Analise exploratoria
 
@@ -120,9 +121,8 @@ data/
   interim/      # dados intermediarios
   processed/    # bases prontas para analise/modelagem
 docs/           # referencias, briefing e entregas textuais
-notebooks/      # EDA, experimentos e modelagem
+notebooks/      # fonte reprodutivel do projeto (pipeline celula a celula; sem .py)
 reports/        # figuras, tabelas e resultados finais
-src/            # scripts reutilizaveis de limpeza, features e modelos
 ```
 
 Nao versionar dados sensiveis, dados pessoais, bases grandes ou arquivos que
