@@ -50,18 +50,19 @@ descrevem uma versão **antiga** do projeto e não devem ser usados como verdade
 | 1 | **`docs/GUIA_DO_PROJETO.md`** (este) | Ponto de entrada e mapa geral | ✅ Vigente |
 | 1b | **`docs/revisao_anual_2026-07-07.md`** | Revisão para custo ANUAL por carreta (fonte única) — decisões e resultados | ✅ **Autoritativo** |
 | 2 | `reports/sumario_executivo.md` | Resposta ao problema, resultados e recomendações (1 página) | ✅ Vigente |
-| 3 | `docs/curadoria_2026-07-07.md` | Curadoria estrutural: o que foi organizado, validado e o que falta ajustar | ✅ Vigente |
-| 4 | `docs/revisao_pos_base_nova_2026-07-07.md` | Revisão da fase **mensal/por km** (superada pela revisão anual) | 🕓 Histórico (mensal) |
-| 5 | `docs/registro_alteracoes_2026-07-06.md` | Log histórico da revisão alvo interno/CPI (fase mensal) | 🕓 Histórico metodológico |
+| 3 | `docs/historico/curadoria_2026-07-07.md` | Curadoria da fase mensal/por km, preservada para auditoria | 🕓 Histórico (mensal) |
+| 4 | `docs/historico/revisao_pos_base_nova_2026-07-07.md` | Revisão da fase **mensal/por km** (superada pela revisão anual) | 🕓 Histórico (mensal) |
+| 5 | `docs/historico/registro_alteracoes_2026-07-06.md` | Log histórico da revisão alvo interno/CPI (fase mensal) | 🕓 Histórico metodológico |
 | 6 | `README.md` | Especificação completa (contexto, dados, hipóteses, técnicas) | ✅ Vigente |
 | 7 | `docs/dicionario_de_dados.md` | Schema, tipos e origem de cada campo das 7 bases | ✅ Vigente |
-| 8 | `docs/dicionario_variaveis_candidatas.md` | Especificação metodológica das 46 X candidatas: grão, fórmula, defasagem, vazamento e hipótese | ✅ Vigente |
+| 8 | `docs/dicionario_variaveis_candidatas.md` | Especificação metodológica das variáveis candidatas deriváveis da fonte única (~25), com defasagem, vazamento e hipótese | ✅ Vigente |
 | 9 | `docs/historico/Plano_Analises.md` | Plano de análises original, mantido para rastreio metodológico | 🕓 Histórico |
 | 10 | `docs/historico/revisao_feedback.md` | Feedback de revisão anterior | 🕓 Histórico |
 | 11 | `AGENTS.md` | Guia de estilo/escopo p/ assistentes de IA | ✅ Vigente |
 | 12 | `notebooks/` (00 → 08, ordem em `notebooks/README.md`) | Pipeline reprodutível célula a célula — **fonte única do projeto** | ✅ Ponto de entrada operacional |
 | 13 | `notebooks/07_painel_resultados.ipynb` | Painel visual que lê as saídas de `reports/` sem reexecutar tudo | ✅ Recomendado para inspeção rápida |
 | 14 | `docs/historico/PrevCustManut_jeison.html` | Relatório visual (site) preliminar | ❌ **Obsoleto**: usa **R$/IPCA** (Brasil), grão **por OS** e R² antigo (0,192) |
+| 15 | `docs/diagramas/modelo_dados.html` | Diagrama do modelo estrela usado na etapa anterior de preparação | 🕓 Contexto técnico |
 
 **Regra de ouro:** em caso de conflito, vale **`docs/revisao_anual_2026-07-07.md` +
 notebooks vigentes + tabelas `reports/` + sumário executivo**.
@@ -162,7 +163,7 @@ Fonte canônica: `reports/tables/` + `reports/sumario_executivo.md`.
 
 ### EDA
 - **Distribuição do Y (custo anual real por carreta):** média **CAD 1.673,72/ano**,
-  mediana **812,55**, assimetria **3,76**, **apenas 3,2%** de carreta-anos com custo
+  mediana **812,55**, assimetria **3,79**, **apenas 3,2%** de carreta-anos com custo
   zero — o grão anual praticamente elimina a zero-inflação.
 - **Evolução real:** custo médio por carreta subiu de **CAD 1.334 (2020) para 2.026
   (2025), +52%** em termos reais (já sem inflação; CPI +20,6% no período).

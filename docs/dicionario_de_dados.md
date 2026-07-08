@@ -1,14 +1,21 @@
-# Dicionário de Dados — Custo de Manutenção Interno por KM
+# Dicionário de Dados — Modelo Estrela (etapa anterior de preparação)
 
 **Projeto Quatro Norte / MBA — Grupo 01**
 Fonte: extração `data/extract_custo_interno_km.sql` (SQLcl → `data/raw/*.csv`)
 Janela de análise: **2020-01-01 a 2025-12-31**
 
+> ⚠️ **Contexto.** Este documento descreve o **modelo estrela** (7 tabelas) e o
+> processo de extração/joins/feature engineering que constituem a **etapa anterior de
+> preparação** dos dados. O estudo vigente **não** usa essas tabelas diretamente: parte
+> da **fonte única** `fato_wo_ml_2020-01-01_to_2025-12-31.csv` para modelar o **custo
+> anual de manutenção por carreta**. Ver [`GUIA_DO_PROJETO.md`](GUIA_DO_PROJETO.md) e
+> [`revisao_anual_2026-07-07.md`](revisao_anual_2026-07-07.md).
+
 ---
 
 ## 1. Visão geral
 
-A extração gera **8 arquivos CSV** que, juntos, permitem calcular o **custo de manutenção interno por quilômetro** das carretas próprias da Trailcon. O modelo combina uma dimensão de carretas (`dim_carretas`), fatos normalizados e um fato enriquecido para modelagem (`fato_wo_ml`).
+A extração gera **8 arquivos CSV** (modelo estrela) que, juntos, permitem consolidar o custo interno de manutenção das carretas próprias. O modelo combina uma dimensão de carretas (`dim_carretas`), fatos normalizados e o fato enriquecido `fato_wo_ml` — este último é a **fonte única** do estudo vigente (custo **anual** por carreta).
 
 O escopo analítico atual **não é restrito à manutenção preventiva**. O alvo considera todas as manutenções internalizadas, isto é, ordens de serviço com custo interno (`charge_flag = 'I'`), incluindo eventos preventivos e corretivos absorvidos pela operação.
 
@@ -260,13 +267,20 @@ Grão: **uma posição GPS por carreta por dia** (o **último** ponto de cada di
 
 ---
 
-## 4. Como calcular o custo interno por KM
+## 4. Do modelo estrela ao estudo vigente (custo anual por carreta)
 
-1. **Custo por OS:** usar `total_custo_interno` de `fato_wo_ml`, ou calcular `total_interno_mao_obra + total_interno_pecas` de `fato_wo`.
-2. **Agregar por carreta × mês** (a partir de `data_os`).
-3. **KM do período:** ordenar `fato_readings` por carreta/data e calcular o Δ de `km_acumulado` no mesmo mês (tratando resets).
-4. **Indicador:** `custo_interno_total_mes / km_rodado_mes` por carreta. O numerador inclui manutenções preventivas e corretivas internalizadas.
-5. **Enriquecer** com `dim_carretas` (idade, classe, reefer) e `fato_contratos` (tipo, franquia) — este último amarrado por carreta + período do contrato vigente.
+> O cálculo por km abaixo pertence à **fase anterior** (grão mensal). O estudo vigente
+> parte da **fonte única** `fato_wo_ml` e agrega o custo interno por **carreta × ano**
+> (deflacionado pelo CPI Canadá) — ver `dicionario_variaveis_candidatas.md`.
+
+1. **Custo por OS:** `total_custo_interno` de `fato_wo_ml` (preventiva + corretiva).
+2. **Agregar por carreta × ano** (a partir de `data_os`) → variável resposta anual.
+3. **Deflacionar** cada OS pelo CPI do Canadá (mês da OS) → custo real (dez/2025).
+4. **Enriquecer** com os atributos do ativo já presentes em `fato_wo_ml` (montadora,
+   ano-modelo, eixos, comprimento, refrigerado, subtipo, pneu, suspensão, novo/usado).
+
+*(Referência histórica — cálculo por km/mês:* `custo_interno_total_mes / km_rodado_mes`,
+usando Δ de `km_acumulado` de `fato_readings`.*)*
 
 ---
 

@@ -1,9 +1,11 @@
 # Plano Analítico em Jupyter Notebooks — Projeto Quatro Norte
 
 > **Arquivo histórico.** Este plano documenta decisões e trilhas anteriores do
-> projeto. A execução vigente foi consolidada em `notebooks/` e está descrita
-> em `notebooks/README.md` e `docs/GUIA_DO_PROJETO.md`. Referências internas a
-> `src/` representam uma etapa intermediária já substituída.
+> projeto. A metodologia vigente é o **custo anual de manutenção por carreta**,
+> no grão **carreta × ano**, a partir da fonte única `fato_wo_ml`. Ver
+> `docs/revisao_anual_2026-07-07.md`, `docs/GUIA_DO_PROJETO.md` e
+> `notebooks/README.md`. Referências internas a `src/`, grão mensal, custo por km,
+> MAINT ou IPCA pertencem a etapas já superadas.
 
 > **ATUALIZAÇÃO (2026-07-06):** por decisão do projeto, o alvo principal
 > voltou a ser **`custo_manutencao_interno_por_km_deflacionado`** (custo
@@ -13,7 +15,7 @@
 > trilha vigente está em `src/` (`run_02` → `run_04_deflacao_cpi` →
 > `run_03b`/`run_03c`/`run_03d` → `run_05b_modelagem_interno` →
 > `run_06_resultados_interno` → `build_ppt`); ver
-> `docs/registro_alteracoes_2026-07-06.md`.
+> `registro_alteracoes_2026-07-06.md` (em `docs/historico/`).
 
 ## Trilha vigente (2026-07-06) — resumo
 

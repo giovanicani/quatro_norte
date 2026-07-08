@@ -1,11 +1,10 @@
 # Revisao do feedback metodologico
 
-> **NOTA (2026-07-06): documento historico.** Os numeros abaixo referem-se
-> a fase em que o alvo era o custo preventivo e a deflacao usava IPCA.
-> A trilha vigente usa alvo `custo_manutencao_interno_por_km_deflacionado`
-> e CPI Canada; resultados atuais em `reports/sumario_executivo.md` e
-> `docs/registro_alteracoes_2026-07-06.md`. As correcoes anti-vazamento
-> descritas aqui (C1, C2...) permanecem incorporadas a base.
+> **Arquivo histórico.** Os números abaixo pertencem à fase mensal/por km e foram
+> superados pela revisão para **custo anual por carreta**. A metodologia vigente usa a
+> fonte única `fato_wo_ml`, CPI Canadá e grão carreta × ano. Resultados atuais:
+> `docs/revisao_anual_2026-07-07.md` e `reports/sumario_executivo.md`. As correções
+> anti-vazamento descritas aqui permanecem úteis como registro metodológico.
 
 Data da revisao: 2026-06-28
 

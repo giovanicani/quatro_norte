@@ -30,13 +30,17 @@
 
 ### Documentação da fase mensal (preservada)
 
-Arquivos históricos movidos:
-- `docs/historico/Plano_Analises.md` — plano original
-- `docs/historico/revisao_feedback.md`, `revisao_pos_base_nova_2026-07-07.md`
+Arquivos históricos da fase mensal (todos em `docs/historico/`):
+- `Plano_Analises.md` — plano original
+- `revisao_feedback.md` — feedback de revisão
+- `revisao_pos_base_nova_2026-07-07.md` — revisão posterior
+- `curadoria_2026-07-07.md` — curadoria (este arquivo)
+- `registro_alteracoes_2026-07-06.md` — log de alterações
 - `notebooks/historico/02_base_analitica_mensal.ipynb`, `03_analise_exploratoria_hipoteses.ipynb`
 
-Raiz:
-- `Plano_Analises.md` — marcado como histórico (banner)
+Arquivos históricos que ainda apareçam fora de `docs/historico/` devem ser lidos
+apenas como atalhos transitórios; a versão organizada do histórico fica centralizada
+em `docs/historico/`.
 
 ---
 

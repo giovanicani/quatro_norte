@@ -1,5 +1,9 @@
 # Revisão Pós-Base Nova — 2026-07-07
 
+> 🕓 **Histórico (fase mensal / por km).** Superado pela revisão para **custo anual por
+> carreta** — ver [`revisao_anual_2026-07-07.md`](revisao_anual_2026-07-07.md). Mantido
+> para rastreio metodológico.
+
 Revisão feita após atualização dos CSVs em `data/raw/`, reconstrução das bases
 processadas e geração de novos resultados em `reports/`.
 
@@ -27,7 +31,7 @@ O projeto está coerente na trilha principal (`notebooks/02 → 04 → 03b/03c/0
   `unit_subtype`.
 - `docs/GUIA_DO_PROJETO.md`: removida indicação antiga de placeholders no
   README e adicionada pendência explícita para reexecutar 00/01.
-- `docs/curadoria_2026-07-07.md`: pendências atualizadas para refletir que a
+- `curadoria_2026-07-07.md` (em `docs/historico/`): pendências atualizadas para refletir que a
   nova base já foi reexecutada e que ainda faltam features candidatas
   adicionais e reexecução de 00/01.
 
