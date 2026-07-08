@@ -1,6 +1,8 @@
 # Entregas — Apresentações Acadêmicas
 
-## Deck Vigente
+> ⚠️ **IMPORTANTE:** Ver [`_NOTA_SOBRE_VERSOES.md`](_NOTA_SOBRE_VERSOES.md) para status de cada arquivo.
+
+## ✅ Entrega Vigente
 
 **`Apresentacao_QuatroNorte.pptx`** (23 slides)
 
@@ -15,26 +17,29 @@
 
 ---
 
-## Arquivos Históricos
+## 🕓 Arquivos Históricos (Desatualizados)
 
 ### `Apresentacao_QuatroNorte_v2.pptx`
 
-- Grão: carreta × mês (fase anterior)
+- **Estado:** ❌ Desatualizado (fase anterior: custo por km, grão mensal)
+- Grão: carreta × mês
 - Alvo: custo por km
-- **Não é reprodutível** (criado manualmente)
 - Desempenho histórico: RF R² 0,085
-- Referência: evolução metodológica
+- **Motivo:** Criação manual; não foi atualizado para a metodologia anual
+- **Uso:** Referência de evolução metodológica apenas
 
 ### `Apresentacao_QuatroNorte_v2.html`
 
-- Relatório web (fase anterior, por km)
-- **Não é reprodutível** (edição manual)
-- Referência: visualização da fase mensal
-- Atualizado in-place em 2026-07-07 para a metodologia anual (teste — não é a trilha oficial)
+- **Estado:** ❌ Desatualizado (fase anterior: custo por km, grão mensal)
+- Relatório web (página única)
+- **Motivo:** Edição manual; não foi atualizado para a metodologia anual
+- **Uso:** Referência de evolução metodológica apenas
 
 ---
 
-## Convenção
+## 📋 Recomendação
 
-- Use `Apresentacao_QuatroNorte.pptx` para apresentações finais
-- `v2.*` são referências históricas de evolução metodológica
+- ✅ Use **`Apresentacao_QuatroNorte.pptx`** para apresentações, entregas e compartilhamento
+- 🕓 Ignore `v2.*` — são apenas referência histórica de como o projeto evoluiu
+
+Ver [`_NOTA_SOBRE_VERSOES.md`](_NOTA_SOBRE_VERSOES.md) para detalhes completos.

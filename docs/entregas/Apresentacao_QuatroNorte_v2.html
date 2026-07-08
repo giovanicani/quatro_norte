@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Previsão de Custos de Manutenção de Carretas · Quatro Norte</title>
+<title>Custo Anual de Manutenção de Carretas · Quatro Norte</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -143,8 +143,8 @@
     <span>Quatro Norte Consulting · MBA · Entrega de Projeto</span>
     <span class="r">Projeto de Pesquisa · Ciência de Dados · Grupo 01</span>
   </div>
-  <h1>Previsão de custos de manutenção de carretas</h1>
-  <p class="sub">Análise de dados históricos e modelagem preditiva do <strong style="color:#fff;font-weight:600">custo de manutenção interno por quilômetro</strong> da frota própria — janela 2020–2025, operação de leasing/rental no Canadá.</p>
+  <h1>Custo anual de manutenção de carretas</h1>
+  <p class="sub">Análise de dados históricos e modelagem preditiva do <strong style="color:#fff;font-weight:600">custo anual de manutenção interno por carreta (CAD/ano)</strong> da frota própria — janela 2020–2025, operação de leasing/rental no Canadá.</p>
   <div class="authors">
     <div class="author"><span class="av">MW</span> Marlon Wenzel</div>
     <div class="author"><span class="av">JL</span> Jeison Lima</div>
@@ -175,10 +175,10 @@
   <p class="lead">Consultoria de dados que atende uma operação de leasing/rental de carretas no Canadá — carretas secas e refrigeradas de até 53 pés, rodando em ON, QC e outras províncias. A manutenção é <strong>própria</strong>: uma rede de oficinas registra ordens de serviço com mão de obra e peças, sob contratos com coberturas MAINT / NET / MIX.</p>
   <div class="note">Parte relevante do custo é <strong>absorvida pela empresa — o custo interno</strong> — e precisa ser prevista para orçamento anual e precificação de contratos.</div>
   <div class="grid g4" style="margin-top:24px">
-    <div class="stat"><div class="n">10.412</div><div class="l">carretas na frota própria</div></div>
+    <div class="stat"><div class="n">9.859</div><div class="l">carretas na frota própria</div></div>
     <div class="stat"><div class="n">223.590</div><div class="l">ordens de serviço (2020–2025)</div></div>
-    <div class="stat"><div class="n o">CAD 79 mi</div><div class="l">custo interno de manutenção no período</div></div>
-    <div class="stat"><div class="n">6 anos</div><div class="l">de histórico: OS, odômetro, contratos, GPS</div></div>
+    <div class="stat"><div class="n o">CAD 82,4 mi</div><div class="l">custo interno de manutenção no período (valores reais dez/2025)</div></div>
+    <div class="stat"><div class="n">6 anos</div><div class="l">de histórico consolidado de ordens de serviço</div></div>
   </div>
 </section>
 
@@ -186,14 +186,14 @@
 <section id="problema">
   <div class="kicker"><span class="secnum">02</span> Bloco 1 · Contexto, problema e objetivos</div>
   <h2>A pergunta de pesquisa</h2>
-  <p class="lead">Quais fatores mais influenciam o <strong>custo de manutenção interno</strong> das carretas — e como prever esse custo por km futuro a partir do histórico?</p>
+  <p class="lead">Quais fatores mais influenciam o <strong>custo anual de manutenção interno</strong> das carretas — e como prever esse custo anual futuro a partir do histórico?</p>
   <div class="grid g3" style="margin-bottom:30px">
-    <div class="card"><span class="code">Variável de interesse</span><h3 style="margin-top:8px">CAD / km</h3><p>grão carreta × mês</p></div>
+    <div class="card"><span class="code">Variável de interesse</span><h3 style="margin-top:8px">CAD / ano</h3><p>grão carreta × ano</p></div>
     <div class="card"><span class="code">Custo interno</span><h3 style="margin-top:8px">Absorvido pela empresa</h3><p>não faturado ao cliente</p></div>
     <div class="card"><span class="code">Escopo</span><h3 style="margin-top:8px">Preventiva + corretiva</h3><p>todas as categorias VMRS</p></div>
   </div>
   <h3 class="sub">Objetivo geral & específicos</h3>
-  <p style="margin-bottom:16px">Identificar os principais fatores que influenciam o custo interno por km e desenvolver um modelo preditivo capaz de estimar custos futuros.</p>
+  <p style="margin-bottom:16px">Identificar os principais fatores que influenciam o custo anual de manutenção interno por carreta e desenvolver um modelo preditivo capaz de estimar custos futuros.</p>
   <div class="steps">
     <div class="step"><span class="k">1</span><div><h4>Coletar e consolidar</h4><p>organizar o histórico de manutenção da frota</p></div></div>
     <div class="step"><span class="k">2</span><div><h4>Explorar (EDA)</h4><p>padrões, tendências e variáveis relevantes</p></div></div>
@@ -209,12 +209,13 @@
   <h2>Hipóteses de trabalho</h2>
   <p class="lead">Avaliadas na EDA (correlações e segmentações) e na modelagem (importância de variáveis) — síntese ao final.</p>
   <div class="grid g2">
-    <div class="card"><span class="code o">H1</span><p style="margin-top:6px">Contratos de leasing mais longos tendem a custar mais em manutenção.</p></div>
-    <div class="card"><span class="code o">H2</span><p style="margin-top:6px">Carretas mais velhas demandam maiores gastos com manutenção.</p></div>
-    <div class="card"><span class="code o">H3</span><p style="margin-top:6px">Mais quilometragem percorrida está associada a mais custo.</p></div>
-    <div class="card"><span class="code o">H4</span><p style="margin-top:6px">O histórico de manutenções anteriores prevê custos futuros.</p></div>
-    <div class="card" style="grid-column:1/-1"><span class="code o">H5</span><p style="margin-top:6px">Variáveis operacionais e características contratuais influenciam os custos.</p></div>
+    <div class="card"><span class="code o">H1</span><p style="margin-top:6px">Carretas mais velhas demandam maior custo anual de manutenção.</p></div>
+    <div class="card"><span class="code o">H2</span><p style="margin-top:6px">Mais quilometragem rodada no ano está associada a maior custo anual.</p></div>
+    <div class="card"><span class="code o">H3</span><p style="margin-top:6px">O histórico de manutenções e custos anteriores prevê o custo do ano seguinte.</p></div>
+    <div class="card"><span class="code o">H4</span><p style="margin-top:6px">Características do ativo (refrigerado, subtipo, montadora) influenciam o custo.</p></div>
+    <div class="card" style="grid-column:1/-1"><span class="code o">H5</span><p style="margin-top:6px">A região de operação influencia o custo anual de manutenção.</p></div>
   </div>
+  <div class="note">O efeito de <strong>contrato de leasing</strong> ficou <strong>fora de escopo</strong>: os atributos contratuais não estão presentes na fonte única de dados analisada.</div>
 </section>
 
 <!-- LITERATURA -->
@@ -252,8 +253,8 @@
 <!-- BASE -->
 <section id="base">
   <div class="kicker"><span class="secnum">03</span> Bloco 2 · Pergunta 6 · Base de dados</div>
-  <h2>Modelo estrela — 1 dimensão + 6 fatos</h2>
-  <p class="lead">Sete "planilhas" ligadas pelo número da carreta: uma com o cadastro e seis com os eventos da vida dela.</p>
+  <h2>Fonte única consolidada de dados</h2>
+  <p class="lead">A análise parte de uma <strong>fonte única</strong>: <span class="mono" style="color:var(--ink)">fato_wo_ml_2020-01-01_to_2025-12-31.csv</span> — 223.590 ordens de serviço, 9.859 carretas, janela 2020–2025. Ela consolida o modelo estrela original (uma dimensão de cadastro + seis fatos de eventos), cuja construção — joins e feature engineering — foi realizada em uma <strong>etapa anterior de preparação</strong> (não reexecutada aqui).</p>
   <div class="grid g2">
     <div class="card"><span class="code">dim_carretas</span><p style="margin-top:6px">1 linha = uma carreta · montadora, modelo, ano, eixos, reefer, classe</p></div>
     <div class="card"><span class="code">fato_readings</span><p style="margin-top:6px">uma leitura de odômetro · km acumulada por data</p></div>
@@ -290,134 +291,128 @@
 <!-- ALVO -->
 <section id="alvo">
   <div class="kicker">Definição do Y</div>
-  <h2>custo_manutencao_interno_por_km</h2>
-  <p class="lead">É o dinheiro que sai do caixa da empresa para manter a carreta rodando — a parte do conserto que não é cobrada do cliente. Inclui preventiva <strong>e</strong> corretiva.</p>
+  <h2>custo_ano_real</h2>
+  <p class="lead">É o dinheiro que sai do caixa da empresa, ao longo de um ano, para manter a carreta rodando — a parte do conserto que não é cobrada do cliente. Inclui preventiva <strong>e</strong> corretiva, a valores reais de dez/2025.</p>
 
   <div class="formula">
-    <span style="color:var(--orange)">Y</span> &nbsp;=&nbsp; custo interno do mês <span class="dim">(CAD, deflacionado)</span> &nbsp;<span class="op">÷</span>&nbsp; km rodado no mês
-    <div class="g">grão: carreta × mês</div>
+    <span style="color:var(--orange)">Y</span> &nbsp;=&nbsp; soma do custo interno anual da carreta <span class="dim">(CAD, deflacionado pelo CPI)</span>
+    <div class="g">grão: carreta × ano</div>
   </div>
 
   <ul class="clean" style="margin-bottom:26px">
     <li>Linhas de OS marcadas como internas (<span class="mono">charge_flag = 'I'</span>)</li>
     <li>Somente OS aprovadas, concluídas e não canceladas</li>
     <li>Mão de obra e peças: valor terceirizado quando sublet; senão custo × quantidade/horas</li>
-    <li>Inclui preventiva e corretiva — "interno" não é sinônimo de "preventivo"</li>
+    <li>Inclui preventiva e corretiva — "interno" não é sinônimo de "preventivo"; todo o custo interno é analisado (sem filtro por categoria)</li>
   </ul>
 
   <div class="grid g3">
-    <div class="stat"><div class="n">351.956</div><div class="l">observações carreta × mês com Y válido (≥ 500 km/mês)</div></div>
-    <div class="stat"><div class="n o">67,1%</div><div class="l">dos meses com custo zero — mantidos (informação legítima)</div></div>
-    <div class="stat"><div class="n">0,091</div><div class="l">CAD/km de média · mediana dos meses com custo: 0,101</div></div>
+    <div class="stat"><div class="n">49.248</div><div class="l">linhas carreta × ano na base analítica</div></div>
+    <div class="stat"><div class="n o">3,2%</div><div class="l">dos carreta-anos com custo zero — o grão anual quase elimina a zero-inflação</div></div>
+    <div class="stat"><div class="n">CAD 1.673,72</div><div class="l">custo médio anual por carreta · mediana: 812,55 · assimetria 3,76</div></div>
   </div>
+  <div class="note">Ganho metodológico do grão anual: apenas <strong>3,2%</strong> de carreta-anos com custo zero, contra cerca de <strong>67%</strong> de observações zeradas no grão mais fino usado na versão anterior. A leitura deixa de exigir tratamento pesado de zero-inflação.</div>
 
-  <h3 class="sub">Correção metodológica · deflação pelo CPI do Canadá</h3>
-  <p style="margin-bottom:16px">Sem a correção, o modelo confundiria "custos subindo" com "dinheiro valendo menos". Todos os custos convertidos ao dólar de dez/2025 via CPI all-items (StatCan).</p>
+  <h3 class="sub">Evolução real do custo anual — já deflacionado</h3>
   <div class="grid g3">
-    <div class="stat"><div class="n o">≈ +20%</div><div class="l">inflação canadense acumulada 2020 → 2025</div></div>
-    <div class="stat"><div class="n">CAD 82,3 mi</div><div class="l">custo interno a valores de dez/2025 (nominal: 77,0 mi)</div></div>
-    <div class="stat"><div class="n b">CPI StatCan</div><div class="l">corrige a versão anterior, que usava IPCA (Brasil)</div></div>
+    <div class="stat"><div class="n o">+52%</div><div class="l">crescimento real do custo médio por carreta 2020 → 2025</div></div>
+    <div class="stat"><div class="n">CAD 1.334 → 2.026</div><div class="l">custo médio anual por carreta · 2020 → 2025</div></div>
+    <div class="stat"><div class="n b">CAD 3,76</div><div class="l">assimetria positiva do Y — cauda longa de carretas caras</div></div>
   </div>
 
-  <h3 class="sub">Do modelo estrela à base mensal</h3>
-  <p><span class="mono" style="color:var(--ink)">7 tabelas normalizadas</span> → join por id_carreta + feature engineering + agregação mensal → <span class="mono" style="color:var(--ink)">1 tabela desnormalizada</span></p>
-  <div class="note">Resultado: <strong>base_mensal_carreta</strong> com 749.664 linhas — grade completa carreta × mês 2020–2025, pronta para EDA e ML.</div>
+  <h3 class="sub">Deflação pelo CPI do Canadá</h3>
+  <p style="margin-bottom:16px">Sem a correção, o modelo confundiria "custos subindo" com "dinheiro valendo menos". Todos os custos são convertidos ao dólar de dez/2025 via CPI all-items do Canadá (StatCan, vetor v41690973).</p>
+  <div class="grid g3">
+    <div class="stat"><div class="n o">+20,6%</div><div class="l">inflação canadense acumulada (CPI) 2020 → 2025</div></div>
+    <div class="stat"><div class="n">CAD 82,43 mi</div><div class="l">custo interno a valores de dez/2025 (nominal: 77,18 mi)</div></div>
+    <div class="stat"><div class="n b">CPI StatCan</div><div class="l">deflator: CPI all-items do Canadá · vetor v41690973</div></div>
+  </div>
+
+  <h3 class="sub">Da fonte única à base anual</h3>
+  <p><span class="mono" style="color:var(--ink)">fato_wo_ml (223.590 OS)</span> → agregação por carreta × ano + deflação pelo CPI → <span class="mono" style="color:var(--ink)">base analítica anual</span></p>
+  <div class="note">Resultado: <strong>base_anual_carreta</strong> com 49.248 linhas — grade carreta × ano 2020–2025, pronta para EDA e ML.</div>
 </section>
 
 <!-- FEATURES -->
 <section id="features">
   <div class="kicker blue">Pergunta 7 · Feature engineering</div>
   <h2>A "vida" da carreta em colunas</h2>
-  <p class="lead">Variáveis derivadas para capturar desgaste, intensidade de uso e histórico — mais preditivas que os campos originais.</p>
+  <p class="lead">Cerca de <strong>25 variáveis candidatas</strong>, todas deriváveis da fonte única, para capturar desgaste, intensidade de uso e histórico — mais preditivas que os campos originais.</p>
   <div class="grid g3">
     <div class="card"><h3 style="font-size:14px">idade_carreta</h3><p style="font-size:13px">anos desde a entrada em serviço</p></div>
-    <div class="card"><h3 style="font-size:14px">km_rodado_mes · km_por_mes</h3><p style="font-size:13px">intensidade de uso mensal e histórica</p></div>
-    <div class="card"><h3 style="font-size:14px">km_acumulado</h3><p style="font-size:13px">quilometragem até o mês anterior (defasada)</p></div>
-    <div class="card"><h3 style="font-size:14px">custo_acum_manutencao</h3><p style="font-size:13px">custo interno acumulado até o mês anterior</p></div>
-    <div class="card"><h3 style="font-size:14px">n_os_acum · n_os_prev_acum</h3><p style="font-size:13px">nº de OS acumuladas (totais e preventivas)</p></div>
-    <div class="card"><h3 style="font-size:14px">custo_medio_movel_3m</h3><p style="font-size:13px">média móvel dos 3 meses anteriores</p></div>
-    <div class="card"><h3 style="font-size:14px">intervalo_medio_os · recência</h3><p style="font-size:13px">dias entre OS · meses desde a última OS</p></div>
-    <div class="card"><h3 style="font-size:14px">duração · idade do contrato</h3><p style="font-size:13px">meses de contrato e tempo decorrido no mês</p></div>
-    <div class="card"><h3 style="font-size:14px">regiao_operacao</h3><p style="font-size:13px">região aproximada por província/local da OS</p></div>
+    <div class="card"><h3 style="font-size:14px">km_rodado_ano</h3><p style="font-size:13px">intensidade de uso no ano</p></div>
+    <div class="card"><h3 style="font-size:14px">km_acumulado_inicio_ano · fim_ano</h3><p style="font-size:13px">quilometragem acumulada (defasada)</p></div>
+    <div class="card"><h3 style="font-size:14px">custo_ano_anterior</h3><p style="font-size:13px">custo interno da carreta no ano anterior</p></div>
+    <div class="card"><h3 style="font-size:14px">n_os_ano_anterior</h3><p style="font-size:13px">nº de OS no ano anterior</p></div>
+    <div class="card"><h3 style="font-size:14px">custo_acum_ate_ano_anterior</h3><p style="font-size:13px">custo interno acumulado até o ano anterior</p></div>
+    <div class="card"><h3 style="font-size:14px">n_os_acum_ate_ano_anterior</h3><p style="font-size:13px">nº de OS acumuladas até o ano anterior</p></div>
+    <div class="card"><h3 style="font-size:14px">unit_subtype · flag_refrigerado</h3><p style="font-size:13px">subtipo da unidade e indicador reefer</p></div>
+    <div class="card"><h3 style="font-size:14px">cod_montadora · regiao_operacao</h3><p style="font-size:13px">montadora e região aproximada da OS</p></div>
   </div>
-  <div class="note"><strong>Regra de ouro · anti-vazamento:</strong> cada linha só usa informação que já existia <em>antes</em> do mês que queremos prever — como na vida real.</div>
+  <div class="note"><strong>Regra de ouro · anti-vazamento:</strong> no cenário preditivo, cada linha só usa informação que já existia <em>antes</em> do ano que queremos prever — como na vida real. <strong>Fora de escopo</strong> (exigiriam outras tabelas): contrato, mão de obra e peças detalhadas, leituras de odômetro granulares.</div>
+  <div class="note blue"><strong>Componentes aritméticos de Y</strong> — n_os_ano e custo_medio_por_os_ano — não entram como explicadores, pois compõem o próprio custo anual.</div>
 </section>
 
 <!-- EDA -->
 <section id="eda">
   <div class="kicker"><span class="secnum">08</span> Pergunta 8 · Análise exploratória</div>
-  <h2>351.956 observações · variável a variável</h2>
-  <p class="lead">Protocolo: quantitativas (histograma + boxplot + descritivas), qualitativas (boxplot de Y por categoria + η), complementares (Pearson/Spearman, VIF, evolução temporal). Leitura em duas partes: ocorrência de custo (67% zeros) e magnitude.</p>
+  <h2>49.248 carreta-anos · variável a variável</h2>
+  <p class="lead">Protocolo: quantitativas (histograma + boxplot + descritivas), qualitativas (boxplot de Y por categoria + η), complementares (Spearman, VIF, evolução temporal). Com o grão anual, apenas 3,2% dos carreta-anos têm custo zero — a leitura em duas partes deixa de ser necessária.</p>
 
-  <h3 class="sub">Distribuição do custo interno por km</h3>
+  <h3 class="sub">Distribuição do custo anual de manutenção</h3>
   <div class="grid g4" style="margin-bottom:12px">
-    <div class="stat"><div class="n">14,4</div><div class="l">assimetria</div></div>
-    <div class="stat"><div class="n">0,374</div><div class="l">desvio-padrão</div></div>
-    <div class="stat"><div class="n">0,000</div><div class="l">mediana (com zeros)</div></div>
-    <div class="stat"><div class="n">29,3</div><div class="l">máximo (CAD/km)</div></div>
+    <div class="stat"><div class="n">1.673,72</div><div class="l">média (CAD/ano)</div></div>
+    <div class="stat"><div class="n">812,55</div><div class="l">mediana (CAD/ano)</div></div>
+    <div class="stat"><div class="n">3,76</div><div class="l">assimetria positiva</div></div>
+    <div class="stat"><div class="n">3,2%</div><div class="l">carreta-anos com custo zero</div></div>
   </div>
-  <div class="note">Zero-inflada e de cauda longa: 67% dos meses sem custo; nos meses com custo, a média (0,277) fica bem acima da mediana (0,101). Pede <strong>log1p, modelos robustos e leitura em duas partes</strong>.</div>
+  <div class="note">Cauda longa, mas quase sem zero-inflação: a média (1.673,72) fica acima da mediana (812,55) e a assimetria é 3,76. Pede <strong>log1p e modelos robustos a caudas</strong>, mas não exige tratamento de zeros.</div>
 
   <h3 class="sub">Evolução anual — valores reais (já deflacionados)</h3>
   <div class="grid g3">
-    <div class="stat"><div class="n o">+71%</div><div class="l">crescimento real da média — já sem inflação</div></div>
-    <div class="stat"><div class="n">0,074 → 0,126</div><div class="l">CAD/km · 2020 → 2025</div></div>
-    <div class="stat"><div class="n">69% → 63%</div><div class="l">share de meses com custo zero, caindo</div></div>
+    <div class="stat"><div class="n o">+52%</div><div class="l">crescimento real do custo médio por carreta — já sem inflação</div></div>
+    <div class="stat"><div class="n">1.334 → 2.026</div><div class="l">CAD/ano por carreta · 2020 → 2025</div></div>
+    <div class="stat"><div class="n">3,2%</div><div class="l">share de carreta-anos com custo zero</div></div>
   </div>
-  <div class="note">Encarecimento real por km, consistente com envelhecimento e maior utilização da frota — o modelo deve capturá-lo pelas variáveis operacionais, não por um efeito "ano".</div>
+  <div class="note">Encarecimento real por carreta, consistente com envelhecimento e maior utilização da frota — o modelo deve capturá-lo pelas variáveis operacionais, não por um efeito "ano".</div>
 
   <h3 class="sub">Força de associação com o Y — quantitativas (ρ Spearman)</h3>
   <div class="bars">
-    <div class="bar"><span class="lbl">n_os_acum · H4</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="val">+0,220</span></div>
-    <div class="bar"><span class="lbl">custo_acum_manutencao · H4</span><div class="track"><div class="fill" style="width:89.5%"></div></div><span class="val">+0,197</span></div>
-    <div class="bar"><span class="lbl">intervalo_medio_os · H4</span><div class="track"><div class="fill neg" style="width:87.7%"></div></div><span class="val">−0,193</span></div>
-    <div class="bar"><span class="lbl">n_os_preventivas_acum</span><div class="track"><div class="fill" style="width:86.4%"></div></div><span class="val">+0,190</span></div>
-    <div class="bar"><span class="lbl">custo_preventivo_acum</span><div class="track"><div class="fill" style="width:75%"></div></div><span class="val">+0,165</span></div>
-    <div class="bar"><span class="lbl">km_acumulado · H3</span><div class="track"><div class="fill" style="width:70.5%"></div></div><span class="val">+0,155</span></div>
-    <div class="bar"><span class="lbl">km_por_mes · H3</span><div class="track"><div class="fill" style="width:55.9%"></div></div><span class="val">+0,123</span></div>
-    <div class="bar"><span class="lbl">km_rodado_mes · H3</span><div class="track"><div class="fill" style="width:42.7%"></div></div><span class="val">+0,094</span></div>
-    <div class="bar"><span class="lbl">custo_medio_movel_3m</span><div class="track"><div class="fill" style="width:38.6%"></div></div><span class="val">+0,085</span></div>
-    <div class="bar"><span class="lbl">meses_desde_ultima_os</span><div class="track"><div class="fill neg" style="width:28.2%"></div></div><span class="val">−0,062</span></div>
-    <div class="bar"><span class="lbl">idade_contrato_no_mes · H1</span><div class="track"><div class="fill" style="width:22.3%"></div></div><span class="val">+0,049</span></div>
-    <div class="bar"><span class="lbl">idade_carreta · H2</span><div class="track"><div class="fill" style="width:16.8%"></div></div><span class="val">+0,037</span></div>
-    <div class="bar"><span class="lbl">duracao_contrato · H1</span><div class="track"><div class="fill" style="width:8.6%"></div></div><span class="val">+0,019</span></div>
+    <div class="bar"><span class="lbl">n_os_ano_anterior · H3</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="val">+0,540</span></div>
+    <div class="bar"><span class="lbl">custo_ano_anterior · H3</span><div class="track"><div class="fill" style="width:99.3%"></div></div><span class="val">+0,536</span></div>
+    <div class="bar"><span class="lbl">km_rodado_ano · H2</span><div class="track"><div class="fill" style="width:98.1%"></div></div><span class="val">+0,530</span></div>
+    <div class="bar"><span class="lbl">n_os_acum_ate_ano_anterior · H3</span><div class="track"><div class="fill" style="width:85.4%"></div></div><span class="val">+0,461</span></div>
+    <div class="bar"><span class="lbl">custo_acum_ate_ano_anterior · H3</span><div class="track"><div class="fill" style="width:83.7%"></div></div><span class="val">+0,452</span></div>
+    <div class="bar"><span class="lbl">km_acumulado_fim_ano · H2</span><div class="track"><div class="fill" style="width:79.3%"></div></div><span class="val">+0,428</span></div>
+    <div class="bar"><span class="lbl">idade_carreta · H1</span><div class="track"><div class="fill" style="width:3.3%"></div></div><span class="val">+0,018</span></div>
   </div>
-  <div class="note"><strong>Nenhuma variável isolada é forte</strong> (máx ρ = 0,22). O histórico domina (n_os_acum, custo_acum, intervalo_medio_os — suporte direto à H4); o ganho preditivo vem de <strong>interações</strong>, o que favorece árvores/ensembles.</div>
+  <div class="note">Associações <strong>fortes e claras</strong> (máx ρ = 0,54): o histórico defasado (n_os e custo do ano anterior e acumulados — H3) e a intensidade de uso (km do ano e acumulado — H2) lideram. <strong>Idade isolada é fraca</strong> (ρ = 0,018 — H1). O ganho preditivo ainda vem de interações, o que favorece árvores/ensembles.</div>
 
   <h3 class="sub">Força de separação — qualitativas (η eta)</h3>
   <div class="bars">
-    <div class="bar"><span class="lbl">unit_subtype</span><div class="track"><div class="fill o" style="width:100%"></div></div><span class="val">0,128</span></div>
-    <div class="bar"><span class="lbl">regiao_operacao · H5</span><div class="track"><div class="fill o" style="width:65.6%"></div></div><span class="val">0,084</span></div>
-    <div class="bar"><span class="lbl">cod_montadora</span><div class="track"><div class="fill o" style="width:36.7%"></div></div><span class="val">0,047</span></div>
-    <div class="bar"><span class="lbl">flag_refrigerado</span><div class="track"><div class="fill o" style="width:50%"></div></div><span class="val">0,064</span></div>
-    <div class="bar"><span class="lbl">cod_classe</span><div class="track"><div class="fill o" style="width:43%"></div></div><span class="val">0,055</span></div>
-    <div class="bar"><span class="lbl">tipo_manutencao</span><div class="track"><div class="fill o" style="width:33.6%"></div></div><span class="val">0,043</span></div>
-    <div class="bar"><span class="lbl">suspension_type</span><div class="track"><div class="fill o" style="width:32.8%"></div></div><span class="val">0,042</span></div>
-    <div class="bar"><span class="lbl">tipo_contrato · H1</span><div class="track"><div class="fill o" style="width:28.1%"></div></div><span class="val">0,036</span></div>
-    <div class="bar"><span class="lbl">tire_size</span><div class="track"><div class="fill o" style="width:25.8%"></div></div><span class="val">0,033</span></div>
-    <div class="bar"><span class="lbl">cod_grupo_manutencao</span><div class="track"><div class="fill o" style="width:12.5%"></div></div><span class="val">0,016</span></div>
+    <div class="bar"><span class="lbl">unit_subtype · H4</span><div class="track"><div class="fill o" style="width:100%"></div></div><span class="val">0,55</span></div>
+    <div class="bar"><span class="lbl">flag_refrigerado · H4</span><div class="track"><div class="fill o" style="width:78.2%"></div></div><span class="val">0,43</span></div>
+    <div class="bar"><span class="lbl">cod_montadora · H4</span><div class="track"><div class="fill o" style="width:43.6%"></div></div><span class="val">0,24</span></div>
   </div>
-  <div class="note">O subtipo da unidade (unit_subtype) é a categórica mais forte (η = 0,128) — foi a variável nova que mais agregou sinal; a região vem em seguida (clima, estradas, custo de oficina local). Reefer adiciona um sistema inteiro que gera OS próprias — figura entre os fatores importantes do modelo final.</div>
+  <div class="note">As características do ativo separam bem o custo (H4): o subtipo da unidade (η = 0,55) é a categórica mais forte, seguido do indicador refrigerado (0,43) e da montadora (0,24). A <strong>região de operação</strong> (H5) aparece com associação fraca. Reefer adiciona um sistema inteiro que gera OS próprias — figura entre os fatores importantes do modelo final.</div>
 
   <h3 class="sub">Multicolinearidade & outliers</h3>
   <div class="grid g2">
     <div class="card">
-      <h3 style="font-size:14px;margin-bottom:10px">VIF · top 5</h3>
+      <h3 style="font-size:14px;margin-bottom:10px">VIF · &gt; 10</h3>
       <table style="min-width:0">
-        <tr><td>custo_acum</td><td class="num" style="color:var(--rust)">33,9</td></tr>
-        <tr><td>n_os_acum</td><td class="num" style="color:var(--rust)">25,4</td></tr>
-        <tr><td>custo_prev_acum</td><td class="num" style="color:var(--orange)">5,8</td></tr>
-        <tr><td>idade_contrato</td><td class="num" style="color:var(--orange)">5,7</td></tr>
-        <tr><td>duracao_contrato</td><td class="num" style="color:var(--orange)">5,3</td></tr>
+        <tr><td>idade_carreta</td><td class="num" style="color:var(--rust)">13,5</td></tr>
+        <tr><td>n_os_acum_ate_ano_anterior</td><td class="num" style="color:var(--rust)">12,9</td></tr>
+        <tr><td>ano_modelo</td><td class="num" style="color:var(--rust)">12,2</td></tr>
       </table>
       <p style="font-size:12px;margin-top:10px">VIF &gt; 5 pede atenção · &gt; 10 indica redundância. Como o modelo recomendado é de árvore (robusto a colinearidade), os pares redundantes foram mantidos.</p>
     </div>
     <div class="card">
       <h3 style="font-size:14px;margin-bottom:6px">Outliers · decisões</h3>
       <ul class="clean" style="margin-top:0">
-        <li>Y: máx 20× o p99 → cap no p99,5; custos negativos (estornos) excluídos</li>
-        <li>n_os_acum / custo_acum: anomalia de cadastro em poucas carretas → winsorizar</li>
-        <li>km_rodado / km_acumulado: 8×–12× o p99 → moderados, mantidos (robustez de árvore)</li>
+        <li>Y: cauda longa de custo anual → cap no p99,5; custos negativos (estornos) excluídos</li>
+        <li>n_os / custo acumulados: anomalia de cadastro em poucas carretas → winsorizar</li>
+        <li>km_rodado_ano / km_acumulado: valores extremos moderados, mantidos (robustez de árvore)</li>
       </ul>
       <p style="font-size:12px;margin-top:10px">Caudas longas de custo são a natureza do fenômeno, não erro de dado.</p>
     </div>
@@ -428,39 +423,35 @@
 <section id="modelagem">
   <div class="kicker"><span class="secnum">09</span> Pergunta 9 · Modelagem preditiva</div>
   <h2>Comparação no teste temporal (2025)</h2>
-  <p class="lead">Split temporal: treina com 2020–2024, prova com 2025 — um período que o modelo nunca viu. População MAINT · validação temporal expansiva (3 rodadas) · métricas R² / RMSE / MAE (CAD/km).</p>
+  <p class="lead">Split temporal: treina com 2020–2024, prova com 2025 — um período que o modelo nunca viu. Dois cenários: <strong>explicativo</strong> (inclui o uso do próprio ano) e <strong>preditivo</strong> (só atributos + histórico defasado, sem vazamento). Todo o custo interno é analisado, sem filtro por categoria. Métricas R² / RMSE / MAE em CAD/ano.</p>
   <div class="tbl-wrap">
     <table>
-      <thead><tr><th>Modelo</th><th class="num">R²</th><th class="num">RMSE</th><th class="num">MAE</th></tr></thead>
+      <thead><tr><th>Cenário · modelo</th><th class="num">R²</th><th class="num">RMSE</th><th class="num">MAE</th></tr></thead>
       <tbody>
-        <tr class="hi"><td>random_forest ◀</td><td class="num">0,085</td><td class="num">0,243</td><td class="num">0,131</td></tr>
-        <tr><td>gradient_boosting</td><td class="num">0,079</td><td class="num">0,243</td><td class="num">0,132</td></tr>
-        <tr><td>hurdle_sgd_gb</td><td class="num">0,072</td><td class="num">0,244</td><td class="num">0,138</td></tr>
-        <tr><td>arvore_decisao</td><td class="num">0,055</td><td class="num">0,247</td><td class="num">0,129</td></tr>
-        <tr><td>ridge / linear múltipla / polinomial g2</td><td class="num">0,041</td><td class="num">0,248</td><td class="num">0,137</td></tr>
-        <tr><td>ridge_log1p · knn · linear_simples</td><td class="num">≤ 0,036</td><td class="num">0,249+</td><td class="num">0,127+</td></tr>
+        <tr><td>Explicativo · gradient_boosting</td><td class="num">0,572</td><td class="num">1.753</td><td class="num">895</td></tr>
+        <tr><td>Explicativo · random_forest</td><td class="num">0,571</td><td class="num">—</td><td class="num">—</td></tr>
+        <tr class="hi"><td>Preditivo · random_forest ◀</td><td class="num">0,429</td><td class="num">2.026</td><td class="num">1.064</td></tr>
+        <tr><td>Preditivo · modelos lineares</td><td class="num">&lt; 0</td><td class="num">—</td><td class="num">—</td></tr>
       </tbody>
     </table>
   </div>
   <div class="grid g2" style="margin-top:16px">
-    <div class="panel"><h3 style="font-size:16px;margin-bottom:4px">R² ≈ 9%</h3><p style="font-size:13px">da variação mês a mês explicada — modesto, mas suficiente para <strong style="color:#fff">ordenar carretas</strong> e apoiar orçamento.</p></div>
-    <div class="panel"><h3 style="font-size:16px;margin-bottom:4px">Números honestos</h3><p style="font-size:13px">versões anteriores pareciam melhores porque "colavam" com informação do futuro — <strong style="color:#fff">vazamento removido</strong>.</p></div>
+    <div class="panel"><h3 style="font-size:16px;margin-bottom:4px">R² ≈ 43%</h3><p style="font-size:13px">no cenário <strong style="color:#fff">preditivo recomendado</strong> (Random Forest, sem vazamento) — suficiente para <strong style="color:#fff">ordenar carretas</strong> e apoiar o orçamento anual.</p></div>
+    <div class="panel"><h3 style="font-size:16px;margin-bottom:4px">R² ≈ 57%</h3><p style="font-size:13px">no cenário <strong style="color:#fff">explicativo</strong>, que inclui o uso do próprio ano — mede quanto o custo é explicável, não o que é previsível a priori.</p></div>
   </div>
 
-  <h3 class="sub">Permutation importance — fatores mais importantes</h3>
+  <h3 class="sub">Permutation importance — cenário preditivo (Random Forest)</h3>
   <div class="bars">
-    <div class="bar"><span class="lbl">km_rodado_mes</span><div class="track"><div class="fill o" style="width:100%"></div></div><span class="val">0,0211</span></div>
-    <div class="bar"><span class="lbl">custo_acum_manutencao</span><div class="track"><div class="fill o" style="width:27%"></div></div><span class="val">0,0057</span></div>
-    <div class="bar"><span class="lbl">custo_prev_medio_movel_3m</span><div class="track"><div class="fill o" style="width:26.5%"></div></div><span class="val">0,0056</span></div>
-    <div class="bar"><span class="lbl">flag_refrigerado</span><div class="track"><div class="fill o" style="width:24.2%"></div></div><span class="val">0,0051</span></div>
-    <div class="bar"><span class="lbl">intervalo_medio_os</span><div class="track"><div class="fill o" style="width:19.4%"></div></div><span class="val">0,0041</span></div>
-    <div class="bar"><span class="lbl">km_rodado_acum</span><div class="track"><div class="fill o" style="width:16.6%"></div></div><span class="val">0,0035</span></div>
-    <div class="bar"><span class="lbl">custo_medio_movel_3m</span><div class="track"><div class="fill o" style="width:11.8%"></div></div><span class="val">0,0025</span></div>
-    <div class="bar"><span class="lbl">km_acumulado</span><div class="track"><div class="fill o" style="width:7.1%"></div></div><span class="val">0,0015</span></div>
-    <div class="bar"><span class="lbl">custo_preventivo_acum</span><div class="track"><div class="fill o" style="width:6.6%"></div></div><span class="val">0,0014</span></div>
-    <div class="bar"><span class="lbl">idade_carreta</span><div class="track"><div class="fill o" style="width:5.2%"></div></div><span class="val">0,0011</span></div>
+    <div class="bar"><span class="lbl">flag_refrigerado</span><div class="track"><div class="fill o" style="width:100%"></div></div><span class="val">0,22</span></div>
+    <div class="bar"><span class="lbl">n_os_ano_anterior</span><div class="track"><div class="fill o" style="width:54.5%"></div></div><span class="val">0,12</span></div>
+    <div class="bar"><span class="lbl">km_acumulado_inicio_ano</span><div class="track"><div class="fill o" style="width:32.7%"></div></div><span class="val">0,072</span></div>
+    <div class="bar"><span class="lbl">custo_ano_anterior</span><div class="track"><div class="fill o" style="width:30%"></div></div><span class="val">0,066</span></div>
+    <div class="bar"><span class="lbl">custo_acum_ate_ano_anterior</span><div class="track"><div class="fill o" style="width:29.5%"></div></div><span class="val">0,065</span></div>
+    <div class="bar"><span class="lbl">n_os_acum_ate_ano_anterior</span><div class="track"><div class="fill o" style="width:26.8%"></div></div><span class="val">0,059</span></div>
+    <div class="bar"><span class="lbl">idade_carreta</span><div class="track"><div class="fill o" style="width:14.5%"></div></div><span class="val">0,032</span></div>
+    <div class="bar"><span class="lbl">unit_subtype</span><div class="track"><div class="fill o" style="width:14.1%"></div></div><span class="val">0,031</span></div>
   </div>
-  <div class="note">Confirma a EDA: histórico operacional e intensidade de uso dominam; atributos fixos pesam menos. <strong>Atenção:</strong> km_rodado_mes é também o denominador do Y — sua importância deve ser lida com cautela (relação em parte mecânica).</div>
+  <div class="note">Confirma a EDA: o indicador <strong>refrigerado</strong> domina, seguido do histórico defasado (nº de OS e custo do ano anterior e acumulados) e da intensidade de uso acumulada. Atributos fixos como idade e subtipo pesam menos.</div>
 </section>
 
 <!-- SINTESE -->
@@ -470,60 +461,62 @@
   <div class="grid" style="gap:12px">
     <div class="card" style="display:grid;grid-template-columns:44px 1fr auto;gap:16px;align-items:center">
       <span class="code o" style="font-size:14px">H1</span>
-      <div><strong>Duração de contrato ⇒ custo.</strong> <span style="color:var(--muted)">Correlação direta ≈ 0 no grão mensal.</span></div>
+      <div><strong>Idade ⇒ custo.</strong> <span style="color:var(--muted)">Correlação direta ≈ 0 (ρ = 0,018) no grão anual.</span></div>
       <span class="pill no">Não suportada</span>
     </div>
     <div class="card" style="display:grid;grid-template-columns:44px 1fr auto;gap:16px;align-items:center">
       <span class="code o" style="font-size:14px">H2</span>
-      <div><strong>Idade ⇒ custo.</strong> <span style="color:var(--muted)">Efeito fraco direto; opera via histórico acumulado.</span></div>
-      <span class="pill part">Parcial</span>
+      <div><strong>Uso / km ⇒ custo.</strong> <span style="color:var(--muted)">km_rodado_ano ρ = +0,53 · km acumulado +0,43.</span></div>
+      <span class="pill ok">Suportada</span>
     </div>
     <div class="card" style="display:grid;grid-template-columns:44px 1fr auto;gap:16px;align-items:center">
       <span class="code o" style="font-size:14px">H3</span>
-      <div><strong>Quilometragem ⇒ custo.</strong> <span style="color:var(--muted)">km_acumulado ρ = +0,16; km mensal é o denominador.</span></div>
-      <span class="pill part">Parcial</span>
+      <div><strong>Histórico prevê custo futuro.</strong> <span style="color:var(--muted)">n_os_ano_anterior +0,54 · custo_ano_anterior +0,54 · acumulados ~0,46.</span></div>
+      <span class="pill ok">Suportada</span>
     </div>
     <div class="card" style="display:grid;grid-template-columns:44px 1fr auto;gap:16px;align-items:center">
       <span class="code o" style="font-size:14px">H4</span>
-      <div><strong>Histórico prevê custo futuro.</strong> <span style="color:var(--muted)">n_os_acum +0,22 · custo_acum +0,20 · intervalo −0,19.</span></div>
+      <div><strong>Características do ativo ⇒ custo.</strong> <span style="color:var(--muted)">unit_subtype η = 0,55 · reefer 0,43 · montadora 0,24.</span></div>
       <span class="pill ok">Suportada</span>
     </div>
     <div class="card" style="display:grid;grid-template-columns:44px 1fr auto;gap:16px;align-items:center">
       <span class="code o" style="font-size:14px">H5</span>
-      <div><strong>Operação e contrato influenciam.</strong> <span style="color:var(--muted)">unit_subtype η = 0,128 (mais forte) · região 0,084 · reefer desloca; contrato fraco.</span></div>
+      <div><strong>Região ⇒ custo.</strong> <span style="color:var(--muted)">Associação fraca — sinal presente, mas modesto.</span></div>
       <span class="pill part">Parcial</span>
     </div>
   </div>
+  <div class="note">O efeito de <strong>contrato de leasing</strong> ficou <strong>fora de escopo</strong>: os atributos contratuais não constam da fonte única analisada.</div>
 </section>
 
 <!-- METODO -->
 <section id="metodo">
   <div class="kicker"><span class="secnum">10</span> Bloco 3 · Metodologia e transparência</div>
-  <h2>Pipeline em 7 notebooks reprodutíveis</h2>
+  <h2>Pipeline em notebooks reprodutíveis</h2>
   <div class="steps" style="margin-bottom:40px">
-    <div class="step"><span class="k">00</span><div><h4>Contexto e inventário</h4><p>problema, 7 bases, validação do modelo estrela, riscos</p></div></div>
-    <div class="step"><span class="k">01</span><div><h4>Qualidade e integridade</h4><p>chaves, duplicidades, ausentes, custos negativos, odômetro</p></div></div>
-    <div class="step"><span class="k">02</span><div><h4>Base analítica mensal</h4><p>carreta × mês, prorrateio de km, piso 500 km, features defasadas</p></div></div>
-    <div class="step"><span class="k">03</span><div><h4>EDA e hipóteses</h4><p>protocolo variável a variável, correlações, η, VIF, 5 hipóteses</p></div></div>
-    <div class="step"><span class="k">04</span><div><h4>Deflação (CPI Canadá)</h4><p>custos CAD a valores de dez/2025 via CPI StatCan</p></div></div>
-    <div class="step"><span class="k">05</span><div><h4>Modelagem preditiva</h4><p>split temporal, 9 modelos + hurdle, métricas, importâncias</p></div></div>
+    <div class="step"><span class="k">00</span><div><h4>Contexto e inventário</h4><p>problema, fonte única fato_wo_ml, escopo, riscos</p></div></div>
+    <div class="step"><span class="k">01</span><div><h4>Qualidade e integridade</h4><p>chaves, duplicidades, ausentes, custos negativos</p></div></div>
+    <div class="step"><span class="k">02</span><div><h4>Base analítica anual</h4><p>agregação carreta × ano, features defasadas do histórico</p></div></div>
+    <div class="step"><span class="k">04</span><div><h4>Deflação (CPI Canadá)</h4><p>custos CAD a valores de dez/2025 via CPI StatCan (v41690973)</p></div></div>
+    <div class="step"><span class="k">03b/c/d</span><div><h4>EDA e hipóteses</h4><p>protocolo variável a variável, Spearman, η, VIF, 5 hipóteses</p></div></div>
+    <div class="step"><span class="k">05</span><div><h4>Seleção + modelagem</h4><p>split temporal, cenários explicativo e preditivo, importâncias</p></div></div>
     <div class="step"><span class="k">06</span><div><h4>Resultados</h4><p>síntese executiva, hipóteses finais, recomendações, limitações</p></div></div>
+    <div class="step"><span class="k">08</span><div><h4>Deck</h4><p>Apresentacao_QuatroNorte.pptx reprodutível · 23 slides</p></div></div>
   </div>
 
   <h3 class="sub">Limitações e cuidados</h3>
   <div class="grid g2">
-    <div class="card"><h3 style="font-size:14px">Zero-inflação</h3><p style="font-size:13px">desempenho pontual modesto — o modelo apoia planejamento, não substitui validação operacional</p></div>
-    <div class="card"><h3 style="font-size:14px">km_rodado_mes</h3><p style="font-size:13px">é denominador do alvo e feature — interpretação cuidadosa</p></div>
-    <div class="card"><h3 style="font-size:14px">Odômetro</h3><p style="font-size:13px">resets e saltos tratados, mas o prorrateio de km é aproximação · custos negativos excluídos</p></div>
-    <div class="card"><h3 style="font-size:14px">GPS parcial</h3><p style="font-size:13px">set–dez/2025 — região derivada da província/local da OS · contratos censurados em 2025-12</p></div>
-    <div class="card"><h3 style="font-size:14px">Vazamento removido</h3><p style="font-size:13px">métricas menores, porém defensáveis</p></div>
-    <div class="card"><h3 style="font-size:14px">Extensões futuras</h3><p style="font-size:13px">Mixed-Effects RF / hierárquicos · modelos zero-inflados</p></div>
+    <div class="card"><h3 style="font-size:14px">Cauda longa</h3><p style="font-size:13px">custos concentrados em poucas carretas caras — o modelo apoia planejamento, não substitui validação operacional</p></div>
+    <div class="card"><h3 style="font-size:14px">Fora de escopo</h3><p style="font-size:13px">contrato, mão de obra e peças detalhadas e odômetro granular exigiriam outras tabelas</p></div>
+    <div class="card"><h3 style="font-size:14px">Fonte única</h3><p style="font-size:13px">construção da base, joins e feature engineering em etapa anterior de preparação (não reexecutada) · custos negativos excluídos</p></div>
+    <div class="card"><h3 style="font-size:14px">Região aproximada</h3><p style="font-size:13px">derivada da província/local da OS · associação com custo fraca (H5 parcial)</p></div>
+    <div class="card"><h3 style="font-size:14px">Vazamento removido</h3><p style="font-size:13px">cenário preditivo usa só histórico defasado — métricas menores, porém defensáveis</p></div>
+    <div class="card"><h3 style="font-size:14px">Extensões futuras</h3><p style="font-size:13px">Mixed-Effects RF / hierárquicos · modelos para caudas longas</p></div>
   </div>
 </section>
 
 <footer>
   <div class="big">Obrigado</div>
-  <p>Previsão de custos de manutenção de carretas</p>
+  <p>Custo anual de manutenção de carretas</p>
   <div class="org">Quatro Norte Consulting · Grupo 01 · MBA FGV · 2026</div>
 </footer>
 
