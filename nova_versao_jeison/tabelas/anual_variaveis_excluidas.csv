@@ -1,0 +1,7 @@
+variavel,motivo
+custo_medio_os,derivada do Y (vazamento)
+custo_preventivo_ano,derivada do Y (vazamento)
+share_prev,derivada do Y (vazamento)
+custo_nominal,derivada do Y (vazamento)
+km_acumulado_defasado,colinearidade (VIF alto)
+ano_modelo,colinearidade (VIF alto)

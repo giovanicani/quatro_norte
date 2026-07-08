@@ -1,0 +1,5 @@
+modelo,R2,RMSE,MAE,WAPE
+Regressão Linear (log),-1.659,4360.2,1356.7,0.671
+Random Forest,0.674,1526.5,864.8,0.428
+Gradient Boosting,0.69,1489.8,830.8,0.411
+Gradient Boosting (sem n_os_ano),0.64,1603.6,900.0,0.445
