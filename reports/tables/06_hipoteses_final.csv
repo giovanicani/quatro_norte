@@ -1,7 +1,7 @@
-hipotese,evidencia,status
-Contratos de maior duracao tendem a maior custo por km,Ocorrencia: Spearman = 0.029; magnitude positiva: Spearman duracao vs custo/km = -0.038,nao suportada nesta EDA
-Carretas mais antigas tendem a ter maior custo por km,Ocorrencia: Spearman = -0.068; spread de taxa por quintil = 0.094; magnitude positiva: Spearman idade vs custo/km = 0.354,suportada
-Maior quilometragem mensal esta associada ao custo absoluto,Spearman km_rodado_mes vs custo_preventivo_total_mes = 0.079; ocorrencia = 0.081; custo/km positivo = -0.572 (relacao mecanica com denominador),nao suportada nesta EDA
-Historico de manutencoes ajuda a prever custo futuro,"Maior |Spearman| entre proxies historicos = 0.261; principais proxies: intervalo_medio_os: ocorrencia=-0.141, magnitude=0.261; custo_preventivo_medio_movel_3m: ocorrencia=-0.123, magnitude=-0.205; meses_desde_ultima_os: ocorrencia=0.050, magnitude=0.193; custo_medio_movel_3m: ocorrencia=-0.046, magnitude=-0.172",parcialmente suportada
-Caracteristicas contratuais influenciam o custo,"Razao media por tipo_contrato em MAINT = 1.50; mediana positiva = 1.99; tipo_manutencao na base completa e caveat estrutural NET/MIX, nao tamanho de efeito (25.93)",parcialmente suportada
-Componentes/sistemas concentram parte relevante do custo,Top 5 sistemas VMRS representam 64.0% do custo de mao de obra,suportada
+hipotese,enunciado,evidencia,veredito
+H1,Idade da carreta eleva o custo anual,Spearman idade_carreta=0.018,Nao suportada (efeito direto fraco)
+H2,Maior uso/quilometragem eleva o custo anual,km_rodado_ano=0.530; km_acumulado=0.428,Suportada
+H3,Historico de manutencao preve o custo futuro,custo_ano_anterior=0.536; n_os_ano_anterior=0.540,Suportada
+H4,Caracteristicas do ativo influenciam o custo,unit_subtype eta=0.55; refrigerado eta=0.43; montadora eta=0.24,Suportada
+H5,Regiao/operacao influencia o custo,provincia eta=0.14; regiao eta=0.08,Parcial (efeito fraco)
+(fora de escopo),Contrato (duracao/tipo) influencia o custo,variaveis de contrato ausentes na fonte unica,Nao testavel nesta etapa

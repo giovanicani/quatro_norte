@@ -1,6 +1,4 @@
 metrica,valor
-limite_delta_km,109592.39700000855
-deltas_negativos_removidos,2443.0
-deltas_acima_limite_removidos,278.0
-intervalos_prorrateados,273824.0
-piso_km_para_alvo,500.0
+km_rodado_ano_ausente,10172.0
+km_rodado_ano_mediana,12698.5
+km_acumulado_fim_ano_mediana,111110.5

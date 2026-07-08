@@ -1,0 +1,400 @@
+variavel,categoria,N,y_media,y_mediana
+cod_montadora,ALU,1,994.5,994.5
+cod_montadora,CHEVROLET,1,1635.9,1635.9
+cod_montadora,CPCTY,1,1645.3,1645.3
+cod_montadora,DI-MOND,227,927.6,566.9
+cod_montadora,DORSEY,8,301.5,259.8
+cod_montadora,FORD,181,1572.7,789.1
+cod_montadora,FREIGHTLINER,11,2151.0,1811.1
+cod_montadora,GMC,10,1031.5,671.1
+cod_montadora,GRTDNE,1736,1228.5,610.4
+cod_montadora,HYUNDAI,3887,1614.1,962.1
+cod_montadora,INTRNTL,9,2994.8,2233.0
+cod_montadora,ITD,641,1286.0,856.3
+cod_montadora,MANAC,4776,1238.2,660.5
+cod_montadora,MCHAS,165,582.0,348.7
+cod_montadora,MOND,313,482.9,290.0
+cod_montadora,MONON,6,642.1,269.8
+cod_montadora,RAM,1,1342.7,1342.7
+cod_montadora,STGHTN,10016,1086.8,664.7
+cod_montadora,STRICK,41,781.1,429.3
+cod_montadora,STWRT,6,928.4,400.3
+cod_montadora,TMOBILE,3151,838.4,496.9
+cod_montadora,TRANSC,62,2206.5,1416.8
+cod_montadora,UTLTY,18942,2329.0,1046.0
+cod_montadora,VGUARD,190,1049.2,644.3
+cod_montadora,VLVNA,18,820.8,599.0
+cod_montadora,WABASH,4836,1739.4,1101.1
+flag_refrigerado,N,34744,1003.5,570.3
+flag_refrigerado,Y,14504,3279.2,2186.8
+unit_subtype,CH3,321,936.3,427.1
+unit_subtype,CH4,28,837.5,484.0
+unit_subtype,DC2,11597,1051.8,595.4
+unit_subtype,DC3,480,2026.9,1871.8
+unit_subtype,DEAD,40,395.7,208.5
+unit_subtype,DH2,6051,761.3,352.2
+unit_subtype,DH3,275,940.3,403.9
+unit_subtype,DS,13113,958.2,612.2
+unit_subtype,DSS,1788,1320.8,830.9
+unit_subtype,FL2,71,2907.7,2496.3
+unit_subtype,FL3,231,1785.8,1138.6
+unit_subtype,HC2,262,3451.6,3137.8
+unit_subtype,HC3,613,4990.4,3362.2
+unit_subtype,HH2,2699,1245.8,933.8
+unit_subtype,HH3,240,1053.2,194.3
+unit_subtype,HS,231,1851.0,1426.3
+unit_subtype,RC2,3875,4918.0,4093.2
+unit_subtype,RC3,222,5353.6,4046.8
+unit_subtype,RHM2,1811,4147.6,3245.7
+unit_subtype,RHM3,42,9293.1,8732.9
+unit_subtype,RHS2,4010,2580.3,1786.1
+unit_subtype,RHS3,448,1992.8,281.7
+unit_subtype,RS,25,2815.0,1885.2
+unit_subtype,SP,758,1321.8,725.4
+unit_subtype,TK,11,2975.8,3406.8
+unit_subtype,Z,6,1357.2,1383.1
+tire_size,10R20,6,585.8,593.1
+tire_size,10X20,4,14.1,5.7
+tire_size,11R22.5,32872,1790.6,867.2
+tire_size,11R24.5,23,1394.0,1204.8
+tire_size,11R245,99,1698.2,1146.0
+tire_size,11X225,92,2480.4,1879.3
+tire_size,11X245,6,1947.0,1756.8
+tire_size,12R225,9,2159.8,274.6
+tire_size,215/75R17.5,4,320.9,262.1
+tire_size,22.5 70R 22.5,18,6061.0,3604.1
+tire_size,225/55X225,6,1311.3,1563.8
+tire_size,235/75X15,7,155.4,213.7
+tire_size,245/70R17.5,6,7590.9,6970.7
+tire_size,255 70R 22.5,16,789.3,738.8
+tire_size,275/70R22.5,5,711.3,608.5
+tire_size,275/80R22.5,1017,3637.8,1701.2
+tire_size,295/75R22.5,3848,1415.6,590.4
+tire_size,295/80R22.5,73,3212.8,1034.9
+tire_size,295X225,1390,894.5,572.1
+tire_size,445/50R22.5,442,2218.9,851.2
+tire_size,445/50R225,134,1680.5,1042.8
+tire_size,455/50R22.5,340,1666.0,1022.6
+tire_size,455/55R22.5,320,1313.3,952.1
+tire_size,LPX225,664,2536.3,887.9
+suspension_type,AIR,26900,1613.2,797.4
+suspension_type,ANTI DOCK WALK,3586,1953.2,1091.6
+suspension_type,AUTOMATIC GREASING SYSTEM,522,1494.7,1023.6
+suspension_type,CHALMERS,4,320.9,262.1
+suspension_type,EVELY,179,2186.7,847.8
+suspension_type,HENDRICKSON,9075,2335.3,1373.2
+suspension_type,HOLLAND,284,1103.1,738.5
+suspension_type,HUTCH,67,581.0,384.2
+suspension_type,SPRING,2237,925.7,507.5
+new_used_indicator,NEW,38927,1820.8,838.6
+new_used_indicator,USED,10142,1109.7,743.9
+descricao_carreta,2017 FREIGHTLINER - EDMONTON SHUNT TRUCK,6,3441.1,2037.7
+descricao_carreta,2021 FORD F550 XL CORNWALL SERVICE UNIT,5,4926.7,3803.0
+descricao_carreta,"28' S/A PLATE VAN W TA TAILGATE, S DOOR",6,462.8,98.1
+descricao_carreta,28' S/A REEFER VAN W LIFTGATE,4,1374.8,1205.3
+descricao_carreta,30' S/A PLATE VAN W TAILGATE,5,172.2,116.8
+descricao_carreta,30' T/A B TRAIN PUP REEFER VAN W RAILGATE,12,2749.4,2503.4
+descricao_carreta,30' T/A B-LEAD REEFER VAN W TAILGATE,114,7609.6,7043.3
+descricao_carreta,30' T/A HEATER VAN W TAILGATE,11,1670.5,1369.3
+descricao_carreta,30' T/A PUP HEATER LEAD VAN W TAILGATE,12,2641.1,2759.4
+descricao_carreta,30' T/A REEFER VAN W TAILGATE,4,2095.2,1377.8
+descricao_carreta,31' T/A 4000DX PUP VAN,5,1737.1,1815.0
+descricao_carreta,31' T/A B TRAIN PUP REEFER VAN,12,6034.5,6216.9
+descricao_carreta,31' T/A B-LEAD REEFER VAN,30,7124.5,6542.6
+descricao_carreta,31' T/A B-TRAIN LEAD,153,695.0,530.0
+descricao_carreta,31' T/A B-TRAIN LEAD DRY VAN,6,3130.5,3292.0
+descricao_carreta,31' T/A B-TRAIN PUP 4000DX VAN,30,1653.3,1233.4
+descricao_carreta,31' T/A B-TRAIN PUP MULTI-TEMP REEFER,6,12911.6,12798.9
+descricao_carreta,31' T/A B-TRAIN REEFER PUP,18,8859.4,8952.4
+descricao_carreta,31' T/A LEAD REEFER,6,3932.0,3980.0
+descricao_carreta,31' T/A LEAD REEFER VAN,25,2916.8,1139.3
+descricao_carreta,31' T/A M/T PUP REEFER VAN,42,5989.8,5645.4
+descricao_carreta,31' T/A MT LEAD REEFER VAN,396,7843.8,7257.8
+descricao_carreta,31' T/A PUP M/T REEFER VAN,18,16884.6,18023.1
+descricao_carreta,31' T/A PUP MULTI TEMP REEFER VAN,12,17003.9,12204.3
+descricao_carreta,31' T/A PUP REEFER VAN,6,10563.8,8688.7
+descricao_carreta,31' TA PUP M/T REEFER,6,886.7,798.2
+descricao_carreta,31' TA PUP M/T REEFER W TAILGATE,6,2236.2,2218.9
+descricao_carreta,32' S/A DRY VAN W TAILGATE,23,547.6,448.8
+descricao_carreta,32' T/A PLATE VAN W/TAILGATE,11,1575.5,1548.1
+descricao_carreta,32' T/A PUP REEFER VAN W TAILGATE,4,3834.2,3281.1
+descricao_carreta,32' T/A REEFER VAN,6,4491.5,4696.1
+descricao_carreta,32' T/A REEFER VAN W TAILGATE,17,2686.8,1747.3
+descricao_carreta,33' T/A DRY VAN,6,3836.7,2957.1
+descricao_carreta,36' S/A INSULATED DRY VAN,2,14697.0,14697.0
+descricao_carreta,36' S/A INSULATED DRY VAN W TAILGATE,2,1068.1,1068.1
+descricao_carreta,36' T/A 4000DX C/W TAILGATE,2,229.4,229.4
+descricao_carreta,36' T/A DRY VAN,7,943.2,657.0
+descricao_carreta,36' T/A DRY VAN W TAILGATE,24,2250.4,1583.9
+descricao_carreta,36' T/A DRY VAN W/TAILGATE,2,435.2,435.2
+descricao_carreta,36' T/A M/T REEFER VAN W TAILGATE,12,7784.9,6234.1
+descricao_carreta,36' T/A PLATE VAN W GATE,3,7682.4,7680.9
+descricao_carreta,36' T/A PLATE VAN W MAXON GPT4 GATE,2,592.8,592.8
+descricao_carreta,"36' T/A PLATE VAN W TA TAILGATE, S DOOR",4,501.0,477.9
+descricao_carreta,36' T/A PLATE VAN W TAILGATE,298,2006.9,1537.5
+descricao_carreta,36' T/A PUP REEFER VAN,6,7814.8,7470.5
+descricao_carreta,36' T/A REEFER VAN,5,5831.3,6950.1
+descricao_carreta,36' T/A REEFER VAN W TAILGATE,12,7206.3,6403.3
+descricao_carreta,36' T/A ST REEFER VAN,30,3068.9,2759.5
+descricao_carreta,40' T/A DRY VAN,4,242.8,187.8
+descricao_carreta,40' T/A DRY VAN W MAXON GPT4 GATE,2,1305.1,1305.1
+descricao_carreta,40' T/A DRY VAN W TAILGATE,14,1922.9,1298.5
+descricao_carreta,40' T/A M/T REEFER VAN,6,3371.8,2900.7
+descricao_carreta,40' T/A M/T REEFER VAN W TAILGATE,4,967.2,278.6
+descricao_carreta,40' T/A PLATE VAN,6,589.0,538.3
+descricao_carreta,40' T/A PLATE VAN W/TAILGATE,1,8679.3,8679.3
+descricao_carreta,40' T/A REEFER VAN W TAILGATE,16,317.7,299.2
+descricao_carreta,40' T/A REEFER VAN W/TAILGATE,6,3642.1,2169.3
+descricao_carreta,40' T/A S/T REEFER VAN W GATE,6,2586.5,2876.5
+descricao_carreta,40'-53' TRIDEM EXTENDABLE CHASSIS,24,1952.7,1906.8
+descricao_carreta,40-53' EXT. GALV. GOOSENECK TRIDEM CHASSIS,12,2014.3,1661.6
+descricao_carreta,40-53' EXT. QUAD CHASSIS,28,837.5,484.0
+descricao_carreta,40-53' EXT. TRIDEM CHASSIS,20,490.6,438.5
+descricao_carreta,40-53' TRIDEM EXT. CHASSIS,10,2062.7,1714.2
+descricao_carreta,42' T/A DRY VAN W TAILGATE,14,2954.4,2619.5
+descricao_carreta,42' TRIDEM DUMP TRAILER,11,802.9,724.9
+descricao_carreta,44.5' T/A DRY VAN,6,462.3,474.8
+descricao_carreta,45' B-TRAIN PUP TRIDEM CHASSIS,3,1530.7,1190.1
+descricao_carreta,45' T/A M/T REEFER VAN RAIL GATE,6,6053.4,4042.2
+descricao_carreta,45' T/A M/T REEFER VAN W/TAILGATE,6,3301.1,2245.3
+descricao_carreta,4500 CUTAWAY,1,1635.9,1635.9
+descricao_carreta,48' QUAD AXLE ALUM FLATBED,6,3968.6,3669.3
+descricao_carreta,48' T/A  REEFER VAN,6,4503.2,3326.8
+descricao_carreta,48' T/A 4000DX C/W TAILGATE,3,420.1,328.1
+descricao_carreta,48' T/A 4000DX VAN,306,530.6,427.4
+descricao_carreta,48' T/A 4000DX W TAILGATE,12,1729.9,809.4
+descricao_carreta,48' T/A DRY - DIVIDERS,5,541.9,248.4
+descricao_carreta,48' T/A DRY DIVIDERS,3,1422.4,1599.6
+descricao_carreta,48' T/A DRY VAN,216,997.9,454.2
+descricao_carreta,48' T/A DRY VAN W TAILGATE,87,818.1,264.5
+descricao_carreta,48' T/A FLATBED,5,907.4,348.2
+descricao_carreta,48' T/A HEATER VAN,42,1851.2,1534.3
+descricao_carreta,48' T/A HEATER VAN W TAILGATE,6,4527.5,4526.1
+descricao_carreta,48' T/A M/T REEFER VAN,16,5746.2,3837.3
+descricao_carreta,48' T/A M/T REEFER VAN W 3 CURBSIDE DOORS,84,8473.7,6807.0
+descricao_carreta,48' T/A M/T REEFER VAN W GATE,1,740.7,740.7
+descricao_carreta,48' T/A P&P VAN,10,309.9,59.3
+descricao_carreta,48' T/A PLATE VAN,122,2093.4,1614.5
+descricao_carreta,48' T/A PLATE VAN RAIL GATE,1,4166.7,4166.7
+descricao_carreta,48' T/A REEFER VAN,8,4829.8,3852.5
+descricao_carreta,48' T/A REEFER VAN W TAILGATE,42,4353.7,3917.7
+descricao_carreta,48' T/A VAN,79,703.6,362.7
+descricao_carreta,48' TA DURAPLATE VAN,6,1305.1,1344.5
+descricao_carreta,48' TRIDEM DRY VAN,30,2132.5,1387.7
+descricao_carreta,48' TRIDEM HEATER VAN W TAILGATE,6,4128.9,4881.8
+descricao_carreta,48' TRIDEM INSULATED VAN (NO HEATER),6,1327.0,996.0
+descricao_carreta,"48' X 108"" T/A SPRING RIDE VAN",17,2230.7,1735.0
+descricao_carreta,48.5' T/A DRY VAN,6,2107.3,2200.4
+descricao_carreta,51' MT REEFER VAN (CDS) W RAIL LIFTGATE,3,2438.5,2937.6
+descricao_carreta,51.5' T/A M/T REEFER VAN W/TAILGATE,18,2576.8,1527.4
+descricao_carreta,53 ' T/A PLATE VAN,33,636.4,559.7
+descricao_carreta,53 T/A DRY VAN,19,214.6,147.0
+descricao_carreta,53 T/A M/T REEFER VAN,3,8918.1,8403.8
+descricao_carreta,53 T/A REEFER VAN,20,1864.0,1451.2
+descricao_carreta,53' B-LEAD TRIDEM CHASSIS,3,275.4,288.1
+descricao_carreta,53' CITY VAN,9,480.7,312.5
+descricao_carreta,53' DRY PLATE VAN,42,1034.4,783.7
+descricao_carreta,53' DRY PLATE VAN TRIDEM,7,1524.4,1531.9
+descricao_carreta,53' DRY VAN,64,1335.8,1211.6
+descricao_carreta,53' LCV T/A PLATE VAN,192,2026.7,1787.7
+descricao_carreta,53' M/T REEFER VAN,20,3407.7,2152.6
+descricao_carreta,53' P&P VAN,6,1296.0,852.2
+descricao_carreta,53' QUAD AXLE DRY VAN,11,1447.8,1031.4
+descricao_carreta,53' QUAD HEATER VAN,12,3505.4,2665.4
+descricao_carreta,53' QUAD-AXLE PLATE VAN,12,4736.8,4193.4
+descricao_carreta,53' STORAGE VAN,2,738.8,738.8
+descricao_carreta,53' T/A  AUTOMOTIVE DRY VAN,24,807.5,635.6
+descricao_carreta,53' T/A  MT REEFER VAN,12,6945.2,5659.8
+descricao_carreta,53' T/A 3-TEMP REEFER VAN,258,5305.0,5094.7
+descricao_carreta,53' T/A 4000DX,9,529.6,181.4
+descricao_carreta,53' T/A 4000DX DRY VAN,359,376.5,317.1
+descricao_carreta,53' T/A 4000DX DRY VAN W TAILGATE,4,2371.1,2025.5
+descricao_carreta,53' T/A 4000DX VAN,6929,832.3,467.0
+descricao_carreta,53' T/A 4000DX VAN W PINTLE HOOK,24,1323.5,981.3
+descricao_carreta,53' T/A 4000DX VAN W/TAILGATE,12,589.4,396.1
+descricao_carreta,53' T/A COMBO SLIDE FLATBED,12,595.2,393.6
+descricao_carreta,53' T/A DROP DECK PLATE VAN,11,215.6,213.7
+descricao_carreta,53' T/A DRY VAN,4743,1046.9,546.9
+descricao_carreta,53' T/A DRY VAN BARN,1,719.4,719.4
+descricao_carreta,53' T/A DRY VAN ROLL,3,418.5,126.0
+descricao_carreta,53' T/A DRY VAN W FRONT DOOR,5,1453.0,312.6
+descricao_carreta,53' T/A DRY VAN W PINTLE HOOK,12,935.0,878.1
+descricao_carreta,53' T/A DRY VAN W TAILGATE,12,4377.7,2672.6
+descricao_carreta,53' T/A HEATER VAN,3010,1421.8,1013.9
+descricao_carreta,53' T/A HEATER VAN - CUSTOMER OWNED TAILGATE ON UNIT,12,1806.4,1491.0
+descricao_carreta,53' T/A HEATER VAN W PINTLE HOOK,12,2834.7,2111.6
+descricao_carreta,53' T/A HEATER VAN W/TAILGATE,36,5347.9,3991.9
+descricao_carreta,53' T/A INS STORAGE VAN,6,736.2,428.1
+descricao_carreta,53' T/A INSULATED DRY VAN,24,1648.3,1560.6
+descricao_carreta,53' T/A INSULATED DRY VAN W TAILGATE,6,3654.1,1735.4
+descricao_carreta,53' T/A INSULATED VAN,6,645.5,339.1
+descricao_carreta,53' T/A M/T REEFER VAN,268,3967.4,2805.8
+descricao_carreta,53' T/A M/T REEFER VAN (CDS),348,5455.2,5077.7
+descricao_carreta,53' T/A M/T REEFER VAN (CROSS DIVIDE),352,4974.1,4217.8
+descricao_carreta,53' T/A MISSING,5,919.3,1090.2
+descricao_carreta,53' T/A MT REEFER VAN,142,4597.0,3483.6
+descricao_carreta,53' T/A MULTI TEMP REEFER VAN,6,1473.3,1328.0
+descricao_carreta,53' T/A P&P VAN,2647,855.9,557.0
+descricao_carreta,53' T/A PLATE VAN,13682,970.1,604.6
+descricao_carreta,53' T/A PLATE VAN  PARTS DOORS,3,292.6,239.5
+descricao_carreta,53' T/A PLATE VAN W INT. PROTECTION,73,705.5,464.1
+descricao_carreta,53' T/A PLATE VAN W PINTLE HOOK,1102,1154.8,616.3
+descricao_carreta,53' T/A PLATE VAN W TAILGATE,48,2398.5,1716.6
+descricao_carreta,53' T/A PLATE VAN W/TAILGATE,35,642.1,312.1
+descricao_carreta,53' T/A PLATE-  MISSING UNIT 7/24,2,1012.4,1012.4
+descricao_carreta,53' T/A REEFER VAN,5931,3228.3,2533.6
+descricao_carreta,53' T/A REEFER VAN (CDS),6,5349.7,5930.1
+descricao_carreta,53' T/A REEFER VAN (MT),582,3359.3,3108.3
+descricao_carreta,53' T/A REEFER VAN W DECKING,102,4631.1,3953.3
+descricao_carreta,53' T/A REEFER VAN W DECKING & PINTLE HOOK,6,4342.0,4099.2
+descricao_carreta,53' T/A REEFER VAN W ROLL FLOOR,18,1929.9,993.0
+descricao_carreta,53' T/A REEFER VAN W SKIRT,6,5471.4,4218.8
+descricao_carreta,53' T/A REEFER VAN W SUPER SINGLES,12,5630.1,3611.8
+descricao_carreta,53' T/A REEFER VAN W TAILGATE,17,3016.4,2025.1
+descricao_carreta,53' T/A REEFER VAN W/TAILGATE,6,2154.8,1405.8
+descricao_carreta,53' T/A S/T REEFER VAN,218,2306.3,1337.2
+descricao_carreta,53' T/A SSL VAN W ROLL FLOOR,8,394.2,334.5
+descricao_carreta,53' T/A ST REEFER VAN,332,1526.8,1031.1
+descricao_carreta,53' T/A STEEL FLATBED,54,3606.8,2920.5
+descricao_carreta,53' T/A STORAGE VAN - JB,6,504.4,114.9
+descricao_carreta,53' T/A VAN- RICK H,6,888.7,774.6
+descricao_carreta,53' TA MT REEFER VAN,12,2370.6,1433.6
+descricao_carreta,53' TA REEFER VAN,4,535.5,516.6
+descricao_carreta,53' TRI-AXLE  TRAILER W WALKING FLOOR,4,856.5,834.3
+descricao_carreta,53' TRIDEM 4000DX,5,372.8,431.2
+descricao_carreta,53' TRIDEM 4000DX VAN,12,1768.4,1416.5
+descricao_carreta,53' TRIDEM CHASSIS,249,777.8,372.1
+descricao_carreta,53' TRIDEM DROP FLAT DECK,10,818.2,738.8
+descricao_carreta,53' TRIDEM DRY VAN,767,1646.1,1191.9
+descricao_carreta,53' TRIDEM FLAT DECK,42,1653.5,1063.6
+descricao_carreta,53' TRIDEM FLATBED,173,1914.1,1282.3
+descricao_carreta,53' TRIDEM HEATER VAN,712,4480.3,3036.6
+descricao_carreta,53' TRIDEM LEAD REEFER VAN,60,566.9,84.1
+descricao_carreta,53' TRIDEM LEAD REEFER VAN W DECKING,12,6002.1,4096.8
+descricao_carreta,53' TRIDEM M/T REEFER VAN,12,8839.3,8137.1
+descricao_carreta,53' TRIDEM MEDICAL WASTE TRAILER,6,760.3,496.1
+descricao_carreta,53' TRIDEM MISSING UNIT 7.24,2,270.9,270.9
+descricao_carreta,53' TRIDEM PLATE VAN,677,1321.1,729.7
+descricao_carreta,53' TRIDEM REEFER,2,287.1,287.1
+descricao_carreta,53' TRIDEM REEFER VAN,522,3529.2,2310.0
+descricao_carreta,53' TRIDEM REEFER VAN (2 ZONE),36,9455.5,9248.8
+descricao_carreta,53' TRIDEM REEFER VAN (3 ZONE),6,8319.0,6704.7
+descricao_carreta,53' TRIDEM REEFER VAN C/W TK C600,6,9389.2,8572.8
+descricao_carreta,53' TRIDEM ST REEFER VAN,69,104.2,81.6
+descricao_carreta,53' TRIDEM STEP DECK,6,625.7,459.1
+descricao_carreta,53' TRIDEM ULTRAVAN II,1,650.1,650.1
+descricao_carreta,53' TRIDEM VAN,24,2321.2,799.8
+descricao_carreta,53' VAN,54,467.0,343.8
+descricao_carreta,"53' X 105"" T/A DRY VAN",3,1066.4,1066.3
+descricao_carreta,53' Z-PLATE DRY VAN,6,1594.0,1605.6
+descricao_carreta,53' Z-PLATE DRY VAN TRIDEM,9,1558.4,1430.5
+descricao_carreta,53’ T/A 4000DX HEATER VAN,48,207.7,113.2
+descricao_carreta,53’ T/A 4000DX Heater Van,3,447.6,136.5
+descricao_carreta,53’ T/A PLATE VAN,74,659.9,472.8
+descricao_carreta,60' TRIDEM DRY VAN,24,1133.6,661.4
+descricao_carreta,60' TRIDEM HEATER VAN,135,719.5,152.2
+descricao_carreta,60' TRIDEM REEFER VAN,4,6638.5,6634.1
+descricao_carreta,AUSTIN PU TRUCK,5,269.9,267.1
+descricao_carreta,CALGARY SHUNT TRACTOR,1,114.1,114.1
+descricao_carreta,CTV CUBE VAN,3,2072.4,232.7
+descricao_carreta,E-SERIES CUTAWAY E-450,2,1127.8,1127.8
+descricao_carreta,E-SERIES CUTAWAY E-450 DRW 176'' WB (BC),4,1340.9,1116.3
+descricao_carreta,E-SERIES CUTAWAY E4F 782A,1,4015.7,4015.7
+descricao_carreta,E450 CUBE VAN,1,667.7,667.7
+descricao_carreta,E4F 782 E-SERIES,1,1700.5,1700.5
+descricao_carreta,E4F 782A E-SERIES,1,142.1,142.1
+descricao_carreta,ECONOLINE E450 SUPER DUTY CUTWAY VAN,3,3340.1,55.8
+descricao_carreta,FORD (WORK VAN),3,800.8,205.6
+descricao_carreta,FORD CUTWAY E-450 WORK TRUCK,27,2241.9,1038.4
+descricao_carreta,FORD CUTWAY E-450 WORK TRUCK (CORNWALL),12,1317.3,1083.4
+descricao_carreta,FORD CUTWAY E-450 WORK TRUCK (EDMONTON),6,2424.3,593.4
+descricao_carreta,FORD CUTWAY E-450 WORK TRUCK CALGARY,4,2361.0,878.5
+descricao_carreta,FORD CUTWAY E-450 WORK TRUCK CORNWALL,12,1284.8,1110.4
+descricao_carreta,FORD CUTWAY E-450 WORK TRUCK SURREY,18,417.9,31.3
+descricao_carreta,FORD ECONOLINE (PARTS TRUCK),11,1894.3,1007.1
+descricao_carreta,FORD ECONOLINE E-450 WORK TRUCK,12,1282.3,919.7
+descricao_carreta,FORD F-150 PARTS TRUCK (EDMONTON),5,141.5,92.4
+descricao_carreta,FORD F-250 PICK UP TRUCK,5,1194.2,388.2
+descricao_carreta,FORD F-550 SUPER DUTY DRW,12,1163.6,916.7
+descricao_carreta,FORD TRANSIT,6,4065.9,2927.6
+descricao_carreta,FORD TRANSIT (CORNWALL),2,217.4,217.4
+descricao_carreta,GMC SAVANNAH 3500,6,1423.1,934.5
+descricao_carreta,GMC SIERRA 35 - TIRE TRUCK,4,444.2,295.3
+descricao_carreta,INTERNATIONAL,2,103.7,103.7
+descricao_carreta,INTERNATIONAL DAYCAB,1,1186.1,1186.1
+descricao_carreta,LEASED FROM RYDER,3,882.4,377.7
+descricao_carreta,MERCEDES BENS SPRINTER 3500 CARGO,6,2841.0,2796.0
+descricao_carreta,RAM PRO MASTER CARGO VAN,1,1342.7,1342.7
+descricao_carreta,SHUNT FOR BC (SURREY),5,5089.2,4680.3
+descricao_carreta,SHUNT TRUCK (BALZAC),1,1645.3,1645.3
+descricao_carreta,SHUNT TRUCK LEASED RYDER,2,183.3,183.3
+descricao_carreta,SUPER DUTY F-5,2,408.9,408.9
+descricao_carreta,SUPER DUTY F-550 XL W TAILGATE,2,661.6,661.6
+descricao_carreta,T-250 SERVICE TRUCK,3,2121.0,2412.7
+descricao_carreta,T-250 SERVICE VAN,3,946.3,773.8
+descricao_carreta,"T/A ""A"" DOLLY CONVERTER",340,1004.5,633.3
+descricao_carreta,T/A DDW-S DOUBLES DOLLY CONVERTER,54,832.3,650.2
+descricao_carreta,T/A DOLLY CONVERTER,37,1080.9,652.5
+descricao_carreta,TCL SHUNT TRUCK,6,1357.2,1383.1
+descricao_carreta,TRANSIT (WOODSTOCK SERVICE TRUCK),2,112.0,112.0
+descricao_carreta,TRANSIT (WOODSTOCK),2,220.8,220.8
+descricao_carreta,TRANSIT CUTAWAY,2,3078.6,3078.6
+descricao_carreta,TRANSIT T-350,2,381.3,381.3
+descricao_carreta,TRANSIT T350 HR,2,1002.0,1002.0
+regiao_operacao,BALZAC,177,2639.0,2115.8
+regiao_operacao,CALCANTIRE,207,303.7,211.4
+regiao_operacao,CALGARY,5391,1733.3,1002.0
+regiao_operacao,CORNWALL,4110,1757.8,947.0
+regiao_operacao,DELTA,1178,2331.5,1490.9
+regiao_operacao,EDMONTON,1665,1676.5,828.8
+regiao_operacao,LANGLEY,13,2872.2,1683.6
+regiao_operacao,MIS,35810,1653.6,764.4
+regiao_operacao,WINNIPEG01,1,55.8,55.8
+regiao_operacao,WOODSTOCK,696,774.9,438.7
+provincia_estado,Alaska,4,1594.4,1101.8
+provincia_estado,Alberta,7746,1836.9,982.7
+provincia_estado,British Columbia,1343,3237.4,1970.2
+provincia_estado,California,4,5477.9,3309.6
+provincia_estado,Colorado,1,1310.6,1310.6
+provincia_estado,Connecticut,4,862.5,616.8
+provincia_estado,DESCONHECIDO,416,521.8,211.7
+provincia_estado,Georgia,5,1156.2,1178.2
+provincia_estado,Illinois,1,1184.2,1184.2
+provincia_estado,Indiana,1,2273.6,2273.6
+provincia_estado,Manitoba,99,3761.2,2319.4
+provincia_estado,Michigan,4,275.5,81.3
+provincia_estado,New Brunswick,317,3257.3,2533.5
+provincia_estado,New York,1,3780.9,3780.9
+provincia_estado,Newfoundland and Labrador,3,5272.1,4754.1
+provincia_estado,Nova Scotia,31,2244.9,589.6
+provincia_estado,Nunavut,3,739.7,826.2
+provincia_estado,Ontario,38008,1572.1,744.7
+provincia_estado,Oregon,2,2519.5,2519.5
+provincia_estado,Quebec,1225,1840.2,1160.9
+provincia_estado,Saskatchewan,13,3617.5,2335.2
+provincia_estado,Texas,1,5861.2,5861.2
+provincia_estado,Washington,13,2076.8,1758.9
+provincia_estado,Wyoming,3,611.3,706.8
+vmrs_predominante_ano,01,26345,1788.0,923.6
+vmrs_predominante_ano,02,1729,1670.1,1072.3
+vmrs_predominante_ano,03,1594,1737.2,901.9
+vmrs_predominante_ano,04,1127,1993.1,1237.5
+vmrs_predominante_ano,05,490,1380.6,927.8
+vmrs_predominante_ano,06,118,1256.1,769.0
+vmrs_predominante_ano,07,561,1104.2,700.2
+vmrs_predominante_ano,08,823,1003.2,791.7
+vmrs_predominante_ano,09,2209,2377.9,1476.7
+vmrs_predominante_ano,10,2135,4753.8,3664.9
+vmrs_predominante_ano,11,2,972.6,972.6
+vmrs_predominante_ano,12,32,3593.9,3020.5
+vmrs_predominante_ano,13,117,1187.5,827.8
+vmrs_predominante_ano,14,156,2199.7,1494.0
+vmrs_predominante_ano,17,16,535.6,318.1
+vmrs_predominante_ano,CL,19,746.1,259.7
+vmrs_predominante_ano,FS,1,464.4,464.4
+vmrs_predominante_ano,PM,10148,896.4,450.5
+vmrs_predominante_ano,RQ,20,750.1,318.9
+vmrs_predominante_ano,RS,1,93.8,93.8
+vmrs_predominante_ano,SC,22,631.8,351.3
+vmrs_predominante_ano,SEM_OS,1582,0.0,0.0
+vmrs_predominante_ano,TW,1,277.0,277.0

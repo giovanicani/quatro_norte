@@ -1,0 +1,11 @@
+variavel,n_categorias,categoria_dominante,share_dominante_pct,pct_ausente
+descricao_carreta,253,53' T/A PLATE VAN,27.8,0.0
+cod_montadora,26,UTLTY,38.5,0.02
+unit_subtype,26,DS,26.6,0.0
+provincia_estado,24,Ontario,77.2,0.0
+tire_size,24,11R22.5,66.7,15.93
+vmrs_predominante_ano,23,01,53.5,0.0
+regiao_operacao,10,MIS,72.7,0.0
+suspension_type,9,AIR,54.6,12.98
+flag_refrigerado,2,N,70.5,0.0
+new_used_indicator,2,NEW,79.0,0.36

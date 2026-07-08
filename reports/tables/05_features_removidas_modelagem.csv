@@ -1,2 +1,5 @@
-feature,motivo,share_meses_modelagem_com_garantia
-prop_pecas_garantia,quase sem variacao util: a base registra pouquissimas pecas em garantia; mantida apenas como diagnostico,0.00028693191256731575
+feature_removida,motivo
+tailgate_flag,variancia nula
+n_os_ano,componente de Y
+custo_medio_por_os_ano,componente de Y
+descricao_carreta,redundante/alta cardinalidade

@@ -1,0 +1,27 @@
+variavel,tipo/papel,descricao
+id_carreta,id,Identificador da carreta
+ano,temporal,Ano de referencia (grao)
+custo_ano_nominal,monetaria (nominal),Custo interno total no ano (CAD nominal); base da variavel resposta
+n_os_ano,operacional/componente de Y,Numero de OS internas no ano
+n_sistemas_vmrs_distintos_ano,operacional,Qtde de sistemas VMRS distintos com OS no ano
+share_pm_ano,operacional,Fracao de OS preventivas (VMRS=PM) no ano
+vmrs_predominante_ano,operacional (cat.),Sistema VMRS mais frequente no ano
+km_acumulado_fim_ano,exposicao,Odometro no fim do ano
+km_rodado_ano,exposicao,Km rodado no ano (variacao do odometro; resets tratados)
+regiao_operacao,geografica (cat.),Local/regiao predominante da OS (cod_local_os)
+provincia_estado,geografica (cat.),Provincia predominante (parcial ~54%)
+cod_montadora,ativo (cat.),Fabricante
+descricao_carreta,ativo (cat.),Descricao/tipo da unidade (proxy de modelo/classe)
+ano_modelo,ativo (quant.),Ano do modelo
+eixos,ativo (quant.),Numero de eixos
+comprimento,ativo (quant.),Comprimento (pes)
+flag_refrigerado,ativo (cat.),Carreta refrigerada (Y/N)
+tailgate_flag,ativo (cat.) - REMOVIDA,Plataforma elevatoria; CONSTANTE (variancia nula) -> descartada
+unit_subtype,ativo (cat.),Subtipo da unidade
+tire_size,ativo (cat.),Tamanho de pneu
+suspension_type,ativo (cat.),Tipo de suspensao
+new_used_indicator,ativo (cat.),Novo/usado na aquisicao
+idade_carreta,ativo derivada (quant.),Idade em anos no ano de referencia
+n_os_ano_anterior,historico defasado,OS no ano anterior
+n_os_acum_ate_ano_anterior,historico defasado,OS acumuladas ate o ano anterior
+anos_ativo_ate_ano_anterior,historico defasado,Anos ativos anteriores

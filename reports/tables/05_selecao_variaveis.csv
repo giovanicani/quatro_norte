@@ -1,0 +1,27 @@
+variavel,decisao,justificativa
+tailgate_flag,removida,Variancia nula (constante 'N') — sem informacao
+n_os_ano,removida,Componente aritmetico de Y (Y = n_os x custo medio/OS)
+custo_medio_por_os_ano,removida,Componente aritmetico de Y
+descricao_carreta,removida,Redundante com unit_subtype; cardinalidade alta (253) — risco de overfit
+ano_modelo,condicional,"Colinear com idade_carreta (VIF alto); mantida em arvores, redundante em modelos lineares"
+idade_carreta,mantida,Atributo de envelhecimento; associacao fraca isolada mas relevante em interacao
+eixos,mantida,Atributo estrutural do ativo
+comprimento,mantida,Porte fisico do ativo
+flag_refrigerado,mantida,Forte separacao de Y (eta=0.43)
+unit_subtype,mantida,Categorica de maior associacao util (eta=0.55)
+tire_size,mantida,Atributo tecnico; associacao fraca
+suspension_type,mantida,Atributo tecnico; associacao fraca
+new_used_indicator,mantida,Historico previo do ativo
+cod_montadora,mantida,Fabricante (eta=0.24)
+regiao_operacao,mantida,Proxy geografica operacional
+provincia_estado,mantida,"Proxy geografica (parcial ~54%, imputada DESCONHECIDO)"
+vmrs_predominante_ano,mantida (so explicativo),Sistema predominante — contemporaneo ao ano
+km_rodado_ano,mantida (so explicativo),Exposicao do ano (ρ=0.53); contemporanea -> so cenario explicativo
+n_sistemas_vmrs_distintos_ano,mantida (so explicativo),Diversidade de problemas no ano; contemporanea
+share_pm_ano,mantida (so explicativo),Perfil preventivo do ano; contemporaneo
+km_acumulado_fim_ano,explicativo / inicio_ano no preditivo,Exposicao acumulada; no preditivo usa-se o odometro de inicio de ano
+n_os_ano_anterior,mantida,Historico defasado (ρ=0.54)
+custo_ano_anterior,mantida,Historico defasado (ρ=0.54) — melhor preditor sem vazamento
+n_os_acum_ate_ano_anterior,mantida,Historico acumulado defasado
+custo_acum_ate_ano_anterior,mantida,Historico acumulado defasado
+anos_ativo_ate_ano_anterior,mantida,Tempo de historico disponivel

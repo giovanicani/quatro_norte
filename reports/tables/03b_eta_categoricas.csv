@@ -1,0 +1,11 @@
+variavel,n_categorias,F_anova,p_valor,eta2,eta
+descricao_carreta,253,144.34,0.0,0.3536,0.5947
+unit_subtype,26,855.93,0.0,0.303,0.5505
+flag_refrigerado,2,11304.55,0.0,0.1867,0.4321
+vmrs_predominante_ano,23,362.98,0.0,0.1172,0.3423
+cod_montadora,26,141.09,0.0,0.0568,0.2383
+tire_size,24,48.25,0.0,0.0239,0.1546
+suspension_type,9,135.81,0.0,0.0217,0.1473
+provincia_estado,24,101.97,0.0,0.0203,0.1424
+new_used_indicator,2,716.14,0.0,0.0144,0.1199
+regiao_operacao,10,37.23,0.0,0.006,0.0775

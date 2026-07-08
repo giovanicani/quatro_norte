@@ -1,0 +1,17 @@
+metrica,valor
+linhas_base_total,49248
+carretas,9859
+anos,2020-2025
+obs_y_valido,49248
+share_y_zero_pct,3.23
+y_media,1673.72
+y_mediana,812.55
+y_media_positivos,1729.53
+y_mediana_positivos,860.15
+y_p90,4221.76
+y_p99,11820.45
+y_max,62230.92
+assimetria,3.79
+custo_total_nominal_mi,77.18
+custo_total_real_mi,82.428
+n_os_total,223408
