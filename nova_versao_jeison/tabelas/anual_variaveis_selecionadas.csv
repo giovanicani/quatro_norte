@@ -1,13 +1,8 @@
-variavel,tipo,status
+variavel,tipo,decisao
 idade_carreta,numérica,selecionada
 eixos,numérica,selecionada
 comprimento,numérica,selecionada
-km_rodado_ano,numérica,selecionada
-delta_km_medio_os,numérica,selecionada
-km_acumulado_fim_ano,numérica,selecionada
-n_os_ano,numérica,selecionada
-n_os_preventivas_ano,numérica,selecionada
-n_sistemas_vmrs,numérica,selecionada
+km_acumulado_defasado,numérica,selecionada
 custo_acum,numérica,selecionada
 n_os_acum,numérica,selecionada
 custo_ano_anterior,numérica,selecionada
@@ -22,4 +17,3 @@ suspension_type,categórica,selecionada
 new_used_indicator,categórica,selecionada
 cod_montadora,categórica,selecionada
 provincia_operacao,categórica,selecionada
-vmrs_predominante,categórica,selecionada

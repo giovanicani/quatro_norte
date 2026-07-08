@@ -49,17 +49,25 @@ Execução completa em ~1 minuto.
    quartis, mínimo, máximo, assimetria, curtose); distribuições (histogramas, boxplots); relação de cada
    variável com Y (Pearson/Spearman para numéricas; η e ANOVA para categóricas); heatmap de correlação.
 5. **Ranking e multicolinearidade** — ordenação por força de associação e diagnóstico de VIF.
-6. **Seleção das variáveis** — exclusão das variáveis derivadas do próprio Y (vazamento) e, de cada par
-   colinear, manutenção de um representante.
+6. **Seleção das variáveis (critério anti-vazamento)** — como o objetivo é *prever* o custo do ano, só entram
+   variáveis conhecidas **antes** dele. São excluídas: (a) as derivadas do próprio Y — *vazamento aritmético*
+   (`custo_medio_os`, `custo_preventivo_ano`, `share_prev`, `custo_nominal`); e (b) as medidas **no próprio ano**
+   — *vazamento temporal* (`n_os_ano`, `n_os_preventivas_ano`, `n_sistemas_vmrs`, `km_rodado_ano`,
+   `delta_km_medio_os`, `km_acumulado_fim_ano`, `vmrs_predominante`). Restam atributos do ativo + histórico
+   defasado; de `ano_modelo` × `idade_carreta` (colineares) mantém-se `idade_carreta`.
 7. **Modelagem** — split temporal (treino 2020–2024, teste 2025) comparando Regressão Linear (log),
-   Random Forest e Gradient Boosting; importância por permutação; previsto × observado.
+   Random Forest e Gradient Boosting; importância por permutação; previsto × observado. Um modelo *explicativo*
+   com as variáveis do ano é reportado **apenas como sensibilidade** (teto de ajuste), não como preditivo.
 
 ## Principais resultados (teste 2025)
 
 - **Base:** 47.666 observações carreta × ano · custo médio CAD 1.726 / mediana CAD 859 por carreta-ano.
-- **Melhor modelo:** Gradient Boosting — R² ≈ 0,69 · MAE ≈ CAD 831 · WAPE ≈ 0,41.
-- **Fator dominante:** número de ordens de serviço no ano (`n_os_ano`); mesmo sem essa variável o modelo
-  mantém R² ≈ 0,64, sustentado por histórico de custo, quilometragem, tipo e região.
+- **Melhor modelo preditivo:** Random Forest — **R² ≈ 0,50** · MAE ≈ CAD 1.149 · WAPE ≈ 0,57
+  (Gradient Boosting muito próximo, R² ≈ 0,48).
+- **Fatores mais importantes (preditivos):** `unit_subtype` (tipo da unidade), `custo_acum` (histórico de custo),
+  `idade_carreta`, `km_acumulado_defasado`, `provincia_operacao` — um retrato acionável de ativo + histórico + uso.
+- **Sensibilidade explicativa:** incluir as variáveis do próprio ano eleva o R² para ≈ 0,69, mas isso mede o
+  *teto de ajuste*, não capacidade preditiva — `n_os_ano` é quase o próprio Y (mais OS no ano → mais custo no ano).
 
 ## Tabelas geradas (`tabelas/`)
 
@@ -73,7 +81,9 @@ Execução completa em ~1 minuto.
 - A base de entrada é a **consolidada** (223.590 OS, com atributos de cadastro), correspondente ao número de
   ordens de serviço reportado na apresentação. A extração bruta pré-consolidação (238.818 OS) permanece no
   repositório como `data/raw/fato_wo_ml_..._bruto_pre_consolidacao_legado.csv`.
-- A base consolidada rende **24 variáveis candidatas analisáveis** (15 numéricas + 9 categóricas) após remover
-  as variáveis com vazamento e colinearidade. A meta documental de "46 variáveis" pressupõe um conjunto
-  ampliado de features que não está integralmente presente na base atual — ponto a reconciliar com a origem
-  dos dados.
+- A base consolidada rende **29 variáveis candidatas** (20 numéricas + 9 categóricas). Após o critério
+  anti-vazamento restam **18 preditoras** (10 numéricas + 8 categóricas). A meta documental de "46 variáveis"
+  pressupõe um conjunto ampliado de features que não está integralmente presente na base atual — ponto a
+  reconciliar com a origem dos dados.
+- **Vazamento vs. previsão:** a distinção entre modelo *preditivo* (só informação ex-ante) e *explicativo*
+  (com variáveis do ano) é intencional. O número de referência do projeto é o **preditivo (R² ≈ 0,50)**.
