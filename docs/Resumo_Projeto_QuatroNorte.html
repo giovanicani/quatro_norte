@@ -1,0 +1,901 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resumo do Projeto - Quatro Norte</title>
+  <style>
+    :root {
+      --bg: #0c131b;
+      --paper: #0c131b;
+      --panel: #101b26;
+      --panel-strong: #12222b;
+      --panel-green: #0e211e;
+      --line: #223243;
+      --line-green: #1c3b34;
+      --title: #f4f9f8;
+      --text: #dde7ed;
+      --muted: #9fb0bc;
+      --teal: #3fe0ce;
+      --orange: #ffb65c;
+      --ok: #25b985;
+      --warn: #dfa62a;
+      --info: #20a9d0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.45;
+    }
+
+    main {
+      position: relative;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 58px 64px 72px;
+      background: var(--paper);
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    main::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 7px;
+      background: linear-gradient(90deg, var(--teal) 0 34%, var(--orange) 34% 40%, var(--line) 40% 100%);
+    }
+
+    main::after {
+      content: "";
+      position: absolute;
+      top: -155px;
+      right: -120px;
+      width: 420px;
+      height: 420px;
+      border: 1px solid #1b2b3a;
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 78px var(--bg), inset 0 0 0 79px #16242f;
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    .top {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      align-items: start;
+      margin-bottom: 42px;
+    }
+
+    .bar {
+      width: 112px;
+      height: 7px;
+      margin: 24px 0 30px;
+      background: var(--orange);
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: var(--teal);
+      font-family: "Courier New", Courier, monospace;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--title);
+      font-size: 58px;
+      line-height: 1.03;
+      letter-spacing: 0;
+      max-width: 960px;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      color: var(--title);
+      font-size: 32px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0;
+      color: var(--title);
+      font-size: 22px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    ul {
+      margin: 10px 0 0 22px;
+      padding: 0;
+    }
+
+    li {
+      margin: 6px 0;
+      color: var(--text);
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: 22px;
+      max-width: 840px;
+      margin-top: 22px;
+      line-height: 1.55;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 13px;
+      color: var(--text);
+      font-family: "Courier New", Courier, monospace;
+      font-size: 13px;
+      font-weight: 700;
+      background: var(--panel);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 26px 0 0;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 22px 24px;
+      background: var(--panel);
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--orange);
+      font-family: "Courier New", Courier, monospace;
+      font-size: 31px;
+      line-height: 1.1;
+      margin-bottom: 9px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .metric.featured {
+      position: relative;
+      grid-column: span 2;
+      min-height: 170px;
+      background:
+        linear-gradient(135deg, rgba(63, 224, 206, 0.14), rgba(255, 182, 92, 0.08)),
+        var(--panel-strong);
+      overflow: hidden;
+    }
+
+    .metric.featured::after {
+      content: "";
+      position: absolute;
+      right: -42px;
+      bottom: -58px;
+      width: 180px;
+      height: 180px;
+      border: 1px solid rgba(63, 224, 206, 0.28);
+      border-radius: 50%;
+    }
+
+    .metric.featured strong {
+      font-size: 54px;
+      color: var(--teal);
+    }
+
+    .visual-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      align-items: stretch;
+      margin-top: 24px;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin: 24px 0 6px;
+    }
+
+    .flow-step {
+      position: relative;
+      min-height: 112px;
+      padding: 16px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+    }
+
+    .flow-step::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -11px;
+      width: 12px;
+      height: 2px;
+      background: var(--orange);
+    }
+
+    .flow-step:last-child::after {
+      display: none;
+    }
+
+    .flow-step b {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--teal);
+      font-family: "Courier New", Courier, monospace;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .flow-step span {
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .model-bars {
+      display: grid;
+      gap: 13px;
+      margin-top: 18px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 190px 1fr 62px;
+      gap: 12px;
+      align-items: center;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .track {
+      height: 18px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #0a1017;
+      border: 1px solid var(--line);
+    }
+
+    .fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--teal), var(--orange));
+    }
+
+    .bar-value {
+      color: var(--orange);
+      font-family: "Courier New", Courier, monospace;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .hypothesis-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .hypothesis {
+      min-height: 160px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      background: var(--panel);
+    }
+
+    .hypothesis strong {
+      display: block;
+      margin: 10px 0 8px;
+      color: var(--title);
+      font-size: 17px;
+    }
+
+    .hypothesis p {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .status-dot {
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: var(--bg);
+      font-family: "Courier New", Courier, monospace;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .status-dot.ok {
+      background: var(--ok);
+    }
+
+    .status-dot.partial {
+      background: var(--warn);
+    }
+
+    .status-dot.no {
+      background: #8d98a3;
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 22px;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: var(--line);
+    }
+
+    .time-card {
+      position: relative;
+      padding-top: 52px;
+    }
+
+    .time-card::before {
+      content: "";
+      position: absolute;
+      top: 13px;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: 0 0 0 7px var(--bg), 0 0 0 8px var(--line);
+    }
+
+    .time-card div {
+      min-height: 120px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+    }
+
+    .time-card b {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--teal);
+      font-family: "Courier New", Courier, monospace;
+      font-size: 13px;
+    }
+
+    .time-card span {
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    section {
+      position: relative;
+      z-index: 1;
+      margin: 34px 0;
+      padding: 30px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .methodology {
+      display: grid;
+      grid-template-columns: 12px 1fr;
+      gap: 28px;
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .methodology-mark {
+      width: 12px;
+      height: 86px;
+      background: var(--orange);
+    }
+
+    .methodology-content {
+      min-width: 0;
+    }
+
+    .methodology-title {
+      margin-bottom: 48px;
+    }
+
+    .methodology-list {
+      display: grid;
+      gap: 18px;
+      margin-left: 10px;
+    }
+
+    .methodology-step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .methodology-step::before {
+      content: "";
+      position: absolute;
+      top: 45px;
+      left: 22px;
+      width: 5px;
+      height: calc(100% + 18px);
+      background: var(--orange);
+      border-radius: 999px;
+    }
+
+    .methodology-step:last-child::before {
+      display: none;
+    }
+
+    .methodology-number {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      width: 48px;
+      height: 48px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #07324d;
+      color: var(--title);
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .methodology-step:nth-child(even) .methodology-number {
+      background: #ff5b22;
+    }
+
+    .methodology-text {
+      min-height: 48px;
+      padding-top: 9px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    .methodology-text strong {
+      color: var(--title);
+      font-size: 20px;
+    }
+
+    .methodology-text span {
+      color: var(--muted);
+    }
+
+    .phase {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 22px 24px;
+      margin: 14px 0;
+      background: var(--panel);
+    }
+
+    .phase:nth-of-type(3n + 1) {
+      background: var(--panel-green);
+      border-color: var(--line-green);
+    }
+
+    .phase-head {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .phase-title {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 5px 11px;
+      color: var(--bg);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .done {
+      background: var(--ok);
+    }
+
+    .progress {
+      background: var(--info);
+    }
+
+    .next {
+      background: var(--warn);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 18px 0 4px;
+      font-size: 15px;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      overflow: hidden;
+    }
+
+    th {
+      background: #07324d;
+      color: var(--title);
+      text-align: left;
+      padding: 14px 16px;
+      font-weight: 700;
+      border-right: 1px solid #dfe8ef;
+    }
+
+    th:last-child {
+      border-right: 0;
+    }
+
+    td {
+      border-bottom: 1px solid rgba(223, 232, 239, 0.14);
+      padding: 14px 16px;
+      vertical-align: top;
+      color: var(--text);
+      background: var(--panel);
+    }
+
+    tr:nth-child(even) td {
+      background: var(--panel-strong);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .note {
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--orange);
+      border-radius: 14px;
+      background: var(--panel-strong);
+      padding: 18px 20px;
+      margin: 22px 0 0;
+      color: var(--text);
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 13px;
+      font-family: "Courier New", Courier, monospace;
+    }
+
+    @media (max-width: 820px) {
+      main {
+        padding: 34px 22px 48px;
+      }
+
+      h1 {
+        font-size: 38px;
+      }
+
+      h2 {
+        font-size: 26px;
+      }
+
+      .lead {
+        font-size: 18px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metric.featured {
+        grid-column: auto;
+      }
+
+      .visual-grid,
+      .flow,
+      .hypothesis-grid,
+      .timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-step::after,
+      .timeline::before {
+        display: none;
+      }
+
+      .bar-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .methodology {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .methodology-title {
+        margin-bottom: 30px;
+      }
+
+      .methodology-step {
+        grid-template-columns: 52px 1fr;
+        gap: 14px;
+      }
+
+      .methodology-number {
+        width: 42px;
+        height: 42px;
+        font-size: 19px;
+      }
+
+      .methodology-step::before {
+        top: 40px;
+        left: 19px;
+      }
+
+      .methodology-text {
+        font-size: 16px;
+      }
+
+      .methodology-text strong {
+        font-size: 17px;
+      }
+
+      .phase-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media print {
+      body {
+        background: var(--bg);
+      }
+
+      main {
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="methodology">
+      <div class="methodology-mark"></div>
+      <div class="methodology-content">
+        <div class="methodology-title">
+          <p class="eyebrow">13 · Metodologia</p>
+          <h1>Procedimento passo a passo</h1>
+        </div>
+
+        <div class="methodology-list">
+          <div class="methodology-step">
+            <div class="methodology-number">0</div>
+            <div class="methodology-text">
+              <strong>Mapeamento e extração</strong>
+              <span> — identifica tabelas-chave, cria scripts SQL para exportar CSVs e desnormaliza as fontes em uma base consolidada.</span>
+            </div>
+          </div>
+          <div class="methodology-step">
+            <div class="methodology-number">1</div>
+            <div class="methodology-text">
+              <strong>Fonte única</strong>
+              <span> — parte só do CSV consolidado <code>fato_wo_ml</code> (223.590 OS · 9.859 carretas).</span>
+            </div>
+          </div>
+          <div class="methodology-step">
+            <div class="methodology-number">2</div>
+            <div class="methodology-text">
+              <strong>Qualidade e integridade</strong>
+              <span> — consistência dos registros e exclusão de estornos (custos negativos).</span>
+            </div>
+          </div>
+          <div class="methodology-step">
+            <div class="methodology-number">3</div>
+            <div class="methodology-text">
+              <strong>Base carreta × ano</strong>
+              <span> — define o alvo Y = custo anual de manutenção por carreta (47.666 linhas).</span>
+            </div>
+          </div>
+          <div class="methodology-step">
+            <div class="methodology-number">4</div>
+            <div class="methodology-text">
+              <strong>Deflação — CPI Canadá</strong>
+              <span> — custos trazidos a CAD reais de dez/2025, comparáveis no tempo.</span>
+            </div>
+          </div>
+          <div class="methodology-step">
+            <div class="methodology-number">5</div>
+            <div class="methodology-text">
+              <strong>EDA</strong>
+              <span> — descritivas, distribuições e relação de cada variável com o custo.</span>
+            </div>
+          </div>
+          <div class="methodology-step">
+            <div class="methodology-number">6</div>
+            <div class="methodology-text">
+              <strong>Seleção anti-vazamento</strong>
+              <span> — remove componentes do próprio Y e usa histórico só do ano anterior.</span>
+            </div>
+          </div>
+          <div class="methodology-step">
+            <div class="methodology-number">7</div>
+            <div class="methodology-text">
+              <strong>Modelagem — split temporal</strong>
+              <span> — treino 2020-2024 / teste 2025; lineares, árvores e ensembles.</span>
+            </div>
+          </div>
+          <div class="methodology-step">
+            <div class="methodology-number">8</div>
+            <div class="methodology-text">
+              <strong>Avaliação e conclusões</strong>
+              <span> — R² / RMSE / MAE, importância das variáveis e recomendações.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Entregas do Projeto</h2>
+
+      <article class="phase">
+        <div class="phase-head">
+          <div class="phase-title">
+            <h3>Gate 1 - Dados e qualidade</h3>
+            <span class="badge done">Concluída</span>
+          </div>
+        </div>
+        <ul>
+          <li>Inventário das bases: carretas, OS, mão de obra, peças, contratos, odômetro e GPS.</li>
+          <li>Validação de chaves, datas, custos negativos/zerados, leituras de odômetro e valores ausentes.</li>
+          <li>Documentação das regras de tratamento e dos riscos metodológicos.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <div class="phase-head">
+          <div class="phase-title">
+            <h3>Gate 2 - Base analítica</h3>
+            <span class="badge done">Concluída</span>
+          </div>
+        </div>
+        <ul>
+          <li>Construção da base carreta x mês para custo preventivo por km.</li>
+          <li>Construção da base carreta x ano para custo anual real de manutenção.</li>
+          <li>Criação de variáveis defasadas para evitar vazamento temporal.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <div class="phase-head">
+          <div class="phase-title">
+            <h3>Gate 3 - EDA e hipóteses</h3>
+            <span class="badge done">Concluída</span>
+          </div>
+        </div>
+        <ul>
+          <li>Análise de distribuições, outliers, assimetria, correlações, VIF e segmentações.</li>
+          <li>Confirmação de que custos e OS têm distribuição assimétrica, com poucos casos extremos.</li>
+          <li>Indícios de efeito de idade, histórico de manutenção, sistemas VMRS e perfil operacional.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <div class="phase-head">
+          <div class="phase-title">
+            <h3>Gate 4 - Modelo mensal por km</h3>
+            <span class="badge progress">Resultados preliminares</span>
+          </div>
+        </div>
+        <ul>
+          <li>Comparação inicial entre regressões, árvore de decisão, Random Forest, Gradient Boosting, KNN e hurdle.</li>
+          <li>O recorte mensal por km indica sinal operacional, mas ainda sofre com zero-inflação e ruído de medição.</li>
+          <li>Esses resultados funcionam como diagnóstico para justificar a evolução para a visão anual.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <div class="phase-head">
+          <div class="phase-title">
+            <h3>Gate 5 - Modelo anual de custo</h3>
+            <span class="badge progress">Resultados preliminares</span>
+          </div>
+        </div>
+        <ul>
+          <li>Modelo em grão carreta x ano, com custo anual real deflacionado.</li>
+          <li>Resultados preliminares promissores, com desempenho superior aos modelos lineares no teste temporal.</li>
+          <li>Principais fatores: número de OS no ano, VMRS predominante, custo acumulado, subtipo, km e região.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <div class="phase-head">
+          <div class="phase-title">
+            <h3>Gate 6 - Interpretação de negócio</h3>
+            <span class="badge next">Próximos passos</span>
+          </div>
+        </div>
+        <ul>
+          <li>Traduzir os resultados em recomendações para orçamento, manutenção preventiva e gestão da frota.</li>
+          <li>Separar, na narrativa final, fatores de risco operacional das limitações de dados e ruído de medição.</li>
+          <li>Reforçar que os achados são preditivos e exploratórios, sem inferência causal definitiva.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <div class="phase-head">
+          <div class="phase-title">
+            <h3>Gate 7 - Validação e robustez</h3>
+            <span class="badge next">Próximos passos</span>
+          </div>
+        </div>
+        <ul>
+          <li>Verificar estabilidade por ano de teste, região, tipo de carreta e perfil de manutenção.</li>
+          <li>Testar sensibilidade a outliers, seleção de variáveis e hiperparâmetros.</li>
+          <li>Avaliar extensões futuras: MERF, modelos hierárquicos e abordagens zero-infladas.</li>
+        </ul>
+      </article>
+    </section>
+
+  </main>
+</body>
+</html>
