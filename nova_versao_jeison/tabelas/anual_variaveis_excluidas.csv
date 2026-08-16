@@ -1,0 +1,12 @@
+variavel,decisao
+ano_modelo,"excluída — colinearidade (VIF, redundante com idade_carreta)"
+km_rodado_ano,excluída — medida no próprio ano (vazamento temporal)
+delta_km_medio_os,excluída — medida no próprio ano (vazamento temporal)
+km_acumulado_fim_ano,excluída — medida no próprio ano (vazamento temporal)
+n_os_ano,excluída — medida no próprio ano (vazamento temporal)
+n_os_preventivas_ano,excluída — medida no próprio ano (vazamento temporal)
+custo_preventivo_ano,excluída — derivada de Y (vazamento aritmético)
+share_prev,excluída — derivada de Y (vazamento aritmético)
+n_sistemas_vmrs,excluída — medida no próprio ano (vazamento temporal)
+custo_medio_os,excluída — derivada de Y (vazamento aritmético)
+vmrs_predominante,excluída — medida no próprio ano (vazamento temporal)
