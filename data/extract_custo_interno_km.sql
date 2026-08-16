@@ -245,6 +245,21 @@ SELECT w.worord_id        AS id_os,
        f.new_used_indicator,
        w.wo_number        AS numero_os,
        CAST(w.wo_date AS DATE)        AS data_os,
+       TO_CHAR(
+           ROUND(
+               (TRUNC(CAST(w.wo_date AS DATE)) - TRUNC(contrato.data_inicio)) / 30.4375,
+               2
+           ),
+           'TM9',
+           'NLS_NUMERIC_CHARACTERS=''.,'''
+       ) AS tempo_contrato_meses_ate_reparo,
+       contrato.cod_cliente,
+       contrato.tipo_manutencao,
+       TO_CHAR(
+           contrato.franquia_km_mensal,
+           'TM9',
+           'NLS_NUMERIC_CHARACTERS=''.,'''
+       ) AS franquia_km_mensal_contrato,
        COALESCE(UPPER(REGEXP_SUBSTR(w.repair_request, 'VMRS[[:space:]]*:[[:space:]]*([^[:space:]*]+)', 1, 1, 'i', 1)), '01') AS vmrs,
        TO_CHAR(
            bi_auxiliary_pkg.unit_actual_reading(
@@ -307,6 +322,20 @@ SELECT w.worord_id        AS id_os,
   JOIN frota f ON f.uni_id = w.uni_id
   LEFT JOIN rla_locations loc       ON loc.loc_id = w.loc_id
   LEFT JOIN adm_province_states ps  ON ps.prosta_id = w.prosta_id_repair
+  OUTER APPLY (
+      SELECT lra.start_date           AS data_inicio,
+             cus.code                 AS cod_cliente,
+             lra.maint_type           AS tipo_manutencao,
+             lra.monthly_km_allowance AS franquia_km_mensal
+        FROM rla_lease_rental_assets lra
+        LEFT JOIN ym_customers cus ON cus.cus_id = lra.cus_id_invoice_to
+       WHERE lra.uni_id = w.uni_id
+         AND lra.void_date IS NULL
+         AND TRUNC(CAST(w.wo_date AS DATE)) >= TRUNC(lra.start_date)
+         AND TRUNC(CAST(w.wo_date AS DATE)) <= NVL(TRUNC(lra.return_date), DATE '9999-12-31')
+       ORDER BY lra.start_date DESC, lra.learenass_id DESC
+       FETCH FIRST 1 ROW ONLY
+  ) contrato
  WHERE w.void_date IS NULL
    AND w.approved_date IS NOT NULL
    AND w.completed_date IS NOT NULL
@@ -324,7 +353,7 @@ SELECT w.worord_id        AS id_os,
                    AND p.charge_flag = 'I'
                    AND p.deleted_flag = 'N'))
  ORDER BY w.uni_id, w.wo_date, w.worord_id;
- --FETCH FIRST 20000 ROWS ONLY;
+-- FETCH FIRST 2000 ROWS ONLY;
 SPOOL OFF
 
 -- ----------------------------------------------------------------------------

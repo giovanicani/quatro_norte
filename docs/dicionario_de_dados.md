@@ -157,6 +157,10 @@ Grão: **uma ordem de serviço** com custo interno, enriquecida para modelagem.
 | `flag_refrigerado` | VARCHAR2(1) | derivado de `ym_units.uni_id_reefer` | `Y` se há reefer acoplado; senão `N` |
 | `numero_os` | VARCHAR2(25) | `rep_work_orders.wo_number` | Número sequencial da OS |
 | `data_os` | DATE | `rep_work_orders.wo_date` (CAST DATE) | Data de abertura da OS |
+| `tempo_contrato_meses_ate_reparo` | NUMBER | diferença em dias entre `rla_lease_rental_assets.start_date` e `data_os`, dividida por 30,4375 | Tempo decorrido, em meses, do contrato ativo até a data do reparo |
+| `cod_cliente` | VARCHAR2(25) | `ym_customers.code` do contrato ativo em `data_os` | Código do cliente faturado no contrato vigente no momento do reparo |
+| `tipo_manutencao` | VARCHAR2(50) | `rla_lease_rental_assets.maint_type` do contrato ativo em `data_os` | Tipo de manutenção contratual vigente no momento do reparo |
+| `franquia_km_mensal_contrato` | NUMBER | `rla_lease_rental_assets.monthly_km_allowance` do contrato ativo em `data_os` | Franquia mensal de quilômetros do contrato vigente no momento do reparo |
 | `vmrs` | VARCHAR2 | `COALESCE(REGEXP_SUBSTR(rep_work_orders.repair_request, ...), '01')` | Código VMRS textual extraído da solicitação; quando ausente, assume `01` (MISC) |
 | `km_acumulado_data_os` | NUMBER | `bi_auxiliary_pkg.unit_actual_reading(...)` | Leitura acumulada em KM na data da OS |
 | `delta_km_desde_ultima_os` | NUMBER | diferença via `LAG(...) OVER (PARTITION BY id_carreta ORDER BY data_os, id_os)` | KM entre a OS atual e a OS anterior da mesma carreta |
