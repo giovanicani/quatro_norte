@@ -10,7 +10,13 @@ leasing/rental no Canada, no grao **carreta x ano**.
 > ⚠️ **Fonte unica.** Toda a analise parte EXCLUSIVAMENTE de
 > `data/raw/fato_wo_ml_2020-01-01_to_2025-12-31.csv`. Extracao SQL, modelo estrela,
 > joins e feature engineering = etapa anterior de preparacao (nao reexecutar).
-> Ver `docs/revisao_anual_2026-07-07.md`.
+> Ver `docs/revisao_contrato_2026-08-16.md` (autoritativo) e
+> `docs/revisao_anual_2026-07-07.md`.
+>
+> 🆕 **2026-08-16.** A base foi reextraida: **29 colunas** (25 antes), **217.217 OS**,
+> **9.585 carretas**. Passou a incluir dados de CONTRATO — a fonte segue unica, sem
+> joins novos. Resultados publicados em `reports/` sao da base anterior e estao
+> PENDENTES de recalculo.
 
 Pergunta do problema:
 
@@ -34,14 +40,29 @@ estatisticos e de ML capazes de estima-lo.
 ## Escopo analitico
 
 O estudo usa apenas a base consolidada `fato_wo_ml` (grao de OS), agregada para o
-grao **carreta x ano**. As variaveis candidatas (~25) derivam dessa fonte: atributos
+grao **carreta x ano**. As variaveis candidatas derivam dessa fonte: atributos
 do ativo (montadora, ano_modelo, eixos, comprimento, refrigerado, subtipo, pneu,
 suspensao, novo/usado), idade, geografia (regiao/provincia), exposicao
-(km_acumulado, km_rodado_ano), operacao do ano (n_os, diversidade VMRS, share PM) e
-historico defasado (custo/OS de anos anteriores).
+(km_acumulado, km_rodado_ano), operacao do ano (n_os, diversidade VMRS, share PM),
+historico defasado (custo/OS de anos anteriores) e **contrato** (tipo de manutencao,
+tempo de contrato, cliente).
 
-Fora de escopo (exigiriam outras tabelas): contrato, mao de obra detalhada, pecas e
-leituras de odometro dedicadas.
+CONTRATO ESTA NO ESCOPO desde 2026-08-16 (hipotese H6, desdobrada em H6a duracao e
+H6b tipo), derivado da propria fonte unica. Restricoes firmadas:
+`franquia_km_mensal_contrato` REMOVIDA (99,8% zeros); `cod_cliente` NAO entra como
+categorica bruta (597 categorias, risco de memorizacao). Regras de agregacao anual em
+`docs/dicionario_variaveis_candidatas.md` §4.
+
+POPULACAO (D6, firmada em 2026-08-16): `tipo_manutencao = 'MAINT'` — retomada do
+criterio da fase mensal, que se perdeu na virada anual so por ausencia do dado.
+Aplicar como FLAG na base anual (`populacao_maint_flag`), NAO excluir linhas: a base
+guarda todas as carreta-anos e a modelagem filtra pela flag. Consequencia:
+`tipo_manutencao` NAO entra como feature (constante na populacao filtrada); H6b e
+respondida na EDA sobre a base completa, e H6a (tempo de contrato) e a hipotese de
+contrato que entra no modelo.
+
+Fora de escopo (exigiriam outras tabelas): `tipo_contrato` (RENTAL/LEASE), mao de obra
+detalhada, pecas e leituras de odometro dedicadas.
 
 Variavel-alvo principal:
 
@@ -57,13 +78,17 @@ Os custos sao deflacionados a valor presente pelo **CPI all-items do Canada**
 - H3 — O historico de manutencao (anos anteriores) preve o custo futuro.
 - H4 — Caracteristicas do ativo (montadora, subtipo, refrigeracao) influenciam o custo.
 - H5 — A regiao de operacao influencia o custo.
-- (Hipoteses de contrato ficam fora de escopo por ausencia de dados na fonte unica.)
+- H6 — O tipo de manutencao contratual (MAINT/NET/MIX) influencia o custo anual
+  absorvido pela empresa.
+- H7 — O tempo de contrato ate o reparo influencia o custo anual.
+
+(H6 e H7 entraram em 2026-08-16, com a chegada dos dados de contrato a fonte unica.)
 
 ## Feature engineering esperado
 
 Ao preparar dados para analise ou modelagem, derive apenas variaveis sustentadas pela
-fonte unica `fato_wo_ml`. Variaveis que exigem contrato, pecas, mao de obra detalhada
-ou leituras dedicadas devem ser tratadas como fora de escopo desta rodada.
+fonte unica `fato_wo_ml`. Variaveis que exigem pecas, mao de obra detalhada ou leituras
+dedicadas devem ser tratadas como fora de escopo desta rodada.
 
 - `idade_carreta`: anos desde a fabricacao.
 - `km_rodado_ano`: intensidade anual de uso derivada do odometro nas OS.
@@ -75,6 +100,12 @@ ou leituras dedicadas devem ser tratadas como fora de escopo desta rodada.
 - `share_pm_ano`: proporcao de OS com VMRS preventivo no ano.
 - `regiao_operacao`: local/regiao predominante da OS.
 - `custo_ano_real`: custo anual deflacionado pelo CPI do Canada (CAD, valor presente).
+- `tipo_manutencao_ano`: regime contratual predominante no ano (`SEM_CONTRATO` quando
+  a OS nao cai em contrato algum).
+- `share_maint_ano`: fracao de OS do ano sob regime MAINT.
+- `tempo_contrato_meses_fim_ano` / `_inicio_ano`: maturidade contratual (a versao de
+  inicio de ano e a unica admissivel no cenario preditivo).
+- `trocou_contrato_ano`, `n_clientes_ano`: rotatividade contratual e comercial.
 
 ## Analise exploratoria
 

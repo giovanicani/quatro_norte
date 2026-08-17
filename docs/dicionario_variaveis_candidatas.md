@@ -6,6 +6,12 @@ Este documento especifica o universo de **variáveis explicativas candidatas** d
 da **fonte única** `data/raw/fato_wo_ml_2020-01-01_to_2025-12-31.csv`, além da variável
 resposta:
 
+> 🆕 **Atualizado em 2026-08-16.** A fonte única foi reextraída (25 → **29 colunas**) e
+> passou a conter **dados de contrato**. O bloco de contrato saiu de *fora de escopo* e
+> ganhou a seção **§4**; `franquia_km_mensal_contrato` foi **removida** por variância
+> quase nula. Contexto e perfil de qualidade em
+> [`revisao_contrato_2026-08-16.md`](revisao_contrato_2026-08-16.md).
+
 ```text
 custo_ano_real  —  custo anual de manutenção por carreta (CAD/ano, real dez/2025)
 ```
@@ -77,14 +83,47 @@ Calculadas com anos **anteriores** ao de referência; disponíveis no início do
 | `anos_ativo_ate_ano_anterior` | quantitativa | nº de anos ativos anteriores | H3 | tempo de histórico |
 | `km_acumulado_inicio_ano` | quantitativa | odômetro do fim de t−1 (só cenário preditivo) | H2 | exposição no início do ano |
 
-## 4. Fora de escopo (exigiriam outras tabelas)
+## 4. Contrato (carreta × ano) — reincluído em 2026-08-16
+
+Derivado dos quatro campos de contrato que passaram a integrar a fonte única:
+`tempo_contrato_meses_ate_reparo`, `cod_cliente`, `tipo_manutencao` e
+`franquia_km_mensal_contrato`. Os campos são do grão de **OS** e descrevem o contrato
+**vigente na data do reparo** — e contrato **não é atributo estático da carreta**:
+51,5% das carretas apresentam mais de um `tipo_manutencao` no período. Daí a
+necessidade de regra de agregação explícita para o grão anual.
+
+| Variável | Tipo | Origem | Transformação | Defasagem | Vazamento | Hipótese | Objetivo |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `tipo_manutencao_ano` | categórica | `tipo_manutencao` | moda das OS do ano; ausente → `SEM_CONTRATO` (nível informativo, não imputação) | contemporânea | baixo | H6b | regime contratual de manutenção |
+| `share_maint_ano` | quantitativa | `tipo_manutencao` | fração de OS do ano com `MAINT` | contemporânea | baixo | H6b | intensidade do regime MAINT |
+| `tempo_contrato_meses_fim_ano` | quantitativa | `tempo_contrato_meses_ate_reparo` | máximo observado no ano | contemporânea | médio | H6a | maturidade da relação contratual |
+| `tempo_contrato_meses_inicio_ano` | quantitativa | idem | valor de fim de t−1 (**só cenário preditivo**) | defasada | baixo | H6a | maturidade conhecida no início do ano |
+| `trocou_contrato_ano` | binária | `tipo_manutencao` + `tempo_contrato_*` | 1 se houve mais de um tipo no ano ou queda no tempo de contrato (indício de novo contrato) | contemporânea | baixo | H6 | rotatividade contratual |
+| `n_clientes_ano` | quantitativa | `cod_cliente` | nº de clientes distintos no ano | contemporânea | baixo | H6b | estabilidade do vínculo comercial |
+| `cod_cliente_predominante_ano` | categórica | `cod_cliente` | cliente com mais OS no ano — **uso descritivo apenas** | contemporânea | **alto** | — | análise de concentração, não *feature* |
+| `franquia_km_mensal_contrato` | — | — | **REMOVIDA**: 99,8% dos valores preenchidos são zero (variância quase nula) | — | — | — | sem informação |
+
+**Restrições de uso registradas:**
+
+- **`cod_cliente` não entra como categórica bruta.** São 597 categorias com 22,8% de
+  ausência; em árvore, tende a memorizar o cliente em vez de explicar o custo, e o
+  modelo perde utilidade para clientes novos. Se for modelado, apenas via redução
+  (top-N + `OUTROS`) ou variável derivada de porte da frota do cliente.
+- **`tipo_manutencao` é desbalanceado** (MAINT 89,7% · MIX 1,6% · NET 1,1% · 7,5%
+  ausente). η (eta) baixo pode refletir desbalanceamento, não ausência de efeito:
+  reportar também custo médio por nível com intervalo de confiança.
+- **Colinearidade a vigiar:** `tempo_contrato_*`, `idade_carreta` e
+  `anos_ativo_ate_ano_anterior` medem maturidade correlacionada. Se VIF > 10, manter uma
+  por família nos modelos lineares; árvores toleram.
+
+## 5. Fora de escopo (exigiriam outras tabelas)
 
 A adesão à **fonte única** deixa de fora variáveis do desenho conceitual original que
 dependiam de outras tabelas do modelo estrela:
 
 | Bloco | Variáveis | Tabela de origem |
 | --- | --- | --- |
-| Contrato | `tipo_contrato`, `tipo_manutencao`, `franquia_km_mensal`, duração/idade de contrato | `fato_contratos` |
+| Contrato (resíduo) | `tipo_contrato` (RENTAL/LEASE) — os demais campos de contrato **entraram** na fonte única (§4) | `fato_contratos` |
 | Leituras / km detalhado | `km_por_mes`, `km_rodado_*` mensal, densidades por 10k km | `fato_readings` |
 | Mão de obra | `sistema_vmrs`, `flag_terceirizado` | `fato_wo_labour` |
 | Peças | `flag_garantia`, `prop_pecas_garantia` | `fato_wo_parts` |
@@ -97,8 +136,13 @@ Integrar esses blocos em etapa futura ampliaria o conjunto explicativo além da 
 
 | Cenário | Inclui | Objetivo |
 | --- | --- | --- |
-| **Explicativo** | Atributos + geografia + uso do ano (km, diversidade, share PM) + histórico defasado | Quais fatores explicam o custo anual |
-| **Preditivo** | Atributos + idade + histórico defasado + odômetro de início de ano | Estimar o custo do ano sem vazamento |
+| **Explicativo** | Atributos + geografia + uso do ano (km, diversidade, share PM) + histórico defasado + **contrato contemporâneo** | Quais fatores explicam o custo anual |
+| **Preditivo** | Atributos + idade + histórico defasado + odômetro de início de ano + **contrato defasado** (`tempo_contrato_meses_inicio_ano`, tipo do ano anterior) | Estimar o custo do ano sem vazamento |
+
+> **Baseline obrigatório.** Como a base foi reextraída **e** ganhou variáveis de
+> contrato na mesma rodada, o notebook `05` deve rodar também um modelo **sem
+> contrato** sobre a base nova. Sem esse baseline não é possível separar o efeito da
+> reextração do efeito das variáveis novas.
 
 ## Critérios de seleção
 
