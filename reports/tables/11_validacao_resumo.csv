@@ -1,0 +1,3 @@
+modelo,anos,delta_r2_medio,delta_r2_min,delta_r2_max,anos_com_ganho,delta_mae_medio
+gradient_boosting,3,0.0026,-0.0193,0.0147,2,-8.2667
+random_forest,3,0.0076,0.0029,0.0165,3,-6.4

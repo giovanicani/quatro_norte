@@ -1,0 +1,5 @@
+cenario,modelo,delta_r2,ic95_r2_inf,ic95_r2_sup,prob_ganho_r2,delta_mae,ic95_mae_inf,ic95_mae_sup,prob_reducao_mae
+explicativo,gradient_boosting,0.0064,-0.0021,0.0146,0.933,-7.7,-16.2,0.9,0.965
+explicativo,random_forest,-0.0024,-0.009,0.0036,0.208,6.3,0.5,12.1,0.017
+preditivo,gradient_boosting,0.0124,0.004,0.0209,0.996,-11.4,-19.0,-3.4,0.999
+preditivo,random_forest,0.0165,0.0098,0.0242,1.0,-15.2,-20.9,-9.4,1.0

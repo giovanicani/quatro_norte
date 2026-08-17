@@ -1,0 +1,9 @@
+cenario,modelo,grupo,n_treino,n_teste,y_medio_teste,r2_unico,r2_por_grupo,delta_r2,mae_unico,mae_por_grupo,delta_mae
+explicativo,gradient_boosting,refrigeradas (Y),10640,2431,4154.1,0.4625,0.479,0.0165,1662.4,1619.7,-42.7
+explicativo,gradient_boosting,secas (N),23310,5358,1242.3,0.3987,0.3773,-0.0214,565.0,573.1,8.1
+explicativo,random_forest,refrigeradas (Y),10640,2431,4154.1,0.45,0.4466,-0.0034,1657.4,1673.6,16.2
+explicativo,random_forest,secas (N),23310,5358,1242.3,0.3696,0.3669,-0.0026,579.0,580.7,1.8
+preditivo,gradient_boosting,refrigeradas (Y),10640,2431,4154.1,0.306,0.3271,0.0211,1951.1,1907.9,-43.2
+preditivo,gradient_boosting,secas (N),23310,5358,1242.3,0.1622,0.1612,-0.001,703.2,706.2,3.0
+preditivo,random_forest,refrigeradas (Y),10640,2431,4154.1,0.3017,0.3275,0.0259,1929.0,1886.3,-42.6
+preditivo,random_forest,secas (N),23310,5358,1242.3,0.1389,0.1463,0.0074,707.3,704.5,-2.8
