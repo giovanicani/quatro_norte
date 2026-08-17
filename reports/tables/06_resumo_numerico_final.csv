@@ -2,13 +2,13 @@ item,valor
 variavel_resposta,"custo_ano_real (CAD/ano, real dez/2025)"
 grao,carreta x ano
 deflator,CPI all-items Canada (StatCan v41690973)
-linhas,49248
-carretas,9859
-share_y_zero_pct,3.23
-custo_total_nominal_mi,77.18
-custo_total_real_mi,82.428
-modelo_recomendado_preditivo,random_forest
-r2_preditivo,0.4286
-rmse_preditivo,2025.9
-mae_preditivo,1064.5
-melhor_r2_explicativo,0.572
+linhas,47715
+carretas,9585
+share_y_zero_pct,3.13
+custo_total_nominal_mi,74.617
+custo_total_real_mi,79.645
+modelo_recomendado_preditivo,gradient_boosting
+r2_preditivo,0.4549
+rmse_preditivo,2002.4
+mae_preditivo,1092.7
+melhor_r2_explicativo,0.5854

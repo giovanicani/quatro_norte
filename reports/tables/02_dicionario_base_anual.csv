@@ -25,3 +25,13 @@ idade_carreta,ativo derivada (quant.),Idade em anos no ano de referencia
 n_os_ano_anterior,historico defasado,OS no ano anterior
 n_os_acum_ate_ano_anterior,historico defasado,OS acumuladas ate o ano anterior
 anos_ativo_ate_ano_anterior,historico defasado,Anos ativos anteriores
+tipo_manutencao_ano,contrato (cat.),Regime contratual predominante no ano (MAINT/NET/MIX/SEM_CONTRATO/SEM_OS)
+share_maint_ano,contrato (quant.),Fracao de OS do ano sob regime MAINT
+n_tipos_manutencao_ano,contrato (quant.),Qtde de regimes contratuais distintos no ano
+tempo_contrato_meses_fim_ano,contrato (quant.),Maior tempo de contrato ate o reparo observado no ano
+tempo_contrato_meses_inicio_ano,contrato defasado,Tempo de contrato ao inicio do ano (fim de t-1); unico admissivel no cenario preditivo
+trocou_contrato_ano,contrato (bin.),1 se houve indicio de novo contrato no ano
+n_clientes_ano,contrato (quant.),Qtde de clientes distintos no ano
+cod_cliente_predominante_ano,contrato (cat.) - DESCRITIVO,"Cliente com mais OS no ano; NAO entra como feature (597 categorias, risco de memorizacao)"
+populacao_maint_flag,flag de populacao,"1 = carreta-ano sob regime MAINT (populacao de modelagem, D6)"
+franquia_km_mensal_contrato,contrato - REMOVIDA,"99,8% dos valores preenchidos sao zero (variancia quase nula) -> descartada (D3)"

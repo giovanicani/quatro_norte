@@ -1,6 +1,9 @@
 passo,linhas
-linhas_originais,223590
-removidas_fora_janela_2020_2025,3
-removidas_custo_negativo_estorno,179
-os_analiticas,223408
-carretas_distintas,9859
+linhas_originais,217217
+removidas_fora_janela_2020_2025,5
+removidas_custo_negativo_estorno,172
+os_analiticas,217040
+carretas_distintas,9585
+os_com_tipo_manutencao_MAINT,194754
+os_sem_contrato_identificado,16246
+descartada_franquia_km_mensal_contrato_D3_99.8pct_zeros,0

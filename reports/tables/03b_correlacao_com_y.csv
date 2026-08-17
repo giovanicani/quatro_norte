@@ -1,16 +1,21 @@
 variavel,papel,pearson,pearson_p,spearman,spearman_p,abs_spearman,N
-custo_medio_por_os_ano,componente de Y,0.514,0.0,0.786,0.0,0.786,49248
-n_os_ano,componente de Y,0.75,0.0,0.769,0.0,0.769,49248
-n_sistemas_vmrs_distintos_ano,explicativa,0.63,0.0,0.704,0.0,0.704,49248
-n_os_ano_anterior,explicativa,0.59,0.0,0.54,0.0,0.54,39389
-custo_ano_anterior,explicativa,0.588,0.0,0.536,0.0,0.536,39389
-km_rodado_ano,explicativa,0.419,0.0,0.53,0.0,0.53,39076
-n_os_acum_ate_ano_anterior,explicativa,0.537,0.0,0.461,0.0,0.461,49248
-custo_acum_ate_ano_anterior,explicativa,0.548,0.0,0.452,0.0,0.452,49248
-km_acumulado_fim_ano,explicativa,0.373,0.0,0.428,0.0,0.428,48976
-anos_ativo_ate_ano_anterior,explicativa,0.182,0.0,0.254,0.0,0.254,49248
-share_pm_ano,explicativa,-0.244,0.0,-0.172,0.0,0.172,49248
-comprimento,explicativa,-0.232,0.0,-0.097,0.0,0.097,48588
-ano_modelo,explicativa,0.11,0.0,0.053,0.0,0.053,49242
-eixos,explicativa,0.087,0.0,0.051,0.0,0.051,49157
-idade_carreta,explicativa,-0.064,0.0,0.018,0.0001,0.018,49242
+custo_medio_por_os_ano,componente de Y,0.512,0.0,0.786,0.0,0.786,47715
+n_os_ano,componente de Y,0.748,0.0,0.768,0.0,0.768,47715
+n_sistemas_vmrs_distintos_ano,explicativa,0.631,0.0,0.702,0.0,0.702,47715
+n_os_ano_anterior,explicativa,0.589,0.0,0.539,0.0,0.539,38130
+custo_ano_anterior,explicativa,0.587,0.0,0.538,0.0,0.538,38130
+km_rodado_ano,explicativa,0.418,0.0,0.527,0.0,0.527,37822
+n_os_acum_ate_ano_anterior,explicativa,0.538,0.0,0.465,0.0,0.465,47715
+custo_acum_ate_ano_anterior,explicativa,0.55,0.0,0.457,0.0,0.457,47715
+km_acumulado_fim_ano,explicativa,0.372,0.0,0.435,0.0,0.435,47448
+anos_ativo_ate_ano_anterior,explicativa,0.188,0.0,0.26,0.0,0.26,47715
+n_clientes_ano,explicativa,0.144,0.0,0.23,0.0,0.23,47715
+share_maint_ano,explicativa,0.138,0.0,0.23,0.0,0.23,47715
+share_pm_ano,explicativa,-0.243,0.0,-0.172,0.0,0.172,47715
+tempo_contrato_meses_fim_ano,explicativa,0.065,0.0,0.14,0.0,0.14,43450
+tempo_contrato_meses_inicio_ano,explicativa,0.055,0.0,0.116,0.0,0.116,34683
+comprimento,explicativa,-0.233,0.0,-0.097,0.0,0.097,47055
+trocou_contrato_ano,explicativa,0.077,0.0,0.084,0.0,0.084,47715
+eixos,explicativa,0.086,0.0,0.051,0.0,0.051,47624
+ano_modelo,explicativa,0.102,0.0,0.041,0.0,0.041,47709
+idade_carreta,explicativa,-0.054,0.0,0.032,0.0,0.032,47709

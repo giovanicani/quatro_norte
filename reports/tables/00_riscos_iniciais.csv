@@ -1,6 +1,6 @@
 risco,evidencia,tratamento
-custos_negativos_estornos,179,excluir na base analitica (nb 02)
-os_fora_janela_2020_2025,3,excluir na base analitica (nb 02)
+custos_negativos_estornos,172,excluir na base analitica (nb 02)
+os_fora_janela_2020_2025,5,excluir na base analitica (nb 02)
 provincia_estado_parcial,53.9% preenchida,usar regiao_operacao (cod_local_os) e imputar DESCONHECIDO
 odometro_ruido_resets,min negativo / max ~3.5M em km_acumulado_data_os,tratar deltas (nb 02): negativos/>250k -> ausente
 tailgate_flag_constante,1 valor(es),remover por variancia nula

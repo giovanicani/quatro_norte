@@ -1,6 +1,7 @@
-tema,recomendacao
-Orcamento,Usar o custo anual real por carreta como base de orcamento; projetar com o modelo preditivo (historico defasado + atributos).
-Priorizacao de frota,Priorizar carretas com alto custo anual anterior, muitas OS no ano anterior e historico acumulado elevado (fatores de maior importancia).
+tema,recomendação
+Orçamento,Usar o custo anual real por carreta como base de orçamento; projetar com o modelo preditivo (histórico defasado + atributos).
+Priorização de frota,Priorizar carretas com alto custo/OS no ano anterior e histórico acumulado elevado (fatores de maior importância).
 Perfil de ativo,"Monitorar subtipos e refrigeradas, que concentram custos anuais mais altos (maior eta)."
-Uso,Incorporar quilometragem esperada ao planejamento: uso e um dos maiores associados ao custo anual.
-Dados,Integrar dados de contrato/mao de obra/pecas em etapa futura para ampliar o conjunto explicativo alem da fonte unica atual.
+Uso,Incorporar quilometragem esperada ao planejamento: o uso é um dos maiores associados ao custo anual.
+Contrato,População de análise definida por contrato com manutenção inclusa (MAINT). Efeito das variáveis de contrato sobre o poder preditivo: +0.0033 de R² — usar como insumo de precificação apenas na medida desse ganho.
+Dados,"Integrar mão de obra, peças e tipo_contrato (RENTAL/LEASE) em etapa futura; contrato de manutenção já foi incorporado."

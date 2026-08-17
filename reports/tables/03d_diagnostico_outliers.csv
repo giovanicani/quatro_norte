@@ -1,16 +1,16 @@
 variavel,Q1,Q3,lim_sup_iqr,p99,p99_9,max,share_acima_iqr,razao_max_p99,decisao
-custo_ano_real,317.2,2009.0,4546.6,11820.4,20100.1,62230.9,0.0894,5.3,cauda estrutural; log1p/robustez na modelagem; negativos ja excluidos
-idade_carreta,4.0,13.0,26.5,23.0,26.0,39.0,0.0009,1.7,outliers moderados (manter)
-km_acumulado_fim_ano,39009.2,243083.2,549194.2,879822.8,1328588.8,3479389.0,0.0612,4.0,outliers moderados (manter)
-km_rodado_ano,4406.5,34116.8,78682.1,133469.0,215629.3,249676.0,0.0554,1.9,outliers moderados (manter)
-n_os_ano,2.0,6.0,12.0,21.0,31.0,59.0,0.054,2.8,outliers moderados (manter)
-custo_medio_por_os_ano,139.8,429.3,863.6,1628.6,3353.9,19177.7,0.0589,11.8,outliers moderados (manter)
-n_sistemas_vmrs_distintos_ano,1.0,3.0,6.0,7.0,9.0,12.0,0.0205,1.7,outliers moderados (manter)
+custo_ano_real,317.8,2009.9,4548.1,11804.4,20150.9,62230.9,0.0886,5.3,cauda estrutural; log1p/robustez na modelagem; negativos ja excluidos
+idade_carreta,4.0,12.0,24.0,23.0,26.0,39.0,0.004,1.7,outliers moderados (manter)
+km_acumulado_fim_ano,39267.5,238422.8,537155.6,878567.9,1308892.4,3479389.0,0.0632,4.0,outliers moderados (manter)
+km_rodado_ano,4591.0,34785.5,80077.2,133830.8,215890.6,249676.0,0.0539,1.9,outliers moderados (manter)
+n_os_ano,2.0,6.0,12.0,21.0,31.0,59.0,0.0538,2.8,outliers moderados (manter)
+custo_medio_por_os_ano,139.2,427.4,859.7,1624.9,3362.9,19177.7,0.0591,11.8,outliers moderados (manter)
+n_sistemas_vmrs_distintos_ano,1.0,3.0,6.0,7.0,9.0,12.0,0.0208,1.7,outliers moderados (manter)
 share_pm_ano,0.0,0.5,1.2,1.0,1.0,1.0,0.0,1.0,sem outliers relevantes
-n_os_ano_anterior,2.0,6.0,12.0,21.0,31.0,59.0,0.0534,2.8,outliers moderados (manter)
-n_os_acum_ate_ano_anterior,2.0,12.0,27.0,66.0,97.0,131.0,0.0807,2.0,outliers moderados (manter)
-custo_ano_anterior,299.4,1925.4,4364.4,11505.8,19301.6,62230.9,0.0907,5.4,outliers moderados (manter)
-custo_acum_ate_ano_anterior,208.9,3823.4,9245.0,29347.7,54467.0,123769.4,0.0946,4.2,outliers moderados (manter)
+n_os_ano_anterior,2.0,6.0,12.0,21.0,30.0,59.0,0.0529,2.8,outliers moderados (manter)
+n_os_acum_ate_ano_anterior,2.0,12.0,27.0,66.0,97.0,131.0,0.0802,2.0,outliers moderados (manter)
+custo_ano_anterior,299.3,1920.2,4351.5,11442.4,19312.4,62230.9,0.0899,5.4,outliers moderados (manter)
+custo_acum_ate_ano_anterior,206.3,3796.6,9182.0,28817.7,53885.3,123769.4,0.0945,4.3,outliers moderados (manter)
 ano_modelo,2011.0,2019.0,2031.0,2024.0,2026.0,2026.0,0.0,1.0,sem outliers relevantes
-eixos,2.0,2.0,2.0,3.0,4.0,4.0,0.0772,1.3,outliers moderados (manter)
-comprimento,53.0,53.0,53.0,53.0,60.0,60.0,0.0034,1.1,outliers moderados (manter)
+eixos,2.0,2.0,2.0,3.0,4.0,4.0,0.0778,1.3,outliers moderados (manter)
+comprimento,53.0,53.0,53.0,53.0,60.0,60.0,0.0035,1.1,outliers moderados (manter)

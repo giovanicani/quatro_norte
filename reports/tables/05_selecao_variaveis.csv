@@ -1,5 +1,13 @@
 variavel,decisao,justificativa
 tailgate_flag,removida,Variancia nula (constante 'N') — sem informacao
+franquia_km_mensal_contrato,removida,"Variancia quase nula: 99,8% dos valores preenchidos sao zero (D3)"
+cod_cliente_predominante_ano,removida,"597 categorias, 22,8% ausente — risco de memorizacao do cliente (D4); uso descritivo"
+tipo_manutencao_ano,removida do modelo,Constante na populacao MAINT (D6); H6b avaliada na EDA sobre a base completa
+tempo_contrato_meses_inicio_ano,mantida,Duracao de contrato conhecida no inicio do ano — testa H6a sem vazamento
+tempo_contrato_meses_fim_ano,mantida (so explicativo),Contemporanea ao ano; fora do cenario preditivo
+share_maint_ano,mantida (so explicativo),Intensidade do regime MAINT no ano
+n_clientes_ano,mantida (so explicativo),Estabilidade do vinculo comercial no ano
+trocou_contrato_ano,mantida (so explicativo),Indicio de novo contrato no ano
 n_os_ano,removida,Componente aritmetico de Y (Y = n_os x custo medio/OS)
 custo_medio_por_os_ano,removida,Componente aritmetico de Y
 descricao_carreta,removida,Redundante com unit_subtype; cardinalidade alta (253) — risco de overfit

@@ -1,26 +1,32 @@
 variavel,tipo,forca,papel
 custo_medio_por_os_ano,quantitativa (|Spearman|),0.786,componente de Y
-n_os_ano,quantitativa (|Spearman|),0.769,componente de Y
-n_sistemas_vmrs_distintos_ano,quantitativa (|Spearman|),0.704,explicativa
-descricao_carreta,categorica (eta),0.5947,explicativa
-unit_subtype,categorica (eta),0.5505,explicativa
-n_os_ano_anterior,quantitativa (|Spearman|),0.54,explicativa
-custo_ano_anterior,quantitativa (|Spearman|),0.536,explicativa
-km_rodado_ano,quantitativa (|Spearman|),0.53,explicativa
-n_os_acum_ate_ano_anterior,quantitativa (|Spearman|),0.461,explicativa
-custo_acum_ate_ano_anterior,quantitativa (|Spearman|),0.452,explicativa
-flag_refrigerado,categorica (eta),0.4321,explicativa
-km_acumulado_fim_ano,quantitativa (|Spearman|),0.428,explicativa
-vmrs_predominante_ano,categorica (eta),0.3423,explicativa
-anos_ativo_ate_ano_anterior,quantitativa (|Spearman|),0.254,explicativa
-cod_montadora,categorica (eta),0.2383,explicativa
+n_os_ano,quantitativa (|Spearman|),0.768,componente de Y
+n_sistemas_vmrs_distintos_ano,quantitativa (|Spearman|),0.702,explicativa
+descricao_carreta,categorica (eta),0.5918,explicativa
+unit_subtype,categorica (eta),0.5438,explicativa
+n_os_ano_anterior,quantitativa (|Spearman|),0.539,explicativa
+custo_ano_anterior,quantitativa (|Spearman|),0.538,explicativa
+km_rodado_ano,quantitativa (|Spearman|),0.527,explicativa
+n_os_acum_ate_ano_anterior,quantitativa (|Spearman|),0.465,explicativa
+custo_acum_ate_ano_anterior,quantitativa (|Spearman|),0.457,explicativa
+km_acumulado_fim_ano,quantitativa (|Spearman|),0.435,explicativa
+flag_refrigerado,categorica (eta),0.4246,explicativa
+vmrs_predominante_ano,categorica (eta),0.3357,explicativa
+anos_ativo_ate_ano_anterior,quantitativa (|Spearman|),0.26,explicativa
+cod_montadora,categorica (eta),0.2301,explicativa
+n_clientes_ano,quantitativa (|Spearman|),0.23,explicativa
+share_maint_ano,quantitativa (|Spearman|),0.23,explicativa
+tipo_manutencao_ano,categorica (eta),0.1828,explicativa
 share_pm_ano,quantitativa (|Spearman|),0.172,explicativa
-tire_size,categorica (eta),0.1546,explicativa
-suspension_type,categorica (eta),0.1473,explicativa
-provincia_estado,categorica (eta),0.1424,explicativa
-new_used_indicator,categorica (eta),0.1199,explicativa
+suspension_type,categorica (eta),0.1409,explicativa
+tempo_contrato_meses_fim_ano,quantitativa (|Spearman|),0.14,explicativa
+provincia_estado,categorica (eta),0.1399,explicativa
+tire_size,categorica (eta),0.125,explicativa
+tempo_contrato_meses_inicio_ano,quantitativa (|Spearman|),0.116,explicativa
+new_used_indicator,categorica (eta),0.1146,explicativa
 comprimento,quantitativa (|Spearman|),0.097,explicativa
-regiao_operacao,categorica (eta),0.0775,explicativa
-ano_modelo,quantitativa (|Spearman|),0.053,explicativa
+trocou_contrato_ano,quantitativa (|Spearman|),0.084,explicativa
+regiao_operacao,categorica (eta),0.0759,explicativa
 eixos,quantitativa (|Spearman|),0.051,explicativa
-idade_carreta,quantitativa (|Spearman|),0.018,explicativa
+ano_modelo,quantitativa (|Spearman|),0.041,explicativa
+idade_carreta,quantitativa (|Spearman|),0.032,explicativa

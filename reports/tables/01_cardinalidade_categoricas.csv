@@ -2,9 +2,9 @@ coluna,n_categorias,constante
 cod_montadora,26,False
 unit_subtype,26,False
 tire_size,24,False
-suspension_type,9,False
+suspension_type,8,False
 new_used_indicator,2,False
 flag_refrigerado,2,False
 tailgate_flag,1,True
-provincia_estado,41,False
+provincia_estado,39,False
 cod_local_os,10,False
