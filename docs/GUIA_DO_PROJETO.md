@@ -44,7 +44,10 @@
   R² = 0,455 · RMSE = 2.002 · MAE = 1.093 CAD/ano (teste temporal 2025). No cenário
   explicativo, R² = 0,585.
 - **Contrato (novo):** testado nesta rodada e com **efeito fraco** (+0,003 de R²). Serviu
-  para **definir a população** (MAINT), não para prever o custo.
+  para **definir a população** (MAINT) — critério revogado em 2026-09-02 (D7). Hoje a
+  população é a frota completa e o **tipo** de contrato é a 4ª variável mais importante
+  do modelo; a **duração** segue irrelevante. Ver
+  [`curadoria_features_2026-09-02.md`](curadoria_features_2026-09-02.md).
 
 ---
 
@@ -92,7 +95,7 @@ Estas quatro decisões definem a análise atual. Detalhe completo no
 | **Grão** | **carreta × ano** | carreta × mês | Reduz a zero-inflação (67% → ~3%) e revela associações mais fortes |
 | **Fonte de dados** | **única**: `fato_wo_ml` (CSV consolidado, **29 colunas**) | 7 tabelas do modelo estrela | Single Source of Truth; joins/FE = etapa anterior. Contrato agora vem **dentro** da fonte única |
 | **Deflator** | **CPI Canadá** (StatCan, vetor v41690973, base dez/2025) | **IPCA/BCB** (Brasil), depois CPI | Custos em CAD; deflator canadense |
-| **População** | **`tipo_manutencao = MAINT`**, via flag na base anual (194.918 OS · 8.670 carretas) | `MAINT` na fase mensal; sem filtro na fase anual, por ausência do dado | **Retomada do critério original** — o filtro se perdeu em 2026-07-07 só porque a coluna não existia. Firmada em 2026-08-16 (D6) |
+| **População** | **Frota completa** — 47.715 carreta-anos (D7, 2026-09-02) | `MAINT` na fase mensal; `MAINT` de 2026-08-16 a 2026-09-02 (D6) | **D6 revogada:** restringir a `MAINT` alterava o R² preditivo em apenas +0,0017 (não era melhora de previsão) e impedia testar H6b dentro do modelo. O recorte virou cenário de comparação |
 | **Escopo de contrato** | **dentro do escopo** (H6a/H6b) | fora de escopo | Os 4 campos de contrato passaram a integrar a base única |
 | **Anti-vazamento** | histórico **defasado** (ano anterior) + split **temporal** (teste = 2025) | havia vazamento | Cenário preditivo usa apenas informação conhecida no início do ano |
 
@@ -159,7 +162,7 @@ Para apenas consultar resultados já gerados, use
 |---|---|---|
 | 1 | `notebooks/00_contexto_inventario_dados.ipynb` | inventário da base consolidada única |
 | 2 | `notebooks/01_qualidade_integridade_dados.ipynb` | qualidade/integridade da base consolidada |
-| 3 | `notebooks/02_base_analitica_anual.ipynb` | monta a base carreta × ano (47.715 linhas) + variáveis de contrato + flag MAINT |
+| 3 | `notebooks/02_base_analitica_anual.ipynb` | monta a base carreta × ano (47.715 linhas) + variáveis de contrato + flag MAINT (auditoria) |
 | 4 | `notebooks/04_deflacao_custos_cpi_canada.ipynb` | deflaciona custos (CAD) pelo CPI Canadá → `custo_ano_real` (Y) |
 | 5 | `notebooks/03b_eda_variaveis.ipynb` | EDA variável-a-variável, relação X↔Y, ranking, VIF |
 | 6 | `notebooks/03c_estatisticas_resumo.ipynb` | estatísticas-resumo do Y anual |
@@ -201,7 +204,7 @@ Fonte canônica: `reports/tables/` + `reports/sumario_executivo.md`.
   `ano_modelo` (12,2) — colinearidades esperadas (idade↔ano; acumulados). Árvores são
   robustas; em modelos lineares mantém-se uma de cada família.
 
-### Modelagem (teste temporal 2025, sem filtro MAINT)
+### Modelagem (teste temporal 2025, frota completa — D7)
 
 | Cenário | Modelo | R² | RMSE | MAE |
 |---|---|---|---|---|
@@ -210,7 +213,12 @@ Fonte canônica: `reports/tables/` + `reports/sumario_executivo.md`.
 | Preditivo | Random Forest / KNN | ~0,449 | ~2.010 | ~1.100 |
 | Preditivo | Lineares (múltipla, ridge) | ~0,27 | — | — |
 
-**Efeito de cada mudança** (preditivo): filtro `MAINT` **+0,0193** · variáveis de
+> ⚠️ Números reexecutados em 2026-09-02 sobre a frota completa. Preditivo: Y1 direto
+> **0,4418** · **Y1 decomposto (Y2 × Y3) 0,4713** ◀ recomendado · Y2 **0,608** ·
+> Y3 0,085. Explicativo 0,5776. Efeito do contrato **+0,0359**; efeito do recorte
+> `MAINT` **+0,0017**. Ver `curadoria_features_2026-09-02.md` §10.
+
+**Efeito de cada mudança** (preditivo, rodada de agosto): filtro `MAINT` **+0,0193** · variáveis de
 contrato **+0,0033**. O ganho do filtro reflete população mais homogênea, não melhora
 de previsão.
 
@@ -239,7 +247,8 @@ ativo isolado.
 | H3 | Histórico ⇒ custo futuro | ✅ Suportada (custo/OS do ano anterior ρ ~0,54) |
 | H4 | Características do ativo ⇒ custo | ✅ Suportada (reefer/subtipo/montadora) |
 | H5 | Região/operação ⇒ custo | ➖ Parcial (efeito fraco) |
-| **H6** | **Tipo de manutenção contratual (MAINT/NET/MIX) ⇒ custo** | 🆕 **No escopo, ainda não testada** |
+| **H6b** | **Tipo de manutenção contratual (MAINT/NET/MIX) ⇒ custo** | ➖ **Parcial** — η 0,183, mas 4ª variável mais importante do modelo (2026-09-02) |
+| **H7** | **Tempo de contrato até o reparo ⇒ custo** | ❌ **Não suportada** — ρ 0,140 e importância **negativa** (−0,003) no modelo final |
 | **H7** | **Tempo de contrato até o reparo ⇒ custo** | 🆕 **No escopo, ainda não testada** |
 | — | `tipo_contrato` (RENTAL/LEASE) ⇒ custo | ⛔ Fora de escopo (segue ausente da fonte única) |
 
@@ -268,6 +277,8 @@ notebook 08, todo conteúdo de `reports/`).
   carretas / 29 colunas) e ganhou variáveis de contrato. Nenhum notebook foi rodado
   desde então: todos os resultados publicados são da base anterior. Plano etapa a etapa
   em [`revisao_contrato_2026-08-16.md`](revisao_contrato_2026-08-16.md) §7.
+- ⛔ **D6 REVOGADA em 2026-09-02 (por D7):** população = frota completa. O texto abaixo
+  descreve a decisão anterior, preservada para rastreio.
 - ✅ **D6 firmada:** população `MAINT`, implementada como **flag** na base anual (não
   exclusão de linhas), seguindo o precedente da fase mensal. Y passa a ser o custo
   anual das carretas sob contrato com manutenção inclusa.
@@ -279,7 +290,8 @@ notebook 08, todo conteúdo de `reports/`).
 - **Escopo reduzido pela fonte única:** mão de obra detalhada, peças, leituras dedicadas
   de odômetro e `tipo_contrato` (RENTAL/LEASE) seguem **fora de escopo**. Contrato
   (tipo de manutenção, duração, cliente) **voltou ao escopo** em 2026-08-16.
-- **Limitações metodológicas** a comunicar: sem filtro MAINT (todo o custo interno);
+- **Limitações metodológicas** a comunicar: frota completa, sem recorte por regime
+  contratual (todo o custo interno);
   `n_os_ano`/`custo_medio_por_os_ano` são componentes de Y (excluídos como
   explicadores); km derivado do odômetro nas OS (resets tratados); província parcial
   (~54%); estornos (custos negativos) excluídos; span ativo assume presença entre a 1ª

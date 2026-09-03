@@ -9,14 +9,16 @@
 > 📖 **A história das perguntas** — como o projeto chegou ao custo anual por carreta, e
 > o mapa dos 16 itens da entrega acadêmica: [`docs/narrativa_do_projeto.md`](docs/narrativa_do_projeto.md).
 >
-> ✅ **Status desta versão (2026-08-16).** Base **reextraída** com **dados de contrato**
-> (25 → 29 colunas) e **pipeline reexecutado ponta a ponta** (`00`→`06`, mais os
-> experimentos `10` e `11`). População da modelagem: **`tipo_manutencao = MAINT`** (D6).
+> ✅ **Status desta versão (2026-09-02).** Curadoria de variáveis pelo Grupo e
+> **pipeline reexecutado** (`02`, `04`, `03b/03c/03d`, `05`, `06`, `07`, `08`) sobre a
+> **frota completa**: a decisão **D6** (população `MAINT`) foi **revogada** (agora D7).
+> Ver [`docs/curadoria_features_2026-09-02.md`](docs/curadoria_features_2026-09-02.md).
 >
-> Dois resultados centrais, ambos negativos e ambos testados: as variáveis de contrato
-> têm efeito **fraco** (+0,003 de R²), e treinar **modelos separados por refrigeração**
-> parecia ganhar em 2025 mas **não se sustenta** em 2023 — mantém-se o **modelo único**.
-> Ver [`docs/revisao_contrato_2026-08-16.md`](docs/revisao_contrato_2026-08-16.md) §11–§12.
+> Três resultados desta rodada: restringir a `MAINT` **não melhorava a previsão**
+> (+0,0017 de R², confirmando a suspeita de agosto); o **tipo** de contrato passou a ser
+> a 4ª variável mais importante (o **tempo** de contrato continua irrelevante); e
+> decompor o alvo em `Y1 = nº de OS × custo médio por OS` **superou** o modelo direto
+> (R² 0,4713 vs 0,4418).
 
 Projeto aplicado do MBA para a **Quatro Norte Consulting**, sobre ciência de dados
 aplicada a uma operação de leasing/rental de carretas no **Canadá**.
@@ -29,12 +31,18 @@ custo a partir das características operacionais, históricas e estruturais da f
 O escopo **não é restrito à manutenção preventiva**: considera todo o custo interno
 absorvido pela operação (`charge_flag = 'I'`), preventivo e corretivo.
 
-> **População (D6, firmada em 2026-08-16).** A modelagem usa as carretas sob contrato
-> com manutenção inclusa (`tipo_manutencao = 'MAINT'`) — **retomada do critério original
-> do projeto**, que se perdeu na virada para o grão anual apenas porque a coluna não
-> existia na fonte única. O filtro é aplicado como **flag** na base anual
-> (`populacao_maint_flag`), não como exclusão de linhas: a base preserva todas as
-> carreta-anos, e o cenário sem filtro permanece disponível como baseline de comparação.
+> **População (D7, firmada em 2026-09-02 — revoga D6).** A modelagem usa a **frota
+> completa**: **47.715 carreta-anos**. O recorte `tipo_manutencao = 'MAINT'` deixou de
+> definir a amostra e virou **cenário de comparação**. Duas razões: (a) restringir a
+> `MAINT` mexeu apenas **+0,0017** no R² preditivo — não era melhora de previsão, como já
+> se suspeitava em agosto; (b) com a frota completa, `tipo_manutencao_ano` deixa de ser
+> constante e **H6b passa a ser testável dentro do modelo**. A flag
+> `populacao_maint_flag` permanece na base anual como coluna de auditoria, sem entrar
+> como *feature*.
+>
+> **Alvos (D8).** Como `custo_ano_real = n_os_ano × custo_medio_por_os_ano` é identidade
+> aritmética, os componentes deixaram de ser *features* e viraram alvos:
+> **Y1** `custo_ano_real`, **Y2** `n_os_ano`, **Y3** `custo_medio_por_os_ano`.
 
 > **Fonte única de dados.** O estudo usa **exclusivamente** a base consolidada
 > `data/raw/fato_wo_ml_2020-01-01_to_2025-12-31.csv`. A extração SQL, o modelo estrela,
@@ -348,44 +356,63 @@ modelos lineares mantém-se uma variável por família; árvores/ensembles são 
    split temporal (05).
 7. Avaliação (R²/RMSE/MAE), importância das variáveis e discussão (05/06).
 
-## 13. Resultados (base reextraída, pipeline de 2026-08-16)
+## 13. Resultados (frota completa, pipeline de 2026-09-02)
 
-Fonte canônica: `reports/tables/` + `docs/revisao_contrato_2026-08-16.md`.
+Fonte canônica: `reports/tables/` + `docs/curadoria_features_2026-09-02.md`.
 
 **Base analítica:** 47.715 carreta-anos · 9.585 carretas · custo interno CAD 74,62 mi
-nominal / **79,65 mi real** (dez/2025). Y: média **CAD 1.669/ano**, mediana 812,
-assimetria 3,82, **3,1%** de carreta-anos com custo zero. População de modelagem
-(`MAINT`): **41.739 carreta-anos (87,5%)**.
+nominal / **79,65 mi real** (dez/2025). Y1: média **CAD 1.669/ano**, mediana 812,
+assimetria 3,82, **3,1%** de carreta-anos com custo zero. População de modelagem:
+**a frota completa** (D7).
 
-**Modelagem (teste temporal 2025):**
+**Modelagem de Y1 (teste temporal 2025):**
 
 | Cenário | Modelo | R² | RMSE | MAE |
 |---|---|---|---|---|
-| Explicativo | Gradient Boosting | 0,585 | 1.746 | 908 |
-| **Preditivo** | **Gradient Boosting** ◀ recomendado | **0,455** | **2.002** | **1.093** |
+| Explicativo | Gradient Boosting | 0,578 | 1.747 | 913 |
+| Preditivo — direto | Gradient Boosting | 0,442 | 2.009 | 1.074 |
+| **Preditivo — decomposto (Y2 × Y3)** | **RF + RF** ◀ recomendado | **0,471** | **1.955** | **1.059** |
 
-**Decomposição do ganho** — três configurações, para separar o efeito do filtro do
-efeito das variáveis novas:
+**Decomposição do ganho** — três configurações:
 
-| Cenário | A: todos, sem contrato | B: MAINT, sem contrato | C: MAINT + contrato | Efeito do filtro | **Efeito do contrato** |
+| Cenário | A: todos, sem contrato | B: todos + contrato | C: MAINT + contrato | **Efeito do contrato** (B−A) | Efeito do recorte MAINT (C−B) |
 |---|---|---|---|---|---|
-| Preditivo | 0,4323 | 0,4516 | **0,4549** | +0,0193 | **+0,0033** |
-| Explicativo | 0,5700 | 0,5878 | 0,5854 | +0,0178 | **−0,0024** |
+| Preditivo | 0,4059 | **0,4418** | 0,4435 | **+0,0359** | +0,0017 |
+| Explicativo | 0,5644 | **0,5776** | 0,5673 | **+0,0132** | −0,0103 |
 
-> ⚠️ O ganho do filtro `MAINT` **não é melhora de previsão**: as 5.976 carreta-anos
-> excluídas têm custo médio de CAD 689 contra 1.689 das `MAINT`, muitas com custo zero.
-> Amostra mais homogênea eleva o R² sem que o modelo preveja melhor.
+> ✅ Confirmado o que agosto suspeitava: o ganho do recorte `MAINT` **não era melhora de
+> previsão** (+0,0193 então, +0,0017 agora com o contrato no modelo). Daí a revogação de D6.
 
-- **Importância (permutação, preditivo):** `flag_refrigerado` 0,169 · `n_os_ano_anterior`
-  0,097 · `custo_acum_ate_ano_anterior` 0,080 · `km_acumulado_inicio_ano` 0,079 ·
-  `unit_subtype` 0,057 · `idade_carreta` 0,017 · `tempo_contrato_meses_inicio_ano`
-  **0,006** (último colocado, dentro do desvio).
-- Árvores/ensembles superam claramente os lineares (ridge e OLS ficam em R² ≈ 0,27).
+**Alvos separados (D8), cenário preditivo:**
+
+| Alvo | Melhor modelo | R² |
+|---|---|---|
+| **Y2** `n_os_ano` | Random Forest | **0,608** |
+| Y3 `custo_medio_por_os_ano` | Random Forest | **0,085** |
+
+> Y2 é bem mais previsível que Y1 — e a **regressão linear múltipla** chega a R² 0,577,
+> a apenas 0,031 do Random Forest. Y3 é o elo fraco da decomposição.
+> `n_os_ano` é contagem com **superdispersão** (variância/média = 4,0), o que aponta
+> **Binomial Negativa** como GLM correto (Poisson está descartado).
+
+- **Importância (permutação, Y1 preditivo):** `flag_refrigerado` **0,209** ·
+  `custo_acum_ate_ano_anterior` 0,100 · `n_os_ano_anterior` 0,092 ·
+  **`tipo_manutencao_ano` 0,058** · `km_acumulado_inicio_ano` 0,056 · `idade_carreta`
+  0,039 · `descricao_carreta` 0,039 · `tempo_contrato_meses_inicio_ano` **−0,003**
+  (último colocado, e negativo — atrapalha).
+- Refrigeração sozinha vale mais que todo o resto somado.
+- O valor do dado de contrato está no **tipo**, não na **duração**.
 
 **Hipóteses:** H2 (uso), H3 (histórico) e H4 (ativo) **suportadas**; H1 (idade isolada)
-**não suportada** (ρ 0,032); H5 (região) **parcial**; **H6a** (duração de contrato,
-ρ 0,140) e **H6b** (tipo contratual, η 0,183) **parciais/fracas** — testadas, não
-assumidas.
+**não suportada** (ρ 0,032); **H5 (região) fora do modelo** desde a curadoria de
+2026-09-02, com respaldo (η ≤ 0,14); **H6b** (tipo contratual, η 0,183) e **H7**
+(duração de contrato, ρ 0,140) **parciais/fracas** — testadas, não assumidas.
+
+**Custo da curadoria de variáveis.** Comparação limpa (mesma população, mesma
+configuração sem contrato, só a lista de variáveis muda): a curadoria custou
+**−0,0264** de R² preditivo (0,4323 → 0,4059). Remover `cod_montadora`,
+`suspension_type`, `new_used_indicator`, `tire_size`, `ano_modelo`, `comprimento`,
+`share_pm_ano` e a geografia retirou sinal real, sobretudo de **Y2**.
 
 **Experimento complementar (modelos por grupo de refrigeração).** Testado e descartado:
 em 2025 o ganho era +0,0124 de R², mas em 2023 inverte de sinal. A validação com três
@@ -451,5 +478,27 @@ Os **notebooks são a fonte única e reprodutível**. Execute na ordem de
 - **Conclusão da rodada:** o contrato acrescenta pouco (+0,003 R²). Refrigeração,
   histórico defasado e uso seguem dominantes.
 
-Pendente: atualização da apresentação em `docs/entregas/` (ver
-[`docs/plano_fase2.md`](docs/plano_fase2.md)).
+**2026-09-02 — curadoria de variáveis e reexecução sobre a frota completa.**
+Ver [`docs/curadoria_features_2026-09-02.md`](docs/curadoria_features_2026-09-02.md)
+(autoritativo em seleção de variáveis, população e alvos).
+
+- **D7** revoga **D6**: população = frota completa (47.715 carreta-anos).
+- **D8**: alvo decomposto em Y1 / Y2 / Y3. O caminho decomposto venceu o direto.
+- **D9**: `id_carreta` como one-hot (9.584 colunas), com ressalva de memorização.
+- Entregável de curadoria: `reports/tables/curadoria_features_2026-09-02.xlsx`
+  (13 abas: decisões, evidência por alvo, mapa das dummies, base codificada).
+- EDA fechada com **comparativo Y1 × Y2** e classificação de disponibilidade
+  (o que existe em janeiro e serve para prever o ano seguinte).
+
+**Pendências (retomar aqui):**
+
+1. Decidir 5 variáveis: `cod_montadora`, `tire_size`, `suspension_type`, `ano_modelo`,
+   `new_used_indicator` — fracas em Y1, moderadas/fortes em Y2.
+2. Corrigir o desempate de `vmrs_predominante_ano` (regra pedida pelo Grupo não foi
+   implementada; 11% das linhas mudariam de categoria).
+3. Treinar a **cascata Y2 → Y1** (`notebooks/13_cascata_y2_para_y1.py`, escrito e
+   ainda não executado).
+4. Construir a **previsão de 2026** (nenhuma foi gerada: falta projetar km e montar a
+   linha de cada carreta para o ano).
+5. Atualizar a apresentação em `docs/entregas/` (ver
+   [`docs/plano_fase2.md`](docs/plano_fase2.md)).
