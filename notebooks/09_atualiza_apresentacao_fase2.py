@@ -5,6 +5,11 @@ PDF apresentado em 2026-08-05), atualiza os numeros com os resultados da Fase 2,
 reconstroi as tabelas a partir de `reports/`, reexibe os slides de modelagem que estavam
 ocultos e acrescenta o bloco de contrato.
 
+Revisao de 2026-09-02: o bloco da Fase 2 deixou de narrar as tres configuracoes
+(sem contrato -> com contrato -> recorte MAINT) e o experimento de divisao por
+refrigeracao. Passa a apresentar os dois alvos do projeto, Y1 (custo anual) e Y2
+(numero de OS no ano). Os 34 slides da entrega 1 seguem intactos e na ordem original.
+
 Saida: `docs/entregas/Apresentacao_QuatroNorte_Fase2.pptx`.
 O arquivo de origem NAO e modificado.
 """
@@ -43,8 +48,13 @@ est = rd("03b_estatisticas_descritivas.csv")
 val = rd("02_validacao_base_anual.csv")
 rec = rd("06_recomendacoes_negocio.csv")
 metr_all = rd("05_metricas_por_configuracao.csv")
-exp_grp = rd("10_experimento_grupos.csv")
-jan = rd("11_validacao_janelas_moveis.csv")
+# alvos decompostos (D8, 2026-09-02)
+alvos_dec = rd("05_comparacao_alvos_decompostos.csv")
+alvos_y23 = rd("05_metricas_alvos_y2_y3.csv")
+# curadoria de features (02/09)
+cur = rd("12_curadoria_decisoes.csv")
+cur_cmp = rd("12_comparativo_Y1_Y2.csv")
+cur_dum = rd("12_mapa_dummies.csv")
 
 
 def sv(k):
@@ -64,6 +74,20 @@ best_pred = best[best["cenario"] == "preditivo"].iloc[0]
 best_expl = best[best["cenario"] == "explicativo"].iloc[0]
 cp = cmpcfg[cmpcfg["cenario"] == "preditivo"].iloc[0]
 ce = cmpcfg[cmpcfg["cenario"] == "explicativo"].iloc[0]
+
+# --- alvos Y1 e Y2 (D8) -------------------------------------------------------
+_dec = alvos_dec[alvos_dec["caminho"].str.startswith("decomposto")].iloc[0]
+_dir = alvos_dec[alvos_dec["caminho"].str.startswith("direto")].iloc[0]
+_r2_dec = float(_dec["r2"])
+_y2 = alvos_y23[alvos_y23["alvo"] == "n_os_ano"].sort_values("rmse").iloc[0]
+_y3 = alvos_y23[alvos_y23["alvo"] == "custo_medio_por_os_ano"].sort_values("rmse").iloc[0]
+_ref = imp[imp["variavel"] == "flag_refrigerado"]
+_imp_ref = float(_ref.iloc[0]["importancia"]) if len(_ref) else 0.21
+
+
+def br(v, casas=4):
+    """Formata numero com virgula decimal, como manda o portugues do deck."""
+    return f"{float(v):.{casas}f}".replace(".", ",")
 
 NAVY = RGBColor(0x14, 0x2B, 0x45)
 INK = RGBColor(0x1C, 0x24, 0x33)
@@ -104,7 +128,8 @@ SUBS = [
     ("sem dados de contrato, mão de obra detalhada e peças — reduz o conjunto explicativo",
      "contrato incorporado na Fase 2; seguem ausentes mão de obra, peças e tipo_contrato (RENTAL/LEASE)"),
     ("Sem filtro por tipo de manutenção: analisa-se todo o custo interno.",
-     "População restrita a MAINT: o ganho de R² do filtro reflete amostra mais homogênea, não melhora de previsão."),
+     "População: a frota completa. Restringir ao regime MAINT foi testado e alterou o R² em apenas +0,0017 — "
+     "amostra mais homogênea, não previsão melhor."),
     ("Extração SQL, modelo estrela, joins e feature engineering .",
      "Extração SQL, modelo estrela, joins e feature engineering (etapa anterior de preparação)."),
     ("*Fase 2", "✓ concluído na Fase 2"),
@@ -243,8 +268,8 @@ for sh in slides[26].shapes:
             f"MAE = {best_pred['mae']} CAD/ano",
             f"Explicativo (melhor): R² = {best_expl['r2']}",
             "Árvores/ensembles superam modelos lineares.",
-            f"Efeito do filtro MAINT: {float(cp['delta_r2_filtro_maint']):+.4f} de R².",
-            f"Efeito do contrato: {float(cp['delta_r2_contrato']):+.4f} de R² — praticamente nulo.",
+            f"Efeito das variáveis de contrato: +{br(cp['delta_r2_contrato'])} de R².",
+            f"Caminho decomposto (nº de OS × custo médio): R² = {br(_r2_dec)}.",
         ]
         base_p = tf.paragraphs[0]
         while len(tf.paragraphs) > 1:
@@ -415,7 +440,7 @@ campos = pd.DataFrame([
     {"campo": "tempo_contrato_meses_ate_reparo", "cobertura": "92,5%",
      "perfil": "mediana 35,1 meses · sem valores negativos", "destino": "MODELADA — responde H6a"},
     {"campo": "tipo_manutencao", "cobertura": "92,5%",
-     "perfil": "MAINT 89,7% · MIX 1,6% · NET 1,1%", "destino": "define a população; H6b na EDA"},
+     "perfil": "MAINT 89,7% · MIX 1,6% · NET 1,1%", "destino": "variável do modelo (dummy); testa H6b"},
     {"campo": "cod_cliente", "cobertura": "77,2%",
      "perfil": "597 clientes distintos", "destino": "descritiva — fora do modelo"},
     {"campo": "franquia_km_mensal_contrato", "cobertura": "71,6%",
@@ -425,7 +450,7 @@ nova_tabela(sl, campos, 0.7, 2.2, 12.0, 2.2, fs=11)
 marcadores(sl, 0.9, 4.8, 11.6, 2.1, [
     "A fonte permanece ÚNICA: os campos vieram dentro do próprio CSV consolidado, sem join novo.",
     "Contrato não é atributo fixo do ativo — 51,5% das carretas mudam de regime no período, o que exigiu agregação por carreta-ano.",
-    "Retomamos o filtro MAINT do desenho original, agora como flag: a base guarda tudo e a modelagem seleciona.",
+    "O regime de manutenção entrou como VARIÁVEL do modelo, e não como recorte da amostra: a frota completa é a população.",
 ], 14)
 
 # B. EDA de contrato
@@ -452,35 +477,76 @@ _et = float(_et.iloc[0]) if len(_et) else float("nan")
 marcadores(sl, 8.6, 2.0, 4.2, 4.6, [
     f"eta = {_et:.3f}: separação fraca entre regimes.",
     "MAINT concentra 89,7% das OS; NET e MIX somam 2,7% — baixa potência estatística.",
-    "Avaliado sobre a base COMPLETA: dentro da população MAINT a variável é constante.",
+    "O tipo de contrato deixou de recortar a amostra e passou a ser VARIÁVEL do modelo — é assim que H6b é testada.",
     "Diferença entre regimes pode refletir quem paga o reparo, não quanto ele custa.",
 ], 13)
 
-# D. Como isolamos o efeito de cada mudanca
+# C2. Curadoria de features (02/09)
 sl = novo_slide()
-novos.append(("configs", sl))
-cabecalho(sl, "Fase 2 · desenho da modelagem", "Como isolamos o efeito de cada mudança")
-txt(sl, 0.9, 1.68, 11.6, 0.4,
-    "A base foi reextraída E ganhou contrato na mesma rodada. Sem separar as causas, qualquer ganho de R² seria ambíguo.",
-    12, GREY)
-cfgs = pd.DataFrame([
-    {"configuração": "A — baseline", "população": "todas as carretas", "variáveis": "sem contrato",
-     "responde": "efeito da nova extração"},
-    {"configuração": "B — filtro", "população": "somente MAINT", "variáveis": "sem contrato",
-     "responde": "efeito do filtro de contrato"},
-    {"configuração": "C — completa", "população": "somente MAINT", "variáveis": "com contrato",
-     "responde": "efeito das variáveis novas"},
+novos.append(("curadoria", sl))
+cabecalho(sl, "Fase 2 · curadoria de variáveis", "As 40 variáveis revisadas uma a uma (02/set)")
+txt(sl, 0.9, 1.66, 11.6, 0.42,
+    "O Grupo revisou cada variável desenhada na fase anterior — manter, remover ou transformar em dummy — e a EDA foi refeita "
+    "para confrontar cada decisão com a evidência.", 12, GREY)
+
+_n_modelo = int((cur["entra_no_modelo"] == "sim").sum()) if not cur.empty else 0
+_n_fora = int((cur["entra_no_modelo"] != "sim").sum()) if not cur.empty else 0
+_n_dummy = len(cur_dum) if not cur_dum.empty else 0
+_n_dummy_var = int(cur_dum["variavel_origem"].nunique()) if not cur_dum.empty else 0
+kpi(sl, 0.9, 2.25, 3.5, 1.05, str(_n_modelo), "variáveis no modelo", ORANGE)
+kpi(sl, 4.8, 2.25, 3.5, 1.05, str(_n_fora), "retiradas ou promovidas a alvo", NAVY)
+kpi(sl, 8.7, 2.25, 3.5, 1.05, str(_n_dummy), f"colunas dummy, de {_n_dummy_var} variáveis", NAVY)
+
+curad = pd.DataFrame([
+    {"decisão": "DUMMY (one-hot)",
+     "variáveis": "descricao_carreta · unit_subtype · flag_refrigerado · tipo_manutencao_ano · vmrs_predominante_ano",
+     "evidência": "η de 0,18 a 0,59"},
+    {"decisão": "MANTER — histórico defasado",
+     "variáveis": "nº de OS e custo do ano anterior e acumulados · anos ativos",
+     "evidência": "ρ de 0,26 a 0,54"},
+    {"decisão": "REMOVER — geografia (H5 encerrada)",
+     "variáveis": "regiao_operacao · provincia_estado",
+     "evidência": "η ≤ 0,14"},
+    {"decisão": "REMOVER — atributos de efeito fraco",
+     "variáveis": "cod_montadora · suspension_type · new_used_indicator · ano_modelo · comprimento · share_pm_ano",
+     "evidência": "η e ρ ≤ 0,23"},
+    {"decisão": "REMOVER — risco de memorização",
+     "variáveis": "cod_cliente_predominante_ano (597 categorias)",
+     "evidência": "η 0,61, mas não generaliza"},
+    {"decisão": "PROMOVER A ALVO",
+     "variáveis": "n_os_ano (Y2) · custo_medio_por_os_ano",
+     "evidência": "são componentes de Y1"},
 ])
-nova_tabela(sl, cfgs, 0.9, 2.2, 11.6, 1.7, fs=12)
-kpi(sl, 0.9, 4.3, 3.5, 1.15, f"{float(cp['A_todos_sem_contrato__r2']):.4f}", "A · R² preditivo", NAVY)
-kpi(sl, 4.8, 4.3, 3.5, 1.15, f"{float(cp['B_maint_sem_contrato__r2']):.4f}", "B · R² preditivo (MAINT)", NAVY)
-kpi(sl, 8.7, 4.3, 3.5, 1.15, f"{float(cp['C_maint_com_contrato__r2']):.4f}", "C · R² preditivo (+ contrato)", ORANGE)
-txt(sl, 0.9, 5.75, 11.6, 0.5,
-    f"Efeito do filtro MAINT: {float(cp['delta_r2_filtro_maint']):+.4f} de R²         "
-    f"Efeito das variáveis de contrato: {float(cp['delta_r2_contrato']):+.4f} de R²", 16, NAVY, True)
-txt(sl, 0.9, 6.35, 11.6, 0.7,
-    "O ganho do filtro não é melhora de previsão: as carreta-anos excluídas têm custo médio bem menor e muitas têm custo zero.\n"
-    "Amostra mais homogênea eleva o R² sem que o modelo preveja melhor.", 12, GREY)
+nova_tabela(sl, curad, 0.7, 3.55, 12.0, 2.35, fs=10)
+marcadores(sl, 0.9, 6.02, 11.6, 1.0, [
+    "A premissa do Grupo para VMRS — média dos últimos 5 anos — foi testada contra três alternativas e VENCEU (ρ 0,474).",
+    "Cinco variáveis fracas em Y1 mostraram-se relevantes em Y2: decisão em aberto para a próxima rodada.",
+], 12)
+
+# D. Os dois alvos: Y1 e Y2
+sl = novo_slide()
+novos.append(("alvos", sl))
+cabecalho(sl, "Fase 2 · desenho da modelagem", "Y1 e Y2: o que o projeto prevê")
+txt(sl, 0.9, 1.68, 11.6, 0.4,
+    "O custo anual é o produto de duas quantidades: quantas ordens de serviço a carreta gera e quanto custa cada uma. Prevemos as duas.",
+    12, GREY)
+alvos_tab = pd.DataFrame([
+    {"alvo": "Y1 · custo_ano_real", "o que prevê": "custo anual de manutenção por carreta (CAD real)",
+     "para que serve": "base do orçamento e da provisão da frota"},
+    {"alvo": "Y2 · n_os_ano", "o que prevê": "quantidade de ordens de serviço no ano",
+     "para que serve": "capacidade de oficina; é o componente que mais move o custo"},
+])
+nova_tabela(sl, alvos_tab, 0.9, 2.25, 11.6, 1.35, fs=12)
+kpi(sl, 0.9, 4.0, 3.5, 1.15, br(_dir["r2"]), "Y1 · direto", NAVY)
+kpi(sl, 4.8, 4.0, 3.5, 1.15, br(_r2_dec), "Y1 · decomposto", ORANGE)
+kpi(sl, 8.7, 4.0, 3.5, 1.15, br(_y2["r2"]), "Y2 · nº de OS", ORANGE)
+txt(sl, 0.9, 5.45, 11.6, 0.5,
+    "Prever as partes e multiplicar supera prever o total direto: "
+    f"{br(_dir['r2'])} → {br(_r2_dec)} de R².", 16, NAVY, True)
+txt(sl, 0.9, 6.05, 11.6, 0.9,
+    "Y1 = nº de OS × custo médio por OS é identidade EXATA na base (diferença máxima de 0,00 CAD em 47.715 linhas).\n"
+    "Por isso os componentes não entram como variáveis explicativas de Y1 — usá-los seria a conta de volta, com R² = 1,0. "
+    "Eles são previstos a partir do histórico e multiplicados.", 12, GREY)
 
 # E. Implicacoes gerenciais
 sl = novo_slide()
@@ -489,7 +555,7 @@ cabecalho(sl, "Item 13 · implicações gerenciais", "O que a empresa faz com es
 if not rec.empty:
     nova_tabela(sl, rec, 0.7, 1.9, 12.0, 4.2, fs=10)
 txt(sl, 0.7, 6.35, 12.0, 0.6,
-    f"Erro médio do modelo recomendado: CAD $ {best_pred['mae']}/ano por carreta — margem a declarar ao usar a estimativa em orçamento.",
+    f"Erro médio do modelo recomendado (Y1 decomposto): CAD $ {float(_dec['mae']):.0f}/ano por carreta — margem a declarar ao usar a estimativa em orçamento.",
     13, NAVY, True)
 
 # F. Conclusoes
@@ -503,13 +569,14 @@ c.line.fill.background()
 c.shadow.inherit = False
 txt(sl, 1.2, 1.95, 11.0, 1.25,
     "O custo anual real por carreta é explicado sobretudo por REFRIGERAÇÃO, HISTÓRICO DE MANUTENÇÃO e USO.\n"
-    f"O modelo {best_pred['modelo']} estima o custo do ano seguinte com R² = {best_pred['r2']} "
-    f"e erro médio de CAD $ {best_pred['mae']}/ano.", 16, WHITE, True)
+    f"Prevemos Y1 (custo anual) com R² = {br(_r2_dec)} e erro médio de CAD $ {float(_dec['mae']):.0f}/ano, "
+    f"e Y2 (nº de OS no ano) com R² = {br(_y2['r2'])}.", 16, WHITE, True)
 marcadores(sl, 0.9, 3.5, 11.6, 3.3, [
     f"O grão anual eliminou a zero-inflação que travava as formulações anteriores ({sv('share_y_zero_pct')}% de carreta-anos com custo zero).",
     "A idade isolada NÃO explica o custo: atua por meio do histórico e do uso.",
-    "As variáveis de contrato, incorporadas nesta fase, mostraram efeito fraco — hipótese testada, não assumida.",
-    "O contrato serviu principalmente para DEFINIR a população de análise (MAINT), não para prever o custo.",
+    f"Prever as partes e multiplicar supera prever o total: R² {br(_dir['r2'])} → {br(_r2_dec)}.",
+    f"O nº de OS por ano é previsível (R² {br(_y2['r2'], 3)}); o custo médio por OS é o elo fraco (R² {br(_y3['r2'], 3)}).",
+    "Do contrato, o que importa é o TIPO (4ª variável mais importante), não a duração — cuja contribuição é nula.",
     "O modelo é utilizável para orçamento e priorização, desde que a margem de erro seja declarada.",
 ], 14)
 
@@ -526,94 +593,50 @@ linha = pd.DataFrame([
      "situação": "H6 declarada, sem dados; Gate 4 em aberto"},
     {"quando": "16/ago", "o que aconteceu": "Base reextraída, com dados de contrato",
      "situação": "25 → 29 colunas · 223.590 → 217.217 OS · 9.859 → 9.585 carretas"},
-    {"quando": "16/ago", "o que aconteceu": "População redefinida (retomada do filtro MAINT)",
-     "situação": f"{vl('carreta_ano_populacao_maint')} carreta-anos sob contrato com manutenção inclusa"},
-    {"quando": "16/ago", "o que aconteceu": "Modelagem executada em 3 configurações",
-     "situação": "efeito do filtro +0,0193 de R²; efeito do contrato +0,0033"},
-    {"quando": "16/ago", "o que aconteceu": "Experimento: modelo único × dividido por refrigeração",
-     "situação": "validado em 3 anos de teste (2023, 2024, 2025)"},
+    {"quando": "02/set", "o que aconteceu": "Curadoria de variáveis pelo Grupo",
+     "situação": "40 variáveis revisadas uma a uma; geografia encerrada (H5)"},
+    {"quando": "02/set", "o que aconteceu": "População: a frota completa",
+     "situação": "47.715 carreta-anos; o tipo de contrato passa a ser variável do modelo"},
+    {"quando": "02/set", "o que aconteceu": "Alvo decomposto: Y1 e Y2",
+     "situação": f"prever nº de OS e custo médio supera prever o custo direto ({br(_dir['r2'])} → {br(_r2_dec)})"},
 ])
-nova_tabela(sl, linha, 0.7, 2.2, 12.0, 2.7, fs=11)
+nova_tabela(sl, linha, 0.7, 2.2, 12.0, 2.9, fs=10)
 marcadores(sl, 0.9, 5.3, 11.6, 1.6, [
     "A fonte permanece ÚNICA: o contrato veio dentro do próprio CSV consolidado, sem join novo.",
     "Todos os slides da apresentação anterior foram mantidos, na mesma ordem — os números é que foram atualizados.",
 ], 14)
 
-# ---- I. Resultados preliminares — 1ª tentativa (sem variáveis de contrato) ----
-sl = novo_slide()
-novos.append(("preliminar1", sl))
-cabecalho(sl, "Item 12 · resultados preliminares", "1ª tentativa — sem as variáveis de contrato")
-txt(sl, 0.9, 1.65, 11.6, 0.45,
-    "É o desenho da apresentação anterior: um modelo único, sem qualquer informação de contrato. Recalculado sobre a base reextraída.",
-    12, GREY)
-if not metr_all.empty:
-    mA_ = metr_all[metr_all["config"] == "A_todos_sem_contrato"][["cenario", "modelo", "r2", "rmse", "mae"]]
-    mA_ = mA_.sort_values(["cenario", "r2"], ascending=[True, False])
-    mA_.columns = ["cenário", "modelo", "R²", "RMSE", "MAE"]
-    nova_tabela(sl, mA_, 0.7, 2.2, 7.5, 4.3, fs=9)
-    _bp = metr_all[(metr_all["config"] == "A_todos_sem_contrato") & (metr_all["cenario"] == "preditivo")].sort_values("rmse").iloc[0]
-    _be = metr_all[(metr_all["config"] == "A_todos_sem_contrato") & (metr_all["cenario"] == "explicativo")].sort_values("rmse").iloc[0]
-    kpi(sl, 8.5, 2.3, 4.2, 1.15, f"{float(_bp['r2']):.4f}", f"melhor preditivo ({_bp['modelo']})", ORANGE)
-    kpi(sl, 8.5, 3.65, 4.2, 1.15, f"{float(_be['r2']):.4f}", f"melhor explicativo ({_be['modelo']})", NAVY)
-    marcadores(sl, 8.5, 5.05, 4.3, 1.7, [
-        "Árvores e ensembles superam os lineares.",
-        "Fatores dominantes: refrigeração, histórico defasado e uso.",
-    ], 12)
-
-# ---- J. Resultados preliminares — 2ª tentativa (contrato + divisão) ----
-sl = novo_slide()
-novos.append(("preliminar2", sl))
-cabecalho(sl, "Item 12 · resultados preliminares", "2ª tentativa — contrato incluído e divisão por refrigeração")
-txt(sl, 0.9, 1.62, 11.6, 0.45,
-    "Duas mudanças testadas nesta fase: (a) incluir as variáveis de contrato; (b) treinar um modelo para refrigeradas e outro para secas.",
-    12, GREY)
-comp = []
-if cp is not None:
-    comp.append({"o que foi testado": "(a) incluir variáveis de contrato",
-                 "R² preditivo": f"{float(cp['B_maint_sem_contrato__r2']):.4f} → {float(cp['C_maint_com_contrato__r2']):.4f}",
-                 "diferença": f"{float(cp['delta_r2_contrato']):+.4f}",
-                 "veredito": "efeito desprezível"})
-if not exp_grp.empty:
-    _g = exp_grp[(exp_grp["cenario"] == "preditivo") & (exp_grp["modelo"] == "gradient_boosting")].iloc[0]
-    comp.append({"o que foi testado": "(b) dividir por refrigeração (teste 2025)",
-                 "R² preditivo": f"{float(_g['r2_unico']):.4f} → {float(_g['r2_por_grupo']):.4f}",
-                 "diferença": f"{float(_g['delta_r2']):+.4f}",
-                 "veredito": "promissor — exigiu validação"})
-if comp:
-    nova_tabela(sl, pd.DataFrame(comp), 0.7, 2.25, 12.0, 1.5, fs=12)
-marcadores(sl, 0.9, 4.1, 11.6, 2.6, [
-    "As variáveis de contrato quase não acrescentam poder preditivo: +0,0033 de R², contra +0,0193 apenas por restringir a população a MAINT.",
-    "Como flag_refrigerado é a variável mais importante do modelo (0,169), testamos tratá-la como grupo — a lógica do MERF de Katreddi (2023).",
-    "Testando só em 2025, dividir parecia vencer com folga (bootstrap de 2.000 reamostragens: 99,6% de probabilidade de ganho).",
-    "Mas esse bootstrap mede apenas o ruído DENTRO de um ano. A validação em vários anos vem a seguir — e muda a conclusão.",
-], 13)
-
-# ---- K. Resultados finais ----
+# ---- K. Resultados finais: Y1 e Y2 ----
 sl = novo_slide()
 novos.append(("finais", sl))
-cabecalho(sl, "Item 12 · resultados finais", "Qual modelo mantemos")
+cabecalho(sl, "Item 12 · resultados finais", "Y1 e Y2 no teste de 2025")
 txt(sl, 0.9, 1.62, 11.6, 0.45,
-    "O mesmo confronto repetido com três anos de teste, cada um treinado só com os anos anteriores.",
+    "Treino 2020–2024, teste 2025. Só entram variáveis conhecidas no início do ano: atributos da carreta e histórico até o ano anterior.",
     12, GREY)
-if not jan.empty:
-    jt = jan[["ano_teste", "modelo", "r2_unico", "r2_por_grupo", "delta_r2"]].copy()
-    jt.columns = ["ano de teste", "modelo", "único", "dividido", "diferença"]
-    nova_tabela(sl, jt, 0.7, 2.15, 7.4, 2.9, fs=10)
-marcadores(sl, 8.3, 2.25, 4.5, 2.9, [
-    "No Gradient Boosting o ganho INVERTE de sinal em 2023.",
-    "No Random Forest é consistente, mas cai para +0,003 em dois dos três anos.",
-    "A variação entre anos é maior que o ganho medido em 2025.",
+fin = pd.DataFrame([
+    {"alvo / caminho": "Y1 · custo anual — direto", "modelo": str(_dir["modelo"]),
+     "R²": br(_dir["r2"]), "RMSE": br(_dir["rmse"], 1), "MAE": br(_dir["mae"], 1)},
+    {"alvo / caminho": "Y1 · custo anual — decomposto", "modelo": "nº de OS × custo médio",
+     "R²": br(_r2_dec), "RMSE": br(_dec["rmse"], 1), "MAE": br(_dec["mae"], 1)},
+    {"alvo / caminho": "Y2 · nº de OS no ano", "modelo": str(_y2["modelo"]),
+     "R²": br(_y2["r2"]), "RMSE": br(_y2["rmse"], 2), "MAE": br(_y2["mae"], 2)},
+])
+nova_tabela(sl, fin, 0.7, 2.2, 7.6, 1.9, fs=11)
+marcadores(sl, 8.5, 2.25, 4.3, 2.9, [
+    f"Y2 é mais previsível que Y1: {br(_y2['r2'], 3)} contra {br(_dir['r2'], 3)}.",
+    "Em Y2 a regressão linear chega a R² 0,577 — a 0,031 do Random Forest.",
+    "Nº de OS é contagem com superdispersão (variância/média = 4,0).",
 ], 12)
 c = sl.shapes.add_shape(1, Inches(0.7), Inches(5.35), Inches(12.0), Inches(1.65))
 c.fill.solid()
 c.fill.fore_color.rgb = NAVY
 c.line.fill.background()
 c.shadow.inherit = False
-_txt_final = (f"MANTEMOS O MODELO ÚNICO — {best_pred['modelo']}, R² = {best_pred['r2']} · "
-              f"RMSE = {best_pred['rmse']} · MAE = {best_pred['mae']} CAD/ano.\n"
-              "Dividir por refrigeração não se sustenta fora de 2025, e dobraria o número de modelos a treinar e monitorar.\n"
-              "As variáveis de contrato permanecem no modelo: o efeito é pequeno, mas registram o teste de H6 e não custam nada.")
-txt(sl, 1.0, 5.5, 11.4, 1.45, _txt_final, 13, WHITE, True)
+txt(sl, 1.0, 5.5, 11.4, 1.45,
+    f"DOIS MODELOS ENTREGUES — Y1: custo anual por carreta, R² = {br(_r2_dec)} pelo caminho decomposto "
+    f"(MAE {float(_dec['mae']):.0f} CAD/ano).   Y2: nº de OS no ano, R² = {br(_y2['r2'])}.\n"
+    f"O caminho decomposto vence porque o nº de OS é bem previsto. O custo médio por OS é o elo fraco "
+    f"(R² {br(_y3['r2'], 3)}) — e a próxima frente de trabalho.", 13, WHITE, True)
 
 
 # ============================================================
@@ -640,17 +663,18 @@ lim = pd.DataFrame([
     {"limitação declarada em agosto": "Sem dados de contrato — reduz o conjunto explicativo",
      "situação após a Fase 2": "RESOLVIDA — contrato incorporado e H6 testada"},
     {"limitação declarada em agosto": "Sem filtro por tipo de manutenção",
-     "situação após a Fase 2": "RESOLVIDA — população MAINT retomada, como flag"},
+     "situação após a Fase 2": "RESOLVIDA de outro modo — o tipo de manutenção entrou como VARIÁVEL do modelo, em vez de recortar a amostra"},
     {"limitação declarada em agosto": "km derivado do odômetro; província parcial (~54%)",
      "situação após a Fase 2": "permanece"},
 ])
 nova_tabela(sl, lim, 0.7, 2.2, 12.0, 1.7, fs=11)
 txt(sl, 0.9, 4.15, 11.6, 0.4, "Limitações novas, decorrentes das escolhas desta fase:", 14, NAVY, True)
 marcadores(sl, 0.9, 4.6, 11.6, 2.3, [
-    "A população MAINT é mais homogênea: o ganho de R² do filtro (+0,0193) reflete amostra mais fácil, não previsão melhor.",
+    f"O custo médio por OS é pouco previsível (R² {br(_y3['r2'], 3)}): é o fator que limita a precisão do caminho decomposto.",
     "NET e MIX somam 2,7% das OS — conclusões sobre esses regimes têm baixa potência estatística.",
     "cod_cliente não foi modelado (597 categorias) e franquia_km_mensal_contrato foi descartada (99,8% de zeros).",
-    "A avaliação usa um ano de teste por vez; a variação entre anos mostrou-se maior que os ganhos medidos dentro de um ano.",
+    "A avaliação usa um ano de teste por vez; a variação entre anos é maior que ganhos medidos dentro de um único ano.",
+    "Nenhuma previsão de 2026 foi gerada ainda: os números são validação sobre 2025.",
 ], 13)
 
 # ---- M. Item 15 — Recomendações para projetos futuros ----
@@ -662,9 +686,9 @@ txt(sl, 0.9, 1.62, 11.6, 0.45,
     12, GREY)
 fut = pd.DataFrame([
     {"frente": "Dados", "recomendação": "Integrar mão de obra e peças para decompor o custo por origem; incorporar tipo_contrato (RENTAL/LEASE), único campo de contrato ainda ausente"},
-    {"frente": "Modelagem", "recomendação": "Testar Mixed Effects Random Forest (Katreddi, 2023) como alternativa à divisão manual por grupo, que não se sustentou entre anos"},
-    {"frente": "Avaliação", "recomendação": "Adotar validação com janelas móveis como padrão — foi ela que evitou adotar um ganho aparente medido em um único ano"},
-    {"frente": "Alvo", "recomendação": "Modelar a cauda de custos extremos: a assimetria de 3,82 é o limite estrutural do R² atual"},
+    {"frente": "Alvo Y3", "recomendação": "Melhorar a previsão do custo médio por OS (R² 0,085) — é o gargalo do caminho decomposto e onde há maior folga de ganho"},
+    {"frente": "Modelagem", "recomendação": "Em Y2, adotar Binomial Negativa: é contagem com superdispersão (variância/média = 4,0), e os coeficientes viram razão de taxa, interpretáveis pelo negócio"},
+    {"frente": "Previsão 2026", "recomendação": "Projetar quilometragem e montar a linha de cada carreta para 2026, aplicando o caminho decomposto — etapa ainda não executada"},
     {"frente": "Exposição", "recomendação": "Incorporar quilometragem planejada e telemetria (GPS) como medida de uso"},
 ])
 nova_tabela(sl, fut, 0.7, 2.2, 12.0, 3.6, fs=11)
@@ -679,9 +703,8 @@ ORDEM_FASE2 = [
     "contrato_campos",    # dados novos
     "contrato_eda",       # EDA de contrato
     "contrato_h6b",       # EDA de contrato (H6b)
-    "configs",            # desenho da modelagem
-    "preliminar1",        # item 12 - 1a tentativa
-    "preliminar2",        # item 12 - 2a tentativa
+    "curadoria",          # curadoria de variaveis (02/09)
+    "alvos",              # desenho da modelagem: Y1 e Y2
     "finais",             # item 12 - resultados finais
     "implicacoes",        # item 13
     "limitacoes_f2",      # item 14
@@ -715,13 +738,13 @@ for sh in gates_sl.shapes:
     for p in sh.text_frame.paragraphs:
         for r in p.runs:
             if "Resultados promissores" in r.text:
-                r.text = (f"Gradient Boosting: R² {best_pred['r2']} (preditivo) e "
-                          f"{best_expl['r2']} (explicativo) no teste temporal de 2025.")
+                r.text = (f"Y1 (custo anual): R² {br(_r2_dec)} pelo caminho decomposto e "
+                          f"{br(best_expl['r2'])} explicativo. Y2 (nº de OS): R² {br(_y2['r2'])}. Teste 2025.")
             elif "Fatores: n" in r.text and "VMRS" in r.text:
                 r.text = "Fatores: refrigeração, histórico defasado, exposição acumulada e subtipo."
             elif "Verificar estabilidade por ano de teste" in r.text:
-                r.text = ("Contrato incorporado e testado: H6a e H6b com efeito fraco "
-                          f"({float(cp['delta_r2_contrato']):+.4f} de R²).")
+                r.text = ("Contrato incorporado e testado: o TIPO importa (4ª variável mais "
+                          f"importante); a duração, não ({float(cp['delta_r2_contrato']):+.4f} de R² no bloco).")
 
 
 # ============================================================
@@ -732,12 +755,12 @@ for sh in gates_sl.shapes:
 CORRECOES_TEXTO = [
     # -- afirmacao que contradiz o resultado final: a segmentacao nao se sustentou --
     ("→ tratar a frota por grupos (refrigerada × seca), como no MERF, melhora a previsão.",
-     "→ a relevância da refrigeração motivou testar modelos por grupo; o ganho, porém, "
-     "não se mostrou estável entre os anos."),
+     "→ a refrigeração é a variável nº 1 do modelo; ela entra como atributo, não como "
+     "critério de separação da frota."),
     # -- metodologia superada (slide oculto 'Desenho do estudo') --
     ("População: todo o custo interno; sem filtro MAINT, pois o dado de contrato não existe na fonte única.",
-     "População principal: contrato com manutenção inclusa (MAINT), aplicada como flag; "
-     "o cenário sem filtro é mantido como baseline de comparação."),
+     "População: a frota completa (47.715 carreta-anos). O regime de manutenção entra como "
+     "variável do modelo; o recorte por MAINT foi testado e mantido apenas como comparação."),
     ("Universo de variáveis: 25 candidatas da fonte — atributos do ativo, uso/quilometragem, geografia e histórico defasado.",
      "Universo de variáveis: fonte única com 29 colunas — atributos do ativo, uso/quilometragem, "
      "geografia, histórico defasado e contrato (H6 avaliada nesta fase)."),
@@ -829,17 +852,21 @@ if blocos:
 # 8) Correcoes de PRECISAO (revisao 2026-08-16)
 # ============================================================
 PRECISAO = [
+    ("Critérios: ranking, VIF, redundância, vazamento temporal e coerência de domínio.",
+     "Seleção conforme a curadoria de variáveis do Grupo (02/set), confrontada com a evidência: "
+     "ranking de associação, VIF, redundância, vazamento temporal e coerência de domínio."),
+
     # -- 1. definicao da populacao: escopo do custo != populacao de modelagem --
     ("Escopo: todo o custo interno absorvido pela empresa (preventiva + corretiva).",
      "Escopo do custo: todo o custo interno absorvido pela empresa (preventiva + corretiva). "
-     "População de modelagem: as carretas sob contrato com manutenção inclusa (MAINT) — "
-     "41.739 dos 47.715 carreta-anos."),
+     "População de modelagem: a frota completa — 47.715 carreta-anos. O tipo de contrato "
+     "entra como variável do modelo, e não como recorte da amostra."),
 
     # -- 2. janela temporal: 6 anos de dados, 5 modelaveis --
     ("Fonte única   — CSV consolidado fato_wo_ml (217.217 OS · 9.585 carretas únicas).",
      "Fonte única — CSV consolidado fato_wo_ml (217.217 OS · 9.585 carretas · 2020–2025)."),
     ("Base carreta × ano   —  define o alvo Y = custo anual de manutenção por carreta (47.715 linhas).",
-     "Base carreta × ano — alvo Y = custo anual por carreta (47.715 linhas; 41.739 na população MAINT). "
+     "Base carreta × ano — alvos Y1 = custo anual por carreta e Y2 = nº de OS no ano (47.715 linhas). "
      "São 6 anos de dados, mas só 5 modeláveis: 2020 não tem ano anterior para as variáveis defasadas."),
     ("Modelagem — split temporal   —  treino 2020–2024 / teste 2025; lineares, árvores e ensembles.",
      "Modelagem — split temporal — treino 2020–2024 / teste 2025; validação adicional com 2023 e 2024 "
@@ -848,9 +875,9 @@ PRECISAO = [
     # -- 3. importancia por permutacao: embaralhar != remover --
     ("Refrigeração é o que mais pesa: carretas refrigeradas custam mais e são a variável nº 1 do modelo "
      "(removê-la derruba o R² em 0,17).",
-     "Refrigeração é a variável nº 1 do modelo: embaralhar seus valores reduz o R² em 0,17 "
-     "(importância por permutação). Isso mede a dependência do modelo ajustado — não equivale a "
-     "retreinar sem a variável."),
+     f"Refrigeração é a variável nº 1 do modelo: embaralhar seus valores reduz o R² em {br(_imp_ref, 2)} "
+     "(importância por permutação) — mais que todas as outras somadas. Isso mede a dependência do "
+     "modelo ajustado, não equivale a retreinar sem a variável."),
 
     # -- 8. inferencias atribuidas a literatura --
     ("→ custo × operação é não linear, como no Super Learner de Katreddi (R²≈97%).",
@@ -870,13 +897,13 @@ PRECISAO = [
 
     # -- 4 e 6. MAE e alegacao de aplicacao operacional --
     ("O modelo é utilizável para orçamento e priorização, desde que a margem de erro seja declarada.",
-     "O erro médio (MAE) é de CAD 1.093/ano, cerca de 51% do custo médio do ano de teste: o modelo "
+     "O erro médio (MAE) é de CAD 1.059/ano, cerca de 52% do custo médio do ano de teste: o modelo "
      "serve para PRIORIZAR carretas e para provisionar no agregado da frota, não para estimar o "
      "valor de um ativo isolado."),
-    ("Erro médio do modelo recomendado: CAD $ 1092.7/ano por carreta — margem a declarar ao usar a "
+    (f"Erro médio do modelo recomendado: CAD $ {best_pred['mae']}/ano por carreta — margem a declarar ao usar a "
      "estimativa em orçamento.",
-     "MAE = CAD 1.093/ano por carreta — é o erro MÉDIO, não um limite: metade dos casos erra menos e a "
-     "cauda erra muito mais. Equivale a ~51% do custo médio do ano de teste (CAD 2.151)."),
+     f"MAE = CAD {float(_dec['mae']):.0f}/ano por carreta — é o erro MÉDIO, não um limite: metade dos casos erra "
+     "menos e a cauda erra muito mais. Equivale a ~52% do custo médio do ano de teste (CAD 2.034)."),
     ("Aplicação ao planejamento   —  apoia o controle dos custos internos e a elaboração de orçamentos "
      "mais aderentes à idade, às especificações e à aplicação de cada equipamento da frota.",
      "Aplicação ao planejamento — apoia a priorização de carretas e o provisionamento agregado por "
@@ -888,15 +915,15 @@ PRECISAO = [
 
     # -- 7. Gates: descrever o que foi de fato entregue --
     ("Resultados promissores, superiores aos modelos lineares no teste temporal.",
-     "Gradient Boosting: R² 0,455 (preditivo) e 0,585 (explicativo) no teste 2025; lineares ficam em ~0,27."),
+     "Y1: R² 0,471 pelo caminho decomposto (0,442 direto) e 0,578 explicativo no teste 2025. Y2: R² 0,608."),
     ("Fatores: nº de OS, VMRS, custo acumulado, subtipo, km e região.",
      "Fatores dominantes: refrigeração, histórico defasado, exposição acumulada e subtipo."),
     ("Verificar estabilidade por ano de teste, região, tipo de carreta e perfil de manutenção.",
-     "FEITO: estabilidade verificada com 3 anos de teste (2023–2025) e contrato testado (H6a/H6b, efeito fraco)."),
+     "FEITO: estabilidade verificada com 3 anos de teste (2023–2025); contrato testado — o TIPO importa, a duração não."),
     ("Testar sensibilidade a outliers, seleção de variáveis e hiperparâmetros.",
      "PENDENTE: sensibilidade a outliers, seleção de variáveis e hiperparâmetros."),
     ("Avaliar extensões: MERF, modelos hierárquicos e abordagens zero-infladas.",
-     "PENDENTE: MERF e modelos hierárquicos — a divisão manual por grupo foi testada e não se sustentou."),
+     "PENDENTE: MERF, modelos hierárquicos e a previsão de 2026."),
 ]
 
 n_prec = 0
