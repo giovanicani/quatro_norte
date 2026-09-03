@@ -1,0 +1,5 @@
+versao,coluna,spearman_com_Y1,p_valor,n_validos,pct_disponivel,observacao
+Contemporanea (ano corrente),n_sistemas_vmrs_distintos_ano,0.7021,0.0,47715,100.0,"Valor do proprio ano. Maior associacao, mas indisponivel para prever 2026."
+Defasada t-1,vmrs_dist_t_1,0.4485,0.0,38130,79.9,Valor do ano anterior. Conhecida no inicio do ano - sem vazamento.
+Media movel 5 anos (defasada),vmrs_dist_media_5a,0.4738,0.0,38130,79.9,"Premissa proposta pelo Grupo, calculada so com anos anteriores."
+Media historica (defasada),vmrs_dist_media_hist,0.4738,0.0,38130,79.9,Media de todos os anos anteriores da carreta.

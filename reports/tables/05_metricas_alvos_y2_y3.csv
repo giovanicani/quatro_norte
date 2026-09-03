@@ -1,0 +1,15 @@
+alvo,modelo,r2,rmse,mae
+n_os_ano,random_forest,0.608,2.767,1.894
+n_os_ano,gradient_boosting,0.5943,2.815,1.949
+n_os_ano,knn,0.5845,2.849,1.941
+n_os_ano,regressao_linear_multipla,0.5766,2.876,1.97
+n_os_ano,ridge,0.5764,2.877,1.971
+n_os_ano,arvore_decisao,0.5648,2.916,2.011
+n_os_ano,regressao_polinomial_grau_2,0.3675,3.515,2.317
+custo_medio_por_os_ano,random_forest,0.0851,319.878,182.056
+custo_medio_por_os_ano,gradient_boosting,0.0817,320.48,180.385
+custo_medio_por_os_ano,arvore_decisao,0.0587,324.459,186.912
+custo_medio_por_os_ano,regressao_linear_multipla,0.0497,326.021,190.249
+custo_medio_por_os_ano,ridge,0.0493,326.089,190.224
+custo_medio_por_os_ano,knn,0.0407,327.546,186.741
+custo_medio_por_os_ano,regressao_polinomial_grau_2,-185.4324,4566.315,261.764

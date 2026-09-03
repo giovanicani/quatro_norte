@@ -1,4 +1,4 @@
 config,linhas_modelagem,treino_2020_2024,teste_2025,cap_outlier_p99_5_treino,y_media_treino,y_media_teste
 A_todos_sem_contrato,47715,38953,8762,13535.9,1567.2,2033.9
-B_maint_sem_contrato,41739,33950,7789,13846.4,1703.8,2151.1
+B_todos_com_contrato,47715,38953,8762,13535.9,1567.2,2033.9
 C_maint_com_contrato,41739,33950,7789,13846.4,1703.8,2151.1

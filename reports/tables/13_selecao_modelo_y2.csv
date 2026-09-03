@@ -1,0 +1,9 @@
+conjunto,modelo,cv_r2_treino,cv_rmse_treino,n_features
+curado + 5 reincorporadas,random_forest,0.6895,2.282,19
+curado (D7),random_forest,0.6815,2.311,14
+curado + 5 reincorporadas,gradient_boosting,0.653,2.413,19
+curado (D7),gradient_boosting,0.6505,2.421,14
+curado + 5 reincorporadas,ridge,0.5861,2.635,19
+curado + 5 reincorporadas,regressao_linear_multipla,0.5861,2.635,19
+curado (D7),regressao_linear_multipla,0.5827,2.646,14
+curado (D7),ridge,0.5823,2.647,14

@@ -1,0 +1,43 @@
+variavel_origem,coluna_dummy,categoria,categoria_base_omitida,pct_linhas,forca_Y1,classificacao,status
+vmrs_predominante_ano,dm_vmrs_predominante_ano_02,02,01,3.39,0.3358,FORTE,materializada
+vmrs_predominante_ano,dm_vmrs_predominante_ano_03,03,01,3.15,0.3358,FORTE,materializada
+vmrs_predominante_ano,dm_vmrs_predominante_ano_09,09,01,4.46,0.3358,FORTE,materializada
+vmrs_predominante_ano,dm_vmrs_predominante_ano_10,10,01,4.24,0.3358,FORTE,materializada
+vmrs_predominante_ano,dm_vmrs_predominante_ano_OUTROS,OUTROS,01,6.95,0.3358,FORTE,materializada
+vmrs_predominante_ano,dm_vmrs_predominante_ano_PM,PM,01,20.36,0.3358,FORTE,materializada
+vmrs_predominante_ano,dm_vmrs_predominante_ano_SEM_OS,SEM_OS,01,3.11,0.3358,FORTE,materializada
+tipo_manutencao_ano,dm_tipo_manutencao_ano_MIX,MIX,MAINT,1.36,0.1828,moderada,"materializada (excecao de escopo: sustenta H6b, razao da revogacao de D6)"
+tipo_manutencao_ano,dm_tipo_manutencao_ano_NET,NET,MAINT,2.23,0.1828,moderada,"materializada (excecao de escopo: sustenta H6b, razao da revogacao de D6)"
+tipo_manutencao_ano,dm_tipo_manutencao_ano_SEM_CONTRATO,SEM_CONTRATO,MAINT,5.82,0.1828,moderada,"materializada (excecao de escopo: sustenta H6b, razao da revogacao de D6)"
+tipo_manutencao_ano,dm_tipo_manutencao_ano_SEM_OS,SEM_OS,MAINT,3.11,0.1828,moderada,"materializada (excecao de escopo: sustenta H6b, razao da revogacao de D6)"
+descricao_carreta,dm_descricao_carreta_36' T/A PLATE VAN W TAILGATE,36' T/A PLATE VAN W TAILGATE,31' T/A MT LEAD REEFER VAN,0.62,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_48' T/A 4000DX VAN,48' T/A 4000DX VAN,31' T/A MT LEAD REEFER VAN,0.64,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' T/A 3-TEMP REEFER VAN,53' T/A 3-TEMP REEFER VAN,31' T/A MT LEAD REEFER VAN,0.54,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' T/A 4000DX DRY VAN,53' T/A 4000DX DRY VAN,31' T/A MT LEAD REEFER VAN,0.75,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' T/A 4000DX VAN,53' T/A 4000DX VAN,31' T/A MT LEAD REEFER VAN,14.41,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' T/A DRY VAN,53' T/A DRY VAN,31' T/A MT LEAD REEFER VAN,9.29,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' T/A HEATER VAN,53' T/A HEATER VAN,31' T/A MT LEAD REEFER VAN,6.3,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' T/A M/T REEFER VAN,53' T/A M/T REEFER VAN,31' T/A MT LEAD REEFER VAN,0.54,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' T/A M/T REEFER VAN (CDS),53' T/A M/T REEFER VAN (CDS),31' T/A MT LEAD REEFER VAN,0.64,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' T/A M/T REEFER VAN (CROSS DIVIDE),53' T/A M/T REEFER VAN (CROSS DIVIDE),31' T/A MT LEAD REEFER VAN,0.71,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' T/A P&P VAN,53' T/A P&P VAN,31' T/A MT LEAD REEFER VAN,4.98,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' T/A PLATE VAN,53' T/A PLATE VAN,31' T/A MT LEAD REEFER VAN,27.66,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' T/A PLATE VAN W PINTLE HOOK,53' T/A PLATE VAN W PINTLE HOOK,31' T/A MT LEAD REEFER VAN,2.31,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' T/A REEFER VAN,53' T/A REEFER VAN,31' T/A MT LEAD REEFER VAN,12.11,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' T/A REEFER VAN (MT),53' T/A REEFER VAN (MT),31' T/A MT LEAD REEFER VAN,1.22,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' T/A ST REEFER VAN,53' T/A ST REEFER VAN,31' T/A MT LEAD REEFER VAN,0.7,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' TRIDEM DRY VAN,53' TRIDEM DRY VAN,31' T/A MT LEAD REEFER VAN,1.55,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' TRIDEM HEATER VAN,53' TRIDEM HEATER VAN,31' T/A MT LEAD REEFER VAN,1.49,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' TRIDEM PLATE VAN,53' TRIDEM PLATE VAN,31' T/A MT LEAD REEFER VAN,1.37,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_53' TRIDEM REEFER VAN,53' TRIDEM REEFER VAN,31' T/A MT LEAD REEFER VAN,1.04,0.5942,FORTE,materializada
+descricao_carreta,dm_descricao_carreta_OUTROS,OUTROS,31' T/A MT LEAD REEFER VAN,9.59,0.5942,FORTE,materializada
+descricao_carreta,"dm_descricao_carreta_T/A ""A"" DOLLY CONVERTER","T/A ""A"" DOLLY CONVERTER",31' T/A MT LEAD REEFER VAN,0.71,0.5942,FORTE,materializada
+flag_refrigerado,dm_flag_refrigerado_Y,Y,N,29.7,0.4246,FORTE,materializada
+unit_subtype,dm_unit_subtype_DH2,DH2,DC2,12.66,0.5438,FORTE,materializada
+unit_subtype,dm_unit_subtype_DS,DS,DC2,25.03,0.5438,FORTE,materializada
+unit_subtype,dm_unit_subtype_DSS,DSS,DC2,3.73,0.5438,FORTE,materializada
+unit_subtype,dm_unit_subtype_HH2,HH2,DC2,5.66,0.5438,FORTE,materializada
+unit_subtype,dm_unit_subtype_OUTROS,OUTROS,DC2,8.91,0.5438,FORTE,materializada
+unit_subtype,dm_unit_subtype_RC2,RC2,DC2,7.52,0.5438,FORTE,materializada
+unit_subtype,dm_unit_subtype_RHM2,RHM2,DC2,3.78,0.5438,FORTE,materializada
+unit_subtype,dm_unit_subtype_RHS2,RHS2,DC2,8.41,0.5438,FORTE,materializada

@@ -1,0 +1,39 @@
+variavel,tipo,disponibilidade,forca_Y1,classe_Y1,forca_Y2,classe_Y2,muda_de_papel,decisao,n_categorias,nota_disponibilidade
+custo_ano_nominal,quantitativa,VAZAMENTO,0.9987,FORTE,0.7671,FORTE,,RETIRAR,,E Y1 antes da deflacao
+n_sistemas_vmrs_distintos_ano,quantitativa,CONTEMPORANEA,0.7021,FORTE,0.845,FORTE,,MANTER sob premissa,,Descreve o ano corrente; usar a media defasada de 5 anos no preditivo
+custo_medio_por_os_ano,quantitativa,ALVO Y3,0.7863,FORTE,0.2489,moderada,,ALVO SECUNDARIO (Y3),,Componente de Y1; virou alvo (D8)
+custo_ano_real,,ALVO Y1,,,0.7676,FORTE,,ALVO PRINCIPAL (Y1),,E a propria resposta
+n_os_ano,quantitativa,ALVO Y2,0.7676,FORTE,,,,ALVO SECUNDARIO (Y2),,Componente de Y1; virou alvo (D8)
+descricao_carreta,categorica,DISPONIVEL,0.5942,FORTE,0.6955,FORTE,,DUMMY (one-hot),248.0,Atributo estatico do ativo
+cod_cliente_predominante_ano,categorica,CONTEMPORANEA,0.6092,FORTE,0.6925,FORTE,,RETIRAR,547.0,Cliente do ano corrente; 597 categorias (D4)
+data_entrada_servico,categorica,DISPONIVEL,0.6007,FORTE,0.6561,FORTE,,RETIRAR,2091.0,Data de entrada; usar via idade_carreta
+unit_subtype,categorica,DISPONIVEL,0.5438,FORTE,0.6487,FORTE,,DUMMY (one-hot),26.0,Atributo estatico do ativo
+km_rodado_ano,quantitativa,CONTEMPORANEA,0.527,FORTE,0.6195,FORTE,,MANTER como feature,,Km do ano corrente; exige projecao para 2026
+n_os_ano_anterior,quantitativa,DISPONIVEL,0.5391,FORTE,0.6176,FORTE,,MANTER como feature,,Historico de t-1
+flag_refrigerado,categorica,DISPONIVEL,0.4246,FORTE,0.567,FORTE,,DUMMY (one-hot),2.0,Atributo estatico do ativo
+custo_ano_anterior,quantitativa,DISPONIVEL,0.5375,FORTE,0.4934,FORTE,,MANTER como feature,,Historico de t-1
+n_os_acum_ate_ano_anterior,quantitativa,DISPONIVEL,0.465,FORTE,0.4402,FORTE,,MANTER como feature,,Historico acumulado ate t-1
+custo_acum_ate_ano_anterior,quantitativa,DISPONIVEL,0.4571,FORTE,0.3674,FORTE,,MANTER como feature,,Historico acumulado ate t-1
+km_acumulado_fim_ano,quantitativa,CONTEMPORANEA,0.435,FORTE,0.3705,FORTE,,MANTER via projecao,,Odometro de fim de ano; usar o de inicio no preditivo
+vmrs_predominante_ano,categorica,CONTEMPORANEA,0.3358,FORTE,0.3964,FORTE,,DUMMY (one-hot),23.0,Sistema predominante do ano corrente
+share_pm_ano,quantitativa,CONTEMPORANEA,0.1718,moderada,0.3495,FORTE,,RETIRAR,,Fracao de OS preventivas do ano corrente
+n_tipos_manutencao_ano,quantitativa,CONTEMPORANEA,0.2915,moderada,0.3361,FORTE,,RETIRAR,,Regimes que conviveram no ano corrente
+n_clientes_ano,quantitativa,CONTEMPORANEA,0.2303,moderada,0.3343,FORTE,,MANTER como feature,,Clientes do ano corrente
+cod_montadora,categorica,DISPONIVEL,0.2302,moderada,0.3325,FORTE,,RETIRAR,27.0,Atributo estatico do ativo
+populacao_maint_flag,quantitativa,POPULACAO,0.3073,FORTE,0.3102,FORTE,,RETIRAR,,"Define a amostra, nao explica o custo"
+ano_modelo,quantitativa,DISPONIVEL,0.0414,fraca,0.2679,moderada,SOBE em Y2 (fraca em Y1),RETIRAR,,Atributo estatico do ativo
+anos_ativo_ate_ano_anterior,quantitativa,DISPONIVEL,0.2602,moderada,0.1853,moderada,,MANTER como feature,,Historico ate t-1
+suspension_type,categorica,DISPONIVEL,0.1603,moderada,0.2489,moderada,,RETIRAR,9.0,Atributo estatico do ativo
+tipo_manutencao_ano,categorica,DISPONIVEL (contrato vigente),0.1828,moderada,0.2477,moderada,,DUMMY (one-hot),5.0,Regime do contrato em vigor - conhecido antes do reparo
+share_maint_ano,quantitativa,CONTEMPORANEA,0.23,moderada,0.1983,moderada,,MANTER como feature,,Composicao contratual do ano corrente
+tire_size,categorica,DISPONIVEL,0.1578,moderada,0.2102,moderada,,DUMMY (one-hot),25.0,Atributo estatico do ativo
+idade_carreta,quantitativa,DISPONIVEL,0.0321,fraca,0.1963,moderada,SOBE em Y2 (fraca em Y1),MANTER como feature,,Deterministica: idade_2026 = idade_2025 + 1
+new_used_indicator,categorica,DISPONIVEL,0.1144,fraca,0.1934,moderada,SOBE em Y2 (fraca em Y1),RETIRAR,3.0,Atributo estatico do ativo
+regiao_operacao,categorica,CONTEMPORANEA,0.076,fraca,0.1535,moderada,SOBE em Y2 (fraca em Y1),RETIRAR,10.0,Regiao predominante do ano corrente
+tempo_contrato_meses_fim_ano,quantitativa,CONTEMPORANEA,0.1403,fraca,0.1507,moderada,SOBE em Y2 (fraca em Y1),MANTER como feature,,Maturidade no fim do ano corrente
+provincia_estado,categorica,CONTEMPORANEA,0.1417,fraca,0.1124,fraca,,RETIRAR,24.0,Provincia predominante do ano corrente
+tempo_contrato_meses_inicio_ano,quantitativa,DISPONIVEL,0.1155,fraca,0.1379,fraca,,MANTER como feature,,Maturidade contratual em t-1
+comprimento,quantitativa,DISPONIVEL,0.097,fraca,0.1132,fraca,,RETIRAR,,Atributo estatico do ativo
+trocou_contrato_ano,quantitativa,CONTEMPORANEA,0.0844,fraca,0.0364,fraca,,MANTER como feature,,Troca ocorrida no ano corrente
+eixos,quantitativa,DISPONIVEL,0.0506,fraca,0.0246,fraca,,MANTER como feature,,Atributo estatico do ativo
+tailgate_flag,categorica,DISPONIVEL,,nao calculavel,,nao calculavel,,DUMMY (one-hot),1.0,Atributo estatico - porem constante

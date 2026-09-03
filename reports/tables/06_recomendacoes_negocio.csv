@@ -3,5 +3,7 @@ Orçamento,Usar o custo anual real por carreta como base de orçamento; projetar
 Priorização de frota,Priorizar carretas com alto custo/OS no ano anterior e histórico acumulado elevado (fatores de maior importância).
 Perfil de ativo,"Monitorar subtipos e refrigeradas, que concentram custos anuais mais altos (maior eta)."
 Uso,Incorporar quilometragem esperada ao planejamento: o uso é um dos maiores associados ao custo anual.
-Contrato,População de análise definida por contrato com manutenção inclusa (MAINT). Efeito das variáveis de contrato sobre o poder preditivo: +0.0033 de R² — usar como insumo de precificação apenas na medida desse ganho.
+Contrato,"População de análise passa a ser a frota completa (D7, 2026-09-02): restringir a MAINT alterou o R² preditivo em apenas +0.0017, e a base completa permite testar o efeito do regime contratual dentro do modelo. Efeito das variáveis de contrato sobre o poder preditivo: +0.0359 de R² — usar como insumo de precificação apenas na medida desse ganho."
+Previsão 2026,Prever o custo por dois caminhos e usar o de menor erro: direto (Y1) ou decomposto (Y1 = nº de OS x custo médio por OS). Diferença medida no teste de 2025: +0.0295 de R² a favor do decomposto.
+Idade e contrato,"Não usar idade da carreta nem tempo de contrato como critério de orçamento: medidos na base completa, quase não ordenam o custo anual (Spearman 0,03 e 0,12). O que ordena é histórico e uso."
 Dados,"Integrar mão de obra, peças e tipo_contrato (RENTAL/LEASE) em etapa futura; contrato de manutenção já foi incorporado."

@@ -1,5 +1,14 @@
 feature_removida,motivo
 tailgate_flag,variancia nula
-n_os_ano,componente de Y
-custo_medio_por_os_ano,componente de Y
-descricao_carreta,redundante/alta cardinalidade
+n_os_ano,alvo Y2 (componente de Y1)
+custo_medio_por_os_ano,alvo Y3 (componente de Y1)
+populacao_maint_flag,definicao de populacao (D7)
+regiao_operacao,H5 encerrada
+provincia_estado,H5 encerrada
+cod_montadora,curadoria do Grupo
+suspension_type,curadoria do Grupo
+new_used_indicator,curadoria do Grupo
+tire_size,dummy pendente de decisao
+ano_modelo,redundante com idade_carreta
+comprimento,redundante com descricao_carreta
+share_pm_ano,curadoria do Grupo

@@ -1,0 +1,41 @@
+variavel,decisao,justificativa_grupo,nota_tecnica,forca_associacao_Y1,metrica_usada,classificacao_Y1,pct_ausente,n_categorias,entra_no_modelo,dummy_materializada
+id_carreta,DUMMY (one-hot),Identificacao da carreta.,"9.585 categorias. One-hot memoriza a carreta e nao generaliza para ativo novo; materializado por decisao explicita do Grupo, em arquivo separado.",,,,,,sim,sim
+ano,CHAVE (nao e feature),Ano em que ocorreram as OS.,Usado como chave do split temporal (treino <=2024 / teste 2025). Nao vira dummy: um nivel 2026 nao existe no treino e quebraria a previsao.,,,,,,nao,-
+custo_ano_nominal,RETIRAR,Numero sem a inflacao.,Correto: e o Y1 antes da deflacao pelo CPI. Mante-lo seria vazamento direto.,0.9987,Spearman,FORTE,0.0,,nao,-
+n_os_ano,ALVO SECUNDARIO (Y2),Prever a quantidade de OS para o ano de 2026.,"Componente aritmetico de Y1 (Y1 = Y2 x Y3). Vira alvo proprio, nunca feature de Y1.",0.7676,Spearman,FORTE,0.0,,e alvo,-
+n_sistemas_vmrs_distintos_ano,MANTER sob premissa,Media da quantidade de VMRS usada pelas carretas nos ultimos 5 anos.,"Aba 03: a premissa do Grupo foi TESTADA e venceu. Media movel de 5 anos defasada Spearman 0,474 vs defasagem t-1 0,449 - a media suaviza o ruido de ano isolado. Usar a media, calculada SO com anos anteriores (sem vazamento). A versao contemporanea (0,702) e mais forte, mas nao existe para prever 2026.",0.7021,Spearman,FORTE,0.0,,sim,-
+share_pm_ano,RETIRAR,Nao testar: recorta classe especifica de manutencao.,Aceito. Associacao com Y1 registrada na aba 02 para rastreio.,0.1718,Spearman,moderada,0.0,,nao,-
+km_acumulado_fim_ano,MANTER via projecao,Estimar o KM em 2026.,Contemporanea ao ano: no cenario preditivo usar o odometro de inicio de ano ou a projecao da serie por carreta.,0.435,Spearman,FORTE,0.56,,sim,-
+vmrs_predominante_ano,DUMMY (one-hot),Codigo mais frequente na carreta; empate resolvido pelo mais frequente da base.,Contemporanea ao ano: valida no cenario explicativo; no preditivo exige a versao t-1.,0.3358,eta (ANOVA),FORTE,0.0,23.0,sim,sim
+regiao_operacao,RETIRAR,Retirar.,Encerra a hipotese H5. Ha respaldo estatistico (eta baixo) - ver aba 02.,0.076,eta (ANOVA),fraca,0.0,10.0,nao,-
+provincia_estado,RETIRAR,Retirar.,Idem H5. Cobertura parcial (~54%) reforca a decisao.,0.1417,eta (ANOVA),fraca,0.0,24.0,nao,-
+tipo_manutencao_ano,DUMMY (one-hot),Verificar se tipos de contrato especificos impactam o custo.,"So e possivel porque D6 foi revogada (base completa). Desbalanceada: MAINT ~88%; reportar custo medio por nivel, nao so eta.",0.1828,eta (ANOVA),moderada,0.0,5.0,sim,sim
+share_maint_ano,MANTER como feature,Acompanha o resultado de tipo_manutencao_ano.,Redundante com a dummy de tipo_manutencao_ano; vigiar VIF em modelo linear.,0.23,Spearman,moderada,0.0,,sim,-
+n_tipos_manutencao_ano,RETIRAR,Redundante com tipo_manutencao_ano.,Aceito - mede so quantos regimes conviveram no ano.,0.2915,Spearman,moderada,0.0,,nao,-
+tempo_contrato_meses_fim_ano,MANTER como feature,Avaliar impacto do tempo de contrato (H7).,Contemporanea: no preditivo usar tempo_contrato_meses_inicio_ano. Colinear com idade_carreta - checar VIF.,0.1403,Spearman,fraca,8.94,,sim,-
+n_clientes_ano,MANTER como feature,Avaliar se mais clientes impactam o custo.,Aceito.,0.2303,Spearman,moderada,0.0,,sim,-
+cod_cliente_predominante_ano,RETIRAR,Retirar do modelo.,"Coerente com D4: 597 categorias, risco de memorizacao. Uso so descritivo.",0.6092,eta (ANOVA),FORTE,0.0,547.0,nao,-
+descricao_carreta,DUMMY (one-hot),Detalhamento da carreta.,253 categorias -> top-N + OUTROS cobrindo 90% das linhas.,0.5942,eta (ANOVA),FORTE,0.0,248.0,sim,sim
+cod_montadora,RETIRAR,Retirar do modelo.,Registrado: eta moderado (ver aba 02). Parte da informacao sobrevive em descricao_carreta.,0.2302,eta (ANOVA),moderada,0.03,27.0,nao,-
+flag_refrigerado,DUMMY (one-hot),Veiculos refrigerados sao mais caros de manter.,Binaria - one-hot com uma coluna basta.,0.4246,eta (ANOVA),FORTE,0.0,2.0,sim,sim
+tailgate_flag,DUMMY (one-hot),Tambem precisa de manutencao e pode afetar o custo.,IMPOSSIVEL: constante na base (variancia nula). Nao ha dummy a criar - ver aba 07.,,eta (ANOVA),nao calculavel,0.0,1.0,sim,NAO - ver aba 07
+unit_subtype,DUMMY (one-hot),Classificacao especifica do negocio.,26 categorias -> top-N + OUTROS.,0.5438,eta (ANOVA),FORTE,0.0,26.0,sim,sim
+tire_size,DUMMY (one-hot),Tamanho do pneu impacta no custo.,"24 categorias, com ausentes -> nivel AUSENTE explicito.",0.1578,eta (ANOVA),moderada,13.64,25.0,sim,NAO - ver aba 07
+suspension_type,RETIRAR,A maioria das carretas ja tem suspensao a ar.,Aceito - baixa variabilidade util.,0.1603,eta (ANOVA),moderada,13.26,9.0,nao,-
+new_used_indicator,RETIRAR,"Em contrato as carretas sao novas, quase todas leasing.",Aceito.,0.1144,eta (ANOVA),fraca,0.38,3.0,nao,-
+ano_modelo,RETIRAR,Redundante com idade_carreta.,Correto: idade_carreta = ano - ano de entrada (fallback ano_modelo).,0.0414,Spearman,fraca,0.01,,nao,-
+eixos,MANTER como feature,"Mais eixos, mais pneus e outros itens.",Quase constante (95% com 2 eixos) - ver aba 02 antes de manter no modelo final.,0.0506,Spearman,fraca,0.19,,sim,-
+comprimento,RETIRAR,Informacao ja presente em descricao_carreta.,Aceito.,0.097,Spearman,fraca,1.38,,nao,-
+data_entrada_servico,RETIRAR,Foco em custo anual.,A informacao permanece via idade_carreta.,0.6007,eta (ANOVA),FORTE,0.01,2091.0,nao,-
+idade_carreta,MANTER como feature,Prever 2026 com base nos anos anteriores.,Deterministica no tempo: idade_2026 = idade_2025 + 1.,0.0321,Spearman,fraca,0.01,,sim,-
+km_rodado_ano,MANTER como feature,Prever 2026 com base nos anos anteriores.,"Contemporanea - no preditivo exige projecao, como km_acumulado_fim_ano.",0.527,Spearman,FORTE,20.73,,sim,-
+n_os_ano_anterior,MANTER como feature,Utilizar no modelo.,Defasada - sem vazamento.,0.5391,Spearman,FORTE,20.09,,sim,-
+n_os_acum_ate_ano_anterior,MANTER como feature,Utilizar no modelo.,Defasada - sem vazamento.,0.465,Spearman,FORTE,0.0,,sim,-
+anos_ativo_ate_ano_anterior,MANTER como feature,Utilizar no modelo.,Defasada - sem vazamento.,0.2602,Spearman,moderada,0.0,,sim,-
+tempo_contrato_meses_inicio_ano,MANTER como feature,Utilizar no modelo.,Versao defasada de tempo_contrato_meses_fim_ano - a admissivel no preditivo.,0.1155,Spearman,fraca,27.31,,sim,-
+trocou_contrato_ano,MANTER como feature,Utilizar no modelo.,"Binaria, contemporanea.",0.0844,Spearman,fraca,0.0,,sim,-
+populacao_maint_flag,RETIRAR,Retirar.,Implica REVOGAR a decisao D6 (populacao = MAINT). Confirmado pelo Grupo em 2026-09-02: a modelagem passa a usar a base completa.,0.3073,Spearman,FORTE,0.0,,nao,-
+custo_ano_real,ALVO PRINCIPAL (Y1),Variavel principal a prever para 2026.,Alvo. CAD real de dez/2025 (CPI Canada).,,,,,,e alvo,-
+custo_medio_por_os_ano,ALVO SECUNDARIO (Y3),Utilizar no modelo.,"Componente aritmetico de Y1 (Y1 = Y2 x Y3): como feature daria R2 artificial ~1. Vira o terceiro alvo, conforme decisao de 2026-09-02.",0.7863,Spearman,FORTE,0.0,,e alvo,-
+custo_ano_anterior,MANTER como feature,Utilizar no modelo.,Defasada - sem vazamento.,0.5375,Spearman,FORTE,20.09,,sim,-
+custo_acum_ate_ano_anterior,MANTER como feature,Utilizar no modelo.,Defasada - sem vazamento.,0.4571,Spearman,FORTE,0.0,,sim,-

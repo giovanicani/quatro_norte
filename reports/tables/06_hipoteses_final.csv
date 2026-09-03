@@ -2,7 +2,7 @@ hipotese,enunciado,evidencia,veredito
 H1,Idade da carreta eleva o custo anual,Spearman idade_carreta=0.032,Não suportada (efeito direto fraco)
 H2,Maior uso/quilometragem eleva o custo anual,km_rodado_ano=0.527; km_acumulado=0.435,Suportada
 H3,Histórico de manutenção prevê o custo futuro,custo_ano_anterior=0.538; n_os_ano_anterior=0.539,Suportada
-H4,Características do ativo influenciam o custo,unit_subtype eta=0.54; refrigerado eta=0.42; montadora eta=0.23,Suportada
-H5,Região/operação influencia o custo,provincia eta=0.14; regiao eta=0.08,Parcial (efeito fraco)
-H6a,Duração do contrato influencia o custo anual,Spearman tempo_contrato=0.140; ganho de R² no preditivo (contrato vs sem contrato) = +0.0033,Parcial (efeito fraco)
-H6b,Tipo de manutenção contratual (MAINT/NET/MIX) influencia o custo anual,eta tipo_manutencao_ano=0.183 (base completa); share_maint_ano Spearman=0.230. Não entra no modelo: constante na população MAINT (D6),Parcial (efeito fraco)
+H4,Características do ativo influenciam o custo,descricao_carreta eta=0.59; unit_subtype eta=0.54; refrigerado eta=0.42,Suportada
+H5,Região/operação influencia o custo,"provincia eta=0.14; regiao eta=0.08. Retiradas do modelo pela curadoria de 2026-09-02, com respaldo estatístico",Não suportada (fora do modelo desde 2026-09-02)
+H6b,Tipo de manutenção contratual (MAINT/NET/MIX) influencia o custo anual,"eta tipo_manutencao_ano=0.183; share_maint_ano Spearman=0.230. ENTRA no modelo desde D7 (2026-09-02), que revogou o recorte MAINT. Desbalanceada: MAINT ~88%",Parcial (efeito fraco)
+H7,Tempo de contrato até o reparo influencia o custo anual,Spearman tempo_contrato_fim_ano=0.140; ganho de R² no preditivo atribuível ao bloco de contrato = +0.0359,Parcial (efeito fraco)

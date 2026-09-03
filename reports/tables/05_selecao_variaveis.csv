@@ -1,35 +1,37 @@
 variavel,decisao,justificativa
-tailgate_flag,removida,Variancia nula (constante 'N') — sem informacao
-franquia_km_mensal_contrato,removida,"Variancia quase nula: 99,8% dos valores preenchidos sao zero (D3)"
-cod_cliente_predominante_ano,removida,"597 categorias, 22,8% ausente — risco de memorizacao do cliente (D4); uso descritivo"
-tipo_manutencao_ano,removida do modelo,Constante na populacao MAINT (D6); H6b avaliada na EDA sobre a base completa
-tempo_contrato_meses_inicio_ano,mantida,Duracao de contrato conhecida no inicio do ano — testa H6a sem vazamento
-tempo_contrato_meses_fim_ano,mantida (so explicativo),Contemporanea ao ano; fora do cenario preditivo
-share_maint_ano,mantida (so explicativo),Intensidade do regime MAINT no ano
-n_clientes_ano,mantida (so explicativo),Estabilidade do vinculo comercial no ano
+tailgate_flag,removida,Variancia nula (constante) - sem informacao
+franquia_km_mensal_contrato,removida,"99,8% dos valores preenchidos sao zero (D3)"
+cod_cliente_predominante_ano,removida,"597 categorias, 22,8% ausente - risco de memorizacao (D4). eta=0,61: e a maior associacao entre as removidas"
+populacao_maint_flag,removida,"Definicao de populacao, nao fator explicativo (D7)"
+tipo_manutencao_ano,mantida (DUMMY),D7 revoga D6: com a base completa a variavel deixa de ser constante e H6b entra no modelo. Desbalanceada (MAINT ~88%)
+share_maint_ano,mantida (so explicativo),Intensidade do regime MAINT no ano; redundante com as dummies de tipo_manutencao_ano - vigiar VIF
+tempo_contrato_meses_inicio_ano,mantida,"Testa H7 sem vazamento; associacao fraca (rho=0,12)"
+tempo_contrato_meses_fim_ano,mantida (so explicativo),"Contemporanea; rho=0,14"
+n_clientes_ano,mantida (so explicativo),Estabilidade do vinculo comercial
 trocou_contrato_ano,mantida (so explicativo),Indicio de novo contrato no ano
-n_os_ano,removida,Componente aritmetico de Y (Y = n_os x custo medio/OS)
-custo_medio_por_os_ano,removida,Componente aritmetico de Y
-descricao_carreta,removida,Redundante com unit_subtype; cardinalidade alta (253) — risco de overfit
-ano_modelo,condicional,"Colinear com idade_carreta (VIF alto); mantida em arvores, redundante em modelos lineares"
-idade_carreta,mantida,Atributo de envelhecimento; associacao fraca isolada mas relevante em interacao
-eixos,mantida,Atributo estrutural do ativo
-comprimento,mantida,Porte fisico do ativo
-flag_refrigerado,mantida,Forte separacao de Y (eta=0.43)
-unit_subtype,mantida,Categorica de maior associacao util (eta=0.55)
-tire_size,mantida,Atributo tecnico; associacao fraca
-suspension_type,mantida,Atributo tecnico; associacao fraca
-new_used_indicator,mantida,Historico previo do ativo
-cod_montadora,mantida,Fabricante (eta=0.24)
-regiao_operacao,mantida,Proxy geografica operacional
-provincia_estado,mantida,"Proxy geografica (parcial ~54%, imputada DESCONHECIDO)"
-vmrs_predominante_ano,mantida (so explicativo),Sistema predominante — contemporaneo ao ano
-km_rodado_ano,mantida (so explicativo),Exposicao do ano (ρ=0.53); contemporanea -> so cenario explicativo
-n_sistemas_vmrs_distintos_ano,mantida (so explicativo),Diversidade de problemas no ano; contemporanea
-share_pm_ano,mantida (so explicativo),Perfil preventivo do ano; contemporaneo
-km_acumulado_fim_ano,explicativo / inicio_ano no preditivo,Exposicao acumulada; no preditivo usa-se o odometro de inicio de ano
-n_os_ano_anterior,mantida,Historico defasado (ρ=0.54)
-custo_ano_anterior,mantida,Historico defasado (ρ=0.54) — melhor preditor sem vazamento
-n_os_acum_ate_ano_anterior,mantida,Historico acumulado defasado
-custo_acum_ate_ano_anterior,mantida,Historico acumulado defasado
-anos_ativo_ate_ano_anterior,mantida,Tempo de historico disponivel
+n_os_ano,ALVO Y2,Componente aritmetico de Y1 (Y1 = Y2 x Y3) - virou alvo proprio (D8)
+custo_medio_por_os_ano,ALVO Y3,Componente aritmetico de Y1 - virou alvo proprio (D8)
+descricao_carreta,mantida (DUMMY),"Reintegrada pela curadoria: eta=0,59, a categorica mais associada a Y1. Cardinalidade tratada por agrupamento de raras"
+unit_subtype,mantida (DUMMY),"eta=0,54"
+flag_refrigerado,mantida (DUMMY),"eta=0,42"
+vmrs_predominante_ano,"mantida (DUMMY, so explicativo)","eta=0,34; contemporanea ao ano"
+n_sistemas_vmrs_distintos_ano,mantida (so explicativo),"rho=0,70, a mais forte; contemporanea"
+vmrs_dist_media_5a,mantida (preditivo),"Premissa do Grupo testada e vencedora: media movel de 5 anos defasada (rho=0,47)"
+km_rodado_ano,mantida (so explicativo),"Exposicao do ano (rho=0,53)"
+km_acumulado_fim_ano,explicativo / inicio_ano no preditivo,"rho=0,44"
+n_os_ano_anterior,mantida,"Historico defasado (rho=0,54)"
+custo_ano_anterior,mantida,"Historico defasado (rho=0,54)"
+n_os_acum_ate_ano_anterior,mantida,"Historico acumulado defasado (rho=0,47)"
+custo_acum_ate_ano_anterior,mantida,"Historico acumulado defasado (rho=0,46)"
+anos_ativo_ate_ano_anterior,mantida,"Tempo de historico disponivel (rho=0,26)"
+idade_carreta,mantida,"Mantida por decisao de previsao para 2026; H1 NAO suportada (rho=0,03)"
+eixos,mantida,"Quase constante: 95% com 2 eixos (rho=0,05)"
+regiao_operacao,removida,"H5 encerrada pelo Grupo, com respaldo: eta=0,08"
+provincia_estado,removida,"H5 encerrada; cobertura parcial ~54%; eta=0,14"
+cod_montadora,removida,"Retirada pelo Grupo (eta=0,23); informacao parcialmente contida em descricao_carreta"
+suspension_type,removida,"Retirada pelo Grupo: maioria ja e suspensao a ar (eta=0,16)"
+new_used_indicator,removida,"Retirada pelo Grupo: em contrato as carretas sao novas (eta=0,11)"
+tire_size,removida (PENDENTE),"Dummy pedida pelo Grupo mas NAO materializada: eta=0,16, abaixo do limiar FORTE de 0,30. Aguarda decisao"
+ano_modelo,removida,"Redundante com idade_carreta (eta=0,04)"
+comprimento,removida,"Informacao ja presente em descricao_carreta (rho=0,10)"
+share_pm_ano,removida,"Retirada pelo Grupo: recorta classe especifica de manutencao (rho=0,17)"

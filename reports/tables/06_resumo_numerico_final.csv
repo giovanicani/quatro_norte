@@ -8,7 +8,11 @@ share_y_zero_pct,3.13
 custo_total_nominal_mi,74.617
 custo_total_real_mi,79.645
 modelo_recomendado_preditivo,gradient_boosting
-r2_preditivo,0.4549
-rmse_preditivo,2002.4
-mae_preditivo,1092.7
-melhor_r2_explicativo,0.5854
+r2_preditivo,0.4418
+rmse_preditivo,2008.7
+mae_preditivo,1074.3
+melhor_r2_explicativo,0.5776
+populacao,"base completa (D7, 2026-09-02) - sem recorte MAINT"
+r2_y1_reconstituido_y2xy3,0.4713
+delta_r2_decomposicao_vs_direto,0.0295
+caminho_recomendado_2026,decomposto (Y1 = Y2 x Y3)

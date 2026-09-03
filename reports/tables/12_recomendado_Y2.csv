@@ -1,0 +1,17 @@
+variavel,tipo,forca_Y2,classe_Y2,decisao
+descricao_carreta,categorica,0.6955,FORTE,DUMMY (one-hot)
+data_entrada_servico,categorica,0.6561,FORTE,RETIRAR
+unit_subtype,categorica,0.6487,FORTE,DUMMY (one-hot)
+n_os_ano_anterior,quantitativa,0.6176,FORTE,MANTER como feature
+flag_refrigerado,categorica,0.567,FORTE,DUMMY (one-hot)
+custo_ano_anterior,quantitativa,0.4934,FORTE,MANTER como feature
+n_os_acum_ate_ano_anterior,quantitativa,0.4402,FORTE,MANTER como feature
+custo_acum_ate_ano_anterior,quantitativa,0.3674,FORTE,MANTER como feature
+cod_montadora,categorica,0.3325,FORTE,RETIRAR
+ano_modelo,quantitativa,0.2679,moderada,RETIRAR
+suspension_type,categorica,0.2489,moderada,RETIRAR
+tipo_manutencao_ano,categorica,0.2477,moderada,DUMMY (one-hot)
+tire_size,categorica,0.2102,moderada,DUMMY (one-hot)
+idade_carreta,quantitativa,0.1963,moderada,MANTER como feature
+new_used_indicator,categorica,0.1934,moderada,RETIRAR
+anos_ativo_ate_ano_anterior,quantitativa,0.1853,moderada,MANTER como feature
